@@ -1,7 +1,6 @@
 package deco2800.skyfall.saving;
 
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.worlds.world.World;
 
 import java.io.Serializable;
@@ -28,6 +27,8 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     // The ID of the main character in this save
     private MainCharacter mainCharacter;
 
+    private int gameStage;
+
 
 
     /**
@@ -53,14 +54,13 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
      * @param mainCharacter The main character in this save state
      */
     public Save(List<World> worlds, MainCharacter mainCharacter, World currentWorld) {
-        // FIXME: this may break if a save is stored for ~293+ years
-        this.worlds = new ArrayList<>();
         this.saveID = System.nanoTime();
 
         this.worlds = worlds;
 
         this.mainCharacter = mainCharacter;
         this.currentWorld = currentWorld;
+        this.gameStage = 0;
     }
 
     public Save(SaveMemento saveMemento) {
@@ -69,6 +69,7 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
             this.worlds = new ArrayList<>();
         }
         this.mainCharacter = null;
+        this.gameStage = saveMemento.gameStage;
     }
 
     public World getCurrentWorld() {
@@ -132,6 +133,22 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
         this.worlds.add(world);
     }
 
+    /**
+     * Increases the game stage by one
+     */
+    public void incrementGameStage() {
+        this.gameStage++;
+    }
+
+    /**
+     * Returns the game stage
+     *
+     * @return the game stage
+     */
+    public int getGameStage() {
+        return this.gameStage;
+    }
+
     @Override
     public SaveMemento save() {
         return new SaveMemento(this);
@@ -145,7 +162,7 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
         }
         this.saveID = saveMemento.saveID;
         this.currentWorldId = saveMemento.currentWorld;
-
+        this.gameStage = saveMemento.gameStage;
     }
 
     /**
@@ -154,13 +171,12 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     public static class SaveMemento extends AbstractMemento implements Serializable {
         private long saveID;
         private long currentWorld;
-
-        // Supposed to fix comparability issues but bricks the tests :(
-        //private static final long serialVersionUID = 1234567890L;
+        private int gameStage;
 
         private SaveMemento(Save save) {
             this.saveID = save.getSaveID();
             this.currentWorld = save.currentWorld.getID();
+            this.gameStage = save.gameStage;
         }
 
         public long getWorldID() {

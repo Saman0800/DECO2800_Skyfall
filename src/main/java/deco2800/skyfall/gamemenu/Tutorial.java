@@ -59,7 +59,7 @@ public class Tutorial extends AbstractUIElement {
     public void draw() {
         String direction = "next_back_button"; // defined as a constant to reduce code smell
         // if in tutorial world then display
-        if (gameMan.isTutorial) {
+        if (gameMan.getIsTutorial()) {
             // display the current tutorial page
             Image current = new Image(gameMenuMan.generateTextureRegionDrawableObject(getTutPage(count)));
             current.setFillParent(true);

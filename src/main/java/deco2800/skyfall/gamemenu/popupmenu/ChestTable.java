@@ -24,7 +24,6 @@ import java.util.Map;
 public class ChestTable extends AbstractPopUpElement{
     private final Skin skin;
     private final StatisticsManager sm;
-    private Table chestTable;
     private Table resourcePanel;
     private World world;
     private Chest chestEntity;
@@ -54,7 +53,7 @@ public class ChestTable extends AbstractPopUpElement{
     @Override
     public void hide() {
         super.hide();
-        chestTable.setVisible(false);
+        baseTable.setVisible(false);
     }
 
     /**
@@ -63,21 +62,9 @@ public class ChestTable extends AbstractPopUpElement{
     @Override
     public void show() {
         super.show();
-        chestTable.setVisible(true);
+        baseTable.setVisible(true);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void updatePosition() {
-        super.updatePosition();
-    }
-
-    @Override
-    public void update() {
-        super.update();
-    }
+    
 
     /**
      * {@inheritDoc}
@@ -87,13 +74,13 @@ public class ChestTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
-        chestTable = new Table();
-        chestTable.setSize(500, 510);
-        chestTable.setPosition((Gdx.graphics.getWidth()/2f - chestTable.getWidth()/2 + 60),
-                (Gdx.graphics.getHeight() + 160) / 2f - chestTable.getHeight()/2);
-        chestTable.top();
-        chestTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
-        chestTable.setName("chestTable");
+        baseTable = new Table();
+        baseTable.setSize(500, 510);
+        baseTable.setPosition((Gdx.graphics.getWidth()/2f - baseTable.getWidth()/2 + 60),
+                (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight()/2);
+        baseTable.top();
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
+        baseTable.setName("baseTable");
 
         Table infoBar = new Table();
         infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
@@ -103,12 +90,11 @@ public class ChestTable extends AbstractPopUpElement{
         infoBar.add(text);
 
         this.resourcePanel = new Table();
-        //updateChestPanel(chest);
 
-        chestTable.addActor(infoBar);
-        chestTable.addActor(this.resourcePanel);
-        chestTable.setVisible(false);
-        stage.addActor(chestTable);
+        baseTable.addActor(infoBar);
+        baseTable.addActor(this.resourcePanel);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
     /**
@@ -139,7 +125,7 @@ public class ChestTable extends AbstractPopUpElement{
             }
         });
 
-        chestTable.addActor(button);
+        baseTable.addActor(button);
     }
 
     public void setWorldAndChestEntity(World world, Chest chest) {

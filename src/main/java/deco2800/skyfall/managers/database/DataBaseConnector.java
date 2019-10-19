@@ -5,13 +5,51 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.MainCharacter.MainCharacterMemento;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.entities.worlditems.Bone;
+import deco2800.skyfall.entities.worlditems.DesertCacti;
+import deco2800.skyfall.entities.worlditems.DesertEnvironment;
+import deco2800.skyfall.entities.worlditems.DesertRock;
+import deco2800.skyfall.entities.worlditems.DesertShrub;
+import deco2800.skyfall.entities.worlditems.ForestMushroom;
+import deco2800.skyfall.entities.worlditems.ForestRock;
+import deco2800.skyfall.entities.worlditems.ForestShrub;
+import deco2800.skyfall.entities.worlditems.ForestTree;
+import deco2800.skyfall.entities.worlditems.Leaves;
+import deco2800.skyfall.entities.worlditems.MountainRock;
+import deco2800.skyfall.entities.worlditems.MountainTree;
+import deco2800.skyfall.entities.worlditems.OrganicMound;
+import deco2800.skyfall.entities.worlditems.RuinedCity;
+import deco2800.skyfall.entities.worlditems.RuinedRobot;
+import deco2800.skyfall.entities.worlditems.Shipwrecks;
+import deco2800.skyfall.entities.worlditems.SnowClump;
+import deco2800.skyfall.entities.worlditems.SnowShrub;
+import deco2800.skyfall.entities.worlditems.SwampRock;
+import deco2800.skyfall.entities.worlditems.SwampShrub;
+import deco2800.skyfall.entities.worlditems.SwampTree;
+import deco2800.skyfall.entities.worlditems.TreeStump;
+import deco2800.skyfall.entities.worlditems.VolcanicRock;
+import deco2800.skyfall.entities.worlditems.VolcanicShrub;
+import deco2800.skyfall.entities.worlditems.VolcanicTree;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.saving.*;
+import deco2800.skyfall.saving.DatabaseException;
+import deco2800.skyfall.saving.LoadException;
+import deco2800.skyfall.saving.RunTimeLoadException;
+import deco2800.skyfall.saving.RunTimeSaveException;
+import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.saving.Save.SaveMemento;
-import deco2800.skyfall.worlds.biomes.*;
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.AbstractBiome.AbstractBiomeMemento;
+import deco2800.skyfall.worlds.biomes.BeachBiome;
+import deco2800.skyfall.worlds.biomes.DesertBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
+import deco2800.skyfall.worlds.biomes.LakeBiome;
+import deco2800.skyfall.worlds.biomes.MountainBiome;
+import deco2800.skyfall.worlds.biomes.OceanBiome;
+import deco2800.skyfall.worlds.biomes.RiverBiome;
+import deco2800.skyfall.worlds.biomes.SnowyMountainsBiome;
+import deco2800.skyfall.worlds.biomes.SwampBiome;
+import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.VoronoiEdge.VoronoiEdgeMemento;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
@@ -23,7 +61,12 @@ import deco2800.skyfall.worlds.world.World.WorldMemento;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,6 +76,17 @@ import org.flywaydb.core.Flyway;
 
 public class DataBaseConnector {
 
+    public static final String RIVER = "river";
+    public static final String SNOWY_MOUNTAINS = "snowy_mountains";
+    public static final String SWAMP = "swamp";
+    public static final String VOLCANIC_MOUNTAINS = "volcanic_mountains";
+    public static final String MOUNTAIN = "mountain";
+    public static final String OCEAN = "ocean";
+    public static final String LAKE = "lake";
+    public static final String FOREST = "forest";
+    public static final String DESERT = "desert";
+    public static final String BEACH = "beach";
+    public static final String BIOME_ID = "biome_id";
     /* The connection to the database */
     private Connection connection;
 
@@ -138,13 +192,31 @@ public class DataBaseConnector {
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
             if (containsQueries.containsNode(world.getID(), worldGenNode.getX(), worldGenNode.getY())) {
                 updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
-                        worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+                    worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             } else {
                 insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
                     worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             }
         }
+        saveEdges(world, containsQueries, insertQueries, updateQueries);
 
+        for (Chunk chunk : world.getLoadedChunks().values()) {
+            saveChunk(chunk);
+        }
+    }
+
+    /**
+     * Saves the edges
+     *
+     * @param world           The world from which the edges are beings saved
+     * @param containsQueries Class that contains query selections
+     * @param insertQueries   Class that contains query insertions
+     * @param updateQueries   Class that contains query updates
+     * @throws SQLException If an sql error occurs
+     * @throws IOException  If a writing error occurs
+     */
+    private void saveEdges(World world, ContainsDataQueries containsQueries, InsertDataQueries insertQueries,
+        UpdateDataQueries updateQueries) throws SQLException, IOException {
         // Save beach edges
         for (VoronoiEdge voronoiEdge : world.getBeachEdges().keySet()) {
             if (containsQueries.containsEdge(voronoiEdge.getID())) {
@@ -166,13 +238,8 @@ public class DataBaseConnector {
                     world.getRiverEdges().get(voronoiEdge).getBiomeID(), voronoiEdge.save());
             }
         }
-
-        for (Chunk chunk : world.getLoadedChunks().values()) {
-            saveChunk(chunk);
-        }
     }
 
-    // TODO:dannathan Fix or remove this.
     public void saveMainCharacter() throws SQLException {
         try {
             ContainsDataQueries containsQueries = new ContainsDataQueries(connection);
@@ -243,7 +310,6 @@ public class DataBaseConnector {
             byte[] buffer;
             try (ResultSet result = preparedStatement.executeQuery()) {
                 connection.setAutoCommit(false);
-                // fixme:jeffvan12 sort this out
 
                 if (!result.next()) {
                     connection.setAutoCommit(true);
@@ -299,7 +365,7 @@ public class DataBaseConnector {
     /**
      * Loads the world of a save
      *
-     * @param save        the save to load from
+     * @param save the save to load from
      * @return the save's current world
      */
     public World loadWorlds(Save save) {
@@ -389,34 +455,34 @@ public class DataBaseConnector {
                         AbstractBiome biome;
 
                         switch (biomeType) {
-                            case "beach":
+                            case BEACH:
                                 biome = new BeachBiome(memento);
                                 break;
-                            case "desert":
+                            case DESERT:
                                 biome = new DesertBiome(memento);
                                 break;
-                            case "forest":
+                            case FOREST:
                                 biome = new ForestBiome(memento);
                                 break;
-                            case "lake":
+                            case LAKE:
                                 biome = new LakeBiome(memento);
                                 break;
-                            case "mountain":
+                            case MOUNTAIN:
                                 biome = new MountainBiome(memento);
                                 break;
-                            case "ocean":
+                            case OCEAN:
                                 biome = new OceanBiome(memento);
                                 break;
-                            case "river":
+                            case RIVER:
                                 biome = new RiverBiome(memento);
                                 break;
-                            case "snowy_mountains":
+                            case SNOWY_MOUNTAINS:
                                 biome = new SnowyMountainsBiome(memento);
                                 break;
-                            case "swamp":
+                            case SWAMP:
                                 biome = new SwampBiome(memento);
                                 break;
-                            case "volcanic_mountains":
+                            case VOLCANIC_MOUNTAINS:
                                 biome = new VolcanicMountainsBiome(memento);
                                 break;
                             default:
@@ -468,7 +534,7 @@ public class DataBaseConnector {
 
                     nodes = new ArrayList<>();
                     do {
-                        long biomeID = result.getLong("biome_id");
+                        long biomeID = result.getLong(BIOME_ID);
 
                         byte[] buffer = result.getBytes("data");
                         ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
@@ -529,7 +595,7 @@ public class DataBaseConnector {
                         byte[] buffer = result.getBytes("data");
                         ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
                         VoronoiEdgeMemento memento = (VoronoiEdgeMemento) objectIn.readObject();
-                        long biomeID = result.getLong("biome_id");
+                        long biomeID = result.getLong(BIOME_ID);
 
                         VoronoiEdge edge = new VoronoiEdge(memento);
                         edge.setWorld(world);
@@ -537,10 +603,10 @@ public class DataBaseConnector {
                         for (AbstractBiome biome : biomes) {
                             if (biome.getBiomeID() == biomeID) {
                                 foundBiome = true;
-                                if (biome.getBiomeName().equals("beach")) {
+                                if (biome.getBiomeName().equals(BEACH)) {
                                     edges.put(edge, (BeachBiome) biome);
                                     break;
-                                } else if (!biome.getBiomeName().equals("river")) {
+                                } else if (!biome.getBiomeName().equals(RIVER)) {
                                     connection.setAutoCommit(true);
                                     throw new LoadException();
                                 }
@@ -588,7 +654,7 @@ public class DataBaseConnector {
 
                     edges = new LinkedHashMap<>();
                     do {
-                        long biomeID = result.getLong("biome_id");
+                        long biomeID = result.getLong(BIOME_ID);
 
                         byte[] buffer = result.getBytes("data");
                         ObjectInputStream objectIn = new ObjectInputStream(new ByteArrayInputStream(buffer));
@@ -597,7 +663,7 @@ public class DataBaseConnector {
                         VoronoiEdge edge = new VoronoiEdge(memento);
                         edge.setWorld(world);
                         for (AbstractBiome biome : biomes) {
-                            if (biome.getBiomeID() == biomeID && biome.getBiomeName().equals("river")) {
+                            if (biome.getBiomeID() == biomeID && biome.getBiomeName().equals(RIVER)) {
                                 edges.put(edge, (RiverBiome) biome);
                                 break;
                             }
@@ -736,10 +802,10 @@ public class DataBaseConnector {
                 return new DesertEnvironment(entityMemento);
             case "Shipwrecks":
                 return new Shipwrecks(entityMemento);
-                case "ruinedRobot":
-                return new ruinedRobot(entityMemento);
+            case "ruinedRobot":
+                return new RuinedRobot(entityMemento);
             case "ruinedCity":
-                return new ruinedCity(entityMemento);
+                return new RuinedCity(entityMemento);
             default:
                 throw new LoadException(
                     String.format("Could not create %s from memento", entityMemento.getEntityType()));
@@ -861,8 +927,17 @@ public class DataBaseConnector {
         }
     }
 
-    // FIXME:jeffvan12 implement delete save method
+    /**
+     * Deletes a save
+     * @param saveId The id of the save to be deleted
+     */
     public void deleteSave(long saveId) {
-
+            try (PreparedStatement preparedStatement = connection
+                .prepareStatement("DELETE FROM SAVES WHERE save_id = ?")) {
+                preparedStatement.setLong(1, saveId);
+                preparedStatement.execute();
+            } catch(SQLException e){
+                throw new RunTimeSaveException("Unable to delete save", e);
+            }
     }
 }

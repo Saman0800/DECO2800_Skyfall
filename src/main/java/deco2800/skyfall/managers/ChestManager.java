@@ -20,6 +20,8 @@ public class ChestManager extends InventoryManager {
      * @param rarity the rarity of the loot
      * @return the generated loot
      */
+    @SuppressWarnings("squid:s128") // SonarQube complains about fall-through
+                                    // but this is intended behaviour
     public static Map<String, List<Item>> generateRandomLoot(
             int amount, LootRarity rarity) {
         Map<String, List<Item>> loot = new HashMap<>();
@@ -32,7 +34,7 @@ public class ChestManager extends InventoryManager {
                 itemPool.add(new Apple());
                 // Fall through
             case EPIC:
-                itemPool.add(new Aloe_Vera());
+                itemPool.add(new AloeVera());
                 // Fall through
             case RARE:
                 itemPool.add(new Berry());
@@ -69,7 +71,7 @@ public class ChestManager extends InventoryManager {
      */
     public ChestManager() {
         initInventory(new HashMap<>());
-        HAS_QUICK_ACCESS = false;
+        hasQuickAccess = false;
     }
 
     /**

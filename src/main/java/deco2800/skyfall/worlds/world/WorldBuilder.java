@@ -168,7 +168,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     /**
-     * The method to be used to spawn gold into a particular woorld
+     * The method to be used to spawn gold into a particular world
      * 
      * @param world           The world that will get static entities
      * @param random          Generates random integers
@@ -194,14 +194,6 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule.setNoiseSeed(worldSeed);
 
         Random random = new Random(worldSeed);
-
-        // FIXME:Ontonator Make this work properly.
-        // You can't spawn things here.
-        // Tile torchTile1 = world.getTile(0.0f, 5.0f);
-        // world.addEntity(new TikiTorch(torchTile1, false));
-        //
-        // Tile torchTile2 = world.getTile(0.0f, -3.0f);
-        // world.addEntity(new TikiTorch(torchTile2, false));
 
         for (AbstractBiome biome : world.getBiomes()) {
             ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
@@ -311,6 +303,7 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         // Spawn gold pieces
         spawnGold(world, random, biomeSpawnRules);
+        spawnBlueprintShop(world, random, biomeSpawnRules);
 
         spawnChests(world, random, biomeSpawnRules);
 
@@ -343,7 +336,8 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         // Spawn gold pieces
         spawnGold(world, random, biomeSpawnRules);
-
+        spawnChests(world, random, biomeSpawnRules);
+        spawnBlueprintShop(world, random, biomeSpawnRules);
         // Spawn some bones
         EntitySpawnRule boneRule = new EntitySpawnRule(tile -> new Bone(tile, true), random.nextInt(), 0.004);
         biomeSpawnRules.add(boneRule);
@@ -357,16 +351,16 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(dRockRule);
 
         // Spawn desert environment
-        EntitySpawnRule DesertEnvironment = new EntitySpawnRule(tile -> new DesertEnvironment(tile, true),
+        EntitySpawnRule desertEnvironment = new EntitySpawnRule(tile -> new DesertEnvironment(tile, true),
                 random.nextInt(), 0.01);
-        biomeSpawnRules.add(DesertEnvironment);
+        biomeSpawnRules.add(desertEnvironment);
 
         // Spawn ruined robot
-        EntitySpawnRule ruinedRobot = new EntitySpawnRule(tile -> new ruinedRobot(tile, true), random.nextInt(), 0.01);
+        EntitySpawnRule ruinedRobot = new EntitySpawnRule(tile -> new RuinedRobot(tile, true), random.nextInt(), 0.01);
         biomeSpawnRules.add(ruinedRobot);
 
         // Spawn ruined city
-        EntitySpawnRule ruinedCity = new EntitySpawnRule(tile -> new ruinedCity(tile, true), random.nextInt(), 0.01);
+        EntitySpawnRule ruinedCity = new EntitySpawnRule(tile -> new RuinedCity(tile, true), random.nextInt(), 0.01);
         biomeSpawnRules.add(ruinedCity);
     }
 
@@ -382,6 +376,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         // Spawn some swords
         EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.01);
         biomeSpawnRules.add(swordRule);
+        spawnBlueprintShop(world, random, biomeSpawnRules);
 
         // Spawn gold pieces
         spawnGold(world, random, biomeSpawnRules);
@@ -408,6 +403,7 @@ public class WorldBuilder implements WorldBuilderInterface {
                 cubic);
         mTreeControl.setLimitAdjacent(true);
         biomeSpawnRules.add(mTreeControl);
+        spawnBlueprintShop(world, random, biomeSpawnRules);
 
         // Spawn gold pieces
         spawnGold(world, random, biomeSpawnRules);

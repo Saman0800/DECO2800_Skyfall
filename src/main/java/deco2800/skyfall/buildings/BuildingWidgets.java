@@ -444,7 +444,6 @@ public class BuildingWidgets {
                             || (collider == null) && !tile.getCoordinates().equals(entity.getPosition())) {
                         continue;
                     }
-
                     // show the building widgets if a building is clicked
                     building = (BuildingEntity) entity;
                     setWidgets((BuildingEntity) entity);

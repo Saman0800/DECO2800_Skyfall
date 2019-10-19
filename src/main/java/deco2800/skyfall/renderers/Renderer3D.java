@@ -42,7 +42,7 @@ public class Renderer3D implements Renderer {
 
     // mouse cursor
     private static final String TEXTURE_SELECTION = "selection";
-    private static final String TEXTURE_DESTINATION = "selection";
+
     private static final String TEXTURE_PATH = "path";
     private float elapsedTime = 0f;
     private int tilesSkipped = 0;
@@ -50,8 +50,8 @@ public class Renderer3D implements Renderer {
     private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
 
     /**
-     * Renders onto a batch, given a renderables with entities It is expected that AbstractWorld contains some entities
-     * and a Map to read tiles from
+     * Renders onto a batch, given a renderables with entities It is expected that
+     * AbstractWorld contains some entities and a Map to read tiles from
      *
      * @param batch Batch to render onto
      */
@@ -62,9 +62,7 @@ public class Renderer3D implements Renderer {
             font.getData().setScale(1f);
         }
 
-        // Render tiles onto the map
-        // List<Tile> tileMap = GameManager.get().getWorld().getTileMap();
-        HashMap<Pair<Integer, Integer>, Chunk> chunks = GameManager.get().getWorld().getLoadedChunks();
+        Map<Pair<Integer, Integer>, Chunk> chunks = GameManager.get().getWorld().getLoadedChunks();
         int tileCount = chunks.values().stream().mapToInt(chunk -> chunk.getTiles().size()).sum();
         List<Tile> tilesToBeSkipped = new ArrayList<>();
         elapsedTime += Gdx.graphics.getDeltaTime();
@@ -102,8 +100,8 @@ public class Renderer3D implements Renderer {
      * @param tilesToBeSkipped a list of tiles to skip.
      * @param tile             the tile to render.
      */
-    private void renderTile(SpriteBatch batch, OrthographicCamera camera, int tileCount,
-        List<Tile> tilesToBeSkipped, Tile tile) {
+    private void renderTile(SpriteBatch batch, OrthographicCamera camera, int tileCount, List<Tile> tilesToBeSkipped,
+            Tile tile) {
 
         if (tilesToBeSkipped.contains(tile)) {
             return;
@@ -119,7 +117,7 @@ public class Renderer3D implements Renderer {
 
         Texture tex = tile.getTexture();
         batch.draw(tex, tileWorldCord[0], tileWorldCord[1], tex.getWidth() * WorldUtil.SCALE_X,
-            tex.getHeight() * WorldUtil.SCALE_Y);
+                tex.getHeight() * WorldUtil.SCALE_Y);
         if (GameManager.getPaused()) {
             Color c = batch.getColor();
             batch.setColor(c.r, c.g, c.b, .5f);
@@ -153,13 +151,14 @@ public class Renderer3D implements Renderer {
 
         if (tile != null) {
             batch.draw(tex, (int) snapWorldCoord[0], (int) snapWorldCoord[1] - (tex.getHeight() * WorldUtil.SCALE_Y),
-                tex.getWidth() * WorldUtil.SCALE_X, tex.getHeight() * WorldUtil.SCALE_Y);
+                    tex.getWidth() * WorldUtil.SCALE_X, tex.getHeight() * WorldUtil.SCALE_Y);
         }
 
     }
 
     /**
-     * Render all the entities on in view, including movement tiles, and excluding undiscovered area.
+     * Render all the entities on in view, including movement tiles, and excluding
+     * undiscovered area.
      *
      * @param batch  the sprite batch.
      * @param camera the camera.
@@ -183,7 +182,7 @@ public class Renderer3D implements Renderer {
                 continue;
             }
 
-            //set color of batch from abstract ent's mod color
+            // set color of batch from abstract ent's mod color
             Color modColor = entity.getModulatingColor();
             batch.setColor(modColor.r, modColor.g, modColor.b, modColor.a);
 
@@ -203,11 +202,11 @@ public class Renderer3D implements Renderer {
                     // think of a massive tree with the tree trunk at the centre of the tile
                     // and it's branches and leaves over surrounding tiles
 
-                    int drawX = (int) (childWorldCoord[0] + (w - childTex.getWidth()) / 2 * WorldUtil.SCALE_X);
-                    int drawY = (int) (childWorldCoord[1] + (h - childTex.getHeight()) / 2 * WorldUtil.SCALE_Y);
+                    int drawX = (int) (childWorldCoord[0] + (w - childTex.getWidth()) / 2.0 * WorldUtil.SCALE_X);
+                    int drawY = (int) (childWorldCoord[1] + (h - childTex.getHeight()) / 2.0 * WorldUtil.SCALE_Y);
 
                     batch.draw(childTex, drawX, drawY, childTex.getWidth() * WorldUtil.SCALE_X,
-                        childTex.getHeight() * WorldUtil.SCALE_Y);
+                            childTex.getHeight() * WorldUtil.SCALE_Y);
                 }
             } else {
                 if (!(entity instanceof Animatable)) {
@@ -216,8 +215,8 @@ public class Renderer3D implements Renderer {
                     if (entity instanceof MainCharacter) {
                         if (((MainCharacter) entity).isHurt() || ((MainCharacter) entity).isDead()) {
                             entity.setModulatingColor(Color.RED);
-                        } else if (((MainCharacter) entity).isRecovering() && ((MainCharacter) entity)
-                            .isTexChanging()) {
+                        } else if (((MainCharacter) entity).isRecovering()
+                                && ((MainCharacter) entity).isTexChanging()) {
                             entity.setModulatingColor(Color.WHITE);
                             ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
                         }
@@ -228,7 +227,7 @@ public class Renderer3D implements Renderer {
 
             /* Draw Peon */
             // Place movement tiles
-            if (entity instanceof Peon && GameManager.get().showPath) {
+            if (entity instanceof Peon && GameManager.get().getShowPath()) {
                 renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
             }
         }
@@ -251,13 +250,12 @@ public class Renderer3D implements Renderer {
 
         float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale();
         float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
-        batch.draw(tempRegion, x, y, width / 2.f, height / 2.f, width, height,
-        1.f, 1.f, angle);
-        //batch.draw(tex, x, y, width, height);
+        batch.draw(tempRegion, x, y, width / 2.f, height / 2.f, width, height, 1.f, 1.f, angle);
+        // batch.draw(tex, x, y, width, height);
     }
 
     private void renderPeonMovementTiles(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
-        float[] entityWorldCord) {
+            float[] entityWorldCord) {
         Peon actor = (Peon) entity;
         AbstractTask task = actor.getTask();
         if (task instanceof MovementTask) {
@@ -268,16 +266,16 @@ public class Renderer3D implements Renderer {
             for (Tile tile : path) {
                 // Place transparent tiles for the path, but place a non-transparent tile for
                 // the destination
-                Texture tex = path.get(path.size() - 1) == tile ? textureManager.getTexture(TEXTURE_DESTINATION)
-                    : textureManager.getTexture(TEXTURE_PATH);
+                Texture tex = path.get(path.size() - 1) == tile ? textureManager.getTexture(TEXTURE_SELECTION)
+                        : textureManager.getTexture(TEXTURE_PATH);
                 float[] tileWorldCord = WorldUtil.colRowToWorldCords(tile.getCol(), tile.getRow());
                 if (WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], camera)) {
                     tilesSkipped++;
                     continue;
                 }
                 batch.draw(tex, tileWorldCord[0], tileWorldCord[1]// + ((tile.getElevation() + 1) *
-                    // elevationZeroThiccness * WorldUtil.SCALE_Y)
-                    , tex.getWidth() * WorldUtil.SCALE_X, tex.getHeight() * WorldUtil.SCALE_Y);
+                // elevationZeroThiccness * WorldUtil.SCALE_Y)
+                        , tex.getWidth() * WorldUtil.SCALE_X, tex.getHeight() * WorldUtil.SCALE_Y);
 
             }
         }
@@ -285,38 +283,39 @@ public class Renderer3D implements Renderer {
 
     private void debugRender(SpriteBatch batch, OrthographicCamera camera) {
 
-        if (GameManager.get().showCoords) {
+        if (GameManager.get().getShowCoords()) {
             List<Tile> tileMap = GameManager.get().getWorld().getTileMap();
             for (Tile tile : tileMap) {
                 float[] tileWorldCord = WorldUtil.colRowToWorldCords(tile.getCol(), tile.getRow());
 
                 if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], camera)) {
                     font.draw(batch, tile.toString(),
-                        // String.format("%.0f, %.0f, %d",tileWorldCord[0], tileWorldCord[1],
-                        // tileMap.indexOf(tile)),
-                        tileWorldCord[0] + WorldUtil.TILE_WIDTH / 4.5f, tileWorldCord[1]);
+                            // String.format("%.0f, %.0f, %d",tileWorldCord[0], tileWorldCord[1],
+                            // tileMap.indexOf(tile)),
+                            tileWorldCord[0] + WorldUtil.TILE_WIDTH / 4.5f, tileWorldCord[1]);
                 }
 
             }
         }
 
-        if (GameManager.get().showCoordsEntity) {
+        if (GameManager.get().getShowCoordsEntity()) {
             List<AbstractEntity> entities = GameManager.get().getWorld().getEntities();
             for (AbstractEntity entity : entities) {
                 float[] tileWorldCord = WorldUtil.colRowToWorldCords(entity.getCol(), entity.getRow());
 
                 if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], camera)) {
                     font.draw(batch, String.format("%.0f, %.0f", entity.getCol(), entity.getRow()), tileWorldCord[0],
-                        tileWorldCord[1]);
+                            tileWorldCord[1]);
                 }
             }
         }
     }
 
     /**
-     * Render the default sprite for an entity, used if the state is NULL and the Animatable interface has been
-     * implemented. If a directional texture cannot be found then the default entity texture is render(i.e the one given
-     * into its constructor)
+     * Render the default sprite for an entity, used if the state is NULL and the
+     * Animatable interface has been implemented. If a directional texture cannot be
+     * found then the default entity texture is render(i.e the one given into its
+     * constructor)
      *
      * @param batch            The sprite batch.
      * @param entity           The entity that will be drawn
@@ -334,8 +333,8 @@ public class Renderer3D implements Renderer {
     }
 
     /**
-     * Runs an animation for the entity if it is applicable if there is no animation to be run or it cannot be found a
-     * default texture is run
+     * Runs an animation for the entity if it is applicable if there is no animation
+     * to be run or it cannot be found a default texture is run
      *
      * @param batch            Sprite batch to draw onto
      * @param entity           Current entity
@@ -373,9 +372,9 @@ public class Renderer3D implements Renderer {
 
         TextureRegion currentFrame = ani.getKeyFrame(time, true);
         float width = currentFrame.getRegionWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X
-            * entity.getScale();
+                * entity.getScale();
         float height = currentFrame.getRegionHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y
-            * entity.getScale();
+                * entity.getScale();
         int[] offset = aniLink.getOffset();
 
         if (entity instanceof MainCharacter) {

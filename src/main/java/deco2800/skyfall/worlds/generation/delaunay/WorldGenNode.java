@@ -238,16 +238,12 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         return null;
     }
 
-    // TODO redo this javadoc
     /**
      * Assigns each tile in the world to the nearest node.
      *
      * @param nodes The list of nodes that can be assigned to
      */
     public static void removeZeroTileNodes(World world, List<WorldGenNode> nodes, int nodeSpacing, int worldSize) throws WorldGenException {
-        // TODO Make this more efficient by looping through only the tiles within the rectangle containing this node
-        //  and stop on the first tile inside the border. Start iterating from the middle, which is more likely to
-        //  be within the node.
 
         NoiseGenerator xGen = world.getTileOffsetNoiseGeneratorX();
         NoiseGenerator yGen = world.getTileOffsetNoiseGeneratorY();
@@ -660,7 +656,6 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         // Throw an exception if there aren't any border nodes as a fail safe
         // (Other parts of the world generation algorithm relies on there being
         // some)
-        // TODO remove
         if (triangleSoup.getBorderNodes().isEmpty()) {
             throw new WorldGenException("No border nodes");
         }

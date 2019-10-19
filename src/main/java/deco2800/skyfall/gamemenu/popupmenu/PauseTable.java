@@ -1,6 +1,9 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -8,28 +11,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import deco2800.skyfall.GameLauncher;
 import deco2800.skyfall.GameScreen;
+import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.SoundManager;
-import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.mainmenu.MainMenuScreen;
+import deco2800.skyfall.managers.*;
 
 
 /**
- * A class for pause table pop up.
+ * A class for pause baseTable pop up.
  */
 public class PauseTable extends AbstractPopUpElement{
     private Skin skin;
-    private Table table;
-
-    private SoundManager sound;
-    private GameScreen game;
-
-
 
     /**
-     * Constructs a pause table.
+     * Constructs a pause baseTable.
      *
      * @param stage Current stage.
      * @param exit Exit button if it has one.
@@ -44,41 +41,22 @@ public class PauseTable extends AbstractPopUpElement{
         super(stage, exit, textureNames,tm , gameMenuManager);
         this.skin = skin;
         this.draw();
-        sound = GameManager.getManagerFromInstance(SoundManager.class);
     }
+    
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        table.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        table.setVisible(true);
-    }
-
-
-    /**
-     * {@inheritDoc}
-     * Draw pause table.
+     * Draw pause baseTable.
      */
     @Override
     public void draw() {
         super.draw();
-        table = new Table();
-        table.setSize(600, 430);
-        table.setPosition(Gdx.graphics.getWidth() / 2f - table.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2f - table.getHeight() / 2);
-        table.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
-        table.setDebug(false);
+        baseTable = new Table();
+        baseTable.setSize(600, 430);
+        baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2f - baseTable.getHeight() / 2);
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
+        baseTable.setDebug(false);
 
         Table infoBar = new Table();
         infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
@@ -86,8 +64,8 @@ public class PauseTable extends AbstractPopUpElement{
         Label text = new Label("GAME PAUSED", skin, "navy-text");
         infoBar.add(text);
 
-        table.add(infoBar).width(475).height(475 * 188f / 1756).padTop(20).colspan(3);
-        table.row();
+        baseTable.add(infoBar).width(475).height(475 * 188f / 1756).padTop(20).colspan(3);
+        baseTable.row();
 
         String textStyle = "white-text";
 
@@ -96,7 +74,7 @@ public class PauseTable extends AbstractPopUpElement{
         soundEffect.setWrap(true);
         soundEffect.setAlignment(Align.center);
         soundEffect.getStyle().font.getData().setLineHeight(40);
-        table.add(soundEffect).width(110);
+        baseTable.add(soundEffect).width(110);
 
         // Slider controlling volume of sound effects
         Slider soundEffectsBar = new Slider(0, 100, 1, false, skin, "default-slider");
@@ -108,11 +86,11 @@ public class PauseTable extends AbstractPopUpElement{
             }
         });
 
-        table.add(soundEffectsBar).height(50).width(300).colspan(2).row();
+        baseTable.add(soundEffectsBar).height(50).width(300).colspan(2).row();
 
         Label music = new Label("MUSIC", skin, textStyle);
         music.setFontScale(0.7f);
-        table.add(music);
+        baseTable.add(music);
 
         // Slider controlling volume of BGM (music)
         Slider musicBar = new Slider(0, 100, 1, false, skin, "default-slider");
@@ -124,13 +102,13 @@ public class PauseTable extends AbstractPopUpElement{
             }
         });
 
-        table.add(musicBar).height(50).width(300).colspan(2).row();
+        baseTable.add(musicBar).height(50).width(300).colspan(2).row();
 
         ImageButton toHome = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("toHome"));
         toHome.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Do nothing for now.
+                returnHome();
             }
         });
 
@@ -155,23 +133,31 @@ public class PauseTable extends AbstractPopUpElement{
         reset.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Do nothing for now.
+                // Do nothing
             }
         });
 
-        table.row();
-        table.add(homeText).expandY().right().bottom().padRight(17.1f);//.padRight(25)
-        table.add(resumeText).expandY().bottom().padBottom(12.5f);
-        table.add(resetText).expandY().left().bottom().padLeft(11.85f);//.padLeft(25)
-        table.row();
-        table.add(toHome).width(100).height(100 * 263 / 264f).right().padBottom(70);
-        table.add(resume).width(125).height(125 * 409 / 410f).padBottom(70);
-        table.add(reset).width(100).height(100 * 263 / 264f).left().padBottom(70);
+        baseTable.row();
+        baseTable.add(homeText).expandY().right().bottom().padRight(17.1f);//.padRight(25)
+        baseTable.add(resumeText).expandY().bottom().padBottom(12.5f);
+        baseTable.add(resetText).expandY().left().bottom().padLeft(11.85f);//.padLeft(25)
+        baseTable.row();
+        baseTable.add(toHome).width(100).height(100 * 263 / 264f).right().padBottom(70);
+        baseTable.add(resume).width(125).height(125 * 409 / 410f).padBottom(70);
+        baseTable.add(reset).width(100).height(100 * 263 / 264f).left().padBottom(70);
 
-        table.setVisible(false);
-        stage.addActor(table);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
+    /**
+     * Returns to the main screen
+     */
+    public void returnHome() {
+        SkyfallGame game = gameMenuManager.getGame();
+        game.create();
+        game.setScreen(new MainMenuScreen(game));
+    }
 
 }
 

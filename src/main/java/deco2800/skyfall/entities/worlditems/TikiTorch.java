@@ -2,7 +2,7 @@ package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.graphics.HasPointLight;
-import deco2800.skyfall.graphics.types.vec2;
+import deco2800.skyfall.graphics.types.Vec2;
 import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.Tile;
@@ -64,8 +64,8 @@ public class TikiTorch extends StaticEntity implements HasPointLight {
         int[] entityCoord = getRenderCentre();
         float gametime = environmentManager.getHourDecimal();
         float kValue = (float) Math.sin(randomPointLightPeriod * gametime) * 0.15f + 1.2f;
-        this.entityPointLight = new PointLight(new vec2(entityCoord[0], entityCoord[1]),
-                new vec3(1.0f, 0.729f, 0.3372f), kValue, 0.5f);
+        this.entityPointLight = new PointLight(new Vec2(entityCoord[0], entityCoord[1]),
+                new Vec3(1.0f, 0.729f, 0.3372f), kValue, 0.5f);
     }
 
     @Override
