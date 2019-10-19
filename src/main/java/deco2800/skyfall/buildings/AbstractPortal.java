@@ -29,8 +29,9 @@ public abstract class AbstractPortal extends SaveableEntity {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPortal.class);
     private static final String ENTITY_ID_STRING = "PortalID";
     // The next biome to teleport to
-    private String nextBiome;
+    String nextBiome;
 
+    private Map<String, Integer> buildCost;
 
     String currentBiome;
     String name;
