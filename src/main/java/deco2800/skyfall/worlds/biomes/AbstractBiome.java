@@ -19,7 +19,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
     // The biome name, i.e forest, desert, mountain
     private String biomeName;
     // The tiles the biome contains
-    private ArrayList<Tile> tiles;
+    private transient ArrayList<Tile> tiles;
     // The biome this is contained in if it's a sub-biome (e.g. a lake)
     private AbstractBiome parentBiome;
     // The biomes which have this biome as a parent
@@ -165,7 +165,32 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
     /**
      * Sets the texture of the given tile assuming it is in this biome.
      */
-    public abstract void setTileTexture(Tile tile);
+    public void setTileTexture(Tile tile) {
+        ArrayList<String> textures = new ArrayList<>();
+
+        if(getBiomeName().equals("lake") || getBiomeName().equals("swamp")) {
+            textures.add(getBiomeName() + "1.1");
+            textures.add(getBiomeName() + "1.2");
+            textures.add(getBiomeName() + "1.3");
+        } else if(getBiomeName().equals("volcanic_mountains")) {
+            textures.add("vmountain1.1");
+            textures.add("vmountain1.2");
+            textures.add("vmountain1.3");
+        } else {
+            textures.add(getBiomeName() + "_1");
+            textures.add(getBiomeName() + "_2");
+            textures.add(getBiomeName() + "_3");
+        }
+
+        double perlinValue =
+                NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);
+        int adjustedPerlinValue = (int) Math.floor(perlinValue * textures.size());
+        if (adjustedPerlinValue >= textures.size()) {
+            adjustedPerlinValue = textures.size() - 1;
+        }
+        tile.setPerlinValue(adjustedPerlinValue);
+        tile.setTexture(textures.get(adjustedPerlinValue));
+    }
 
     public long getBiomeID() {
         return this.id;

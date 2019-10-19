@@ -1,12 +1,14 @@
 package deco2800.skyfall.worlds.generation.perlinnoise;
 
 import deco2800.skyfall.worlds.Tile;
+
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiConsumer;
 
 /**
  * Used to generate noise values for biomes
+ * @deprecated
  */
 @Deprecated
 public class TileNoiseGenerator {

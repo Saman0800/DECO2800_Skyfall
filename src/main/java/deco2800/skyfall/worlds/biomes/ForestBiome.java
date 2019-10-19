@@ -29,23 +29,4 @@ public class ForestBiome extends AbstractBiome {
         super(memento);
         textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 3, 60, 0.4);
     }
-
-    @Override
-    public void setTileTexture(Tile tile) {
-        ArrayList<String> textures = new ArrayList<>();
-        textures.add("forest_1");
-        textures.add("forest_2");
-        textures.add("forest_3");
-
-        double perlinValue =
-                NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);
-        int adjustedPerlinValue = (int) Math.floor(perlinValue * textures.size());
-        if (adjustedPerlinValue >= textures.size()) {
-            adjustedPerlinValue = textures.size() - 1;
-        }
-        tile.setPerlinValue(adjustedPerlinValue);
-        tile.setTexture(textures.get(adjustedPerlinValue));
-    }
-
-
 }
