@@ -76,9 +76,6 @@ public class GameOverTable extends AbstractPopUpElement{
      * Resets the quest once play dies and chooses retry.
      */
     public void retryQuest() {
-        // Restore health to full
-        MainCharacter.getInstance().changeHealth(50);
-
         // Reset quest
         GameManager.getManagerFromInstance(QuestManager.class).resetQuest();
     }
