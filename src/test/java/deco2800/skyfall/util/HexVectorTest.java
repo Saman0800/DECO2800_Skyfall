@@ -1,9 +1,11 @@
 package deco2800.skyfall.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class HexVectorTest {
 
@@ -42,6 +44,22 @@ public class HexVectorTest {
         HexVector vector = new HexVector(3, 4);
         vector.setRow(19);
         assertEquals(19, vector.getRow(), 0);
+    }
+
+    @Test
+    public void testToString() {
+        HexVector vector = new HexVector(3, 4);
+        assertEquals("3.0, 4.0", vector.toString());
+    }
+
+    @Test
+    public void testSetHexVector() {
+        HexVector vector1 = new HexVector(0, 0);
+        HexVector vector2 = new HexVector(3, 4);
+
+        vector1.set(vector2);
+        assertEquals(3.0f, vector1.getCol(), 0.001);
+        assertEquals(4.0f, vector1.getRow(), 0.001);
     }
 
     @Test
@@ -119,7 +137,7 @@ public class HexVectorTest {
 
         assertEquals(vector1.getCol(), xShift + col1, 0.0001);
         assertEquals(vector1.getRow(), yShift + row1, 0.0001);
-        //assertEquals(vector1.getAngle(), angle, 0.0001);
+        // assertEquals(vector1.getAngle(), angle, 0.0001);
     }
 
     @Test
@@ -127,9 +145,12 @@ public class HexVectorTest {
         HexVector vector1 = new HexVector(0, 0);
         HexVector vector2 = new HexVector(0, 0);
         HexVector vector3 = new HexVector((float) 0.00001, 0);
+        HexVector vector4 = new HexVector(10, 20);
 
         assertTrue(vector1.isCloseEnoughToBeTheSame(vector2));
+        assertFalse(vector1.isCloseEnoughToBeTheSame(vector4));
         assertTrue(vector1.isCloseEnoughToBeTheSameByDistance(vector3, 1));
+        assertFalse(vector1.isCloseEnoughToBeTheSameByDistance(vector4, 1));
     }
 
     @Test
@@ -160,6 +181,16 @@ public class HexVectorTest {
         HexVector vector3 = vector1.add(vector2);
 
         assertEquals((float) 1.5, vector3.getCol(), 0.0001);
+        assertEquals((float) -2.5, vector3.getRow(), 0.0001);
+    }
+
+    @Test
+    public void testSubstract() {
+        HexVector vector1 = new HexVector((float) 0.5, (float) -2.5);
+        HexVector vector2 = new HexVector((float) 1, (float) 0);
+        HexVector vector3 = vector1.subtract(vector2);
+
+        assertEquals((float) -0.5, vector3.getCol(), 0.0001);
         assertEquals((float) -2.5, vector3.getRow(), 0.0001);
     }
 }

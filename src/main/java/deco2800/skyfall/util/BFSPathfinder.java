@@ -1,39 +1,27 @@
 package deco2800.skyfall.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.Tile;
+import java.util.*;
 
-public class BFSPathfinder extends Pathfinder {
+public class BFSPathfinder implements Pathfinder {
 	
-	@SuppressWarnings("unused")
 	private final Logger log = LoggerFactory.getLogger(BFSPathfinder.class);
 
-
-	@Override
 	public List<Tile> pathfind(World world, HexVector origin, HexVector destination) {
 
 		Tile originTile = getTileByHexVector(world, origin);
 		Tile destinationTile = getTileByHexVector(world, destination);
 		if (originTile == null || destinationTile == null) {
-			return null;
+			return new LinkedList<>();
 		}
-
-		return pathfindBFS(world, originTile, destinationTile);
-
+		return pathfindBFS(originTile, destinationTile);
 	}
 
-	private List<Tile> pathfindBFS(World world, Tile origin, Tile destination) {
+	private List<Tile> pathfindBFS(Tile origin, Tile destination) {
 		LinkedList<Tile> queue = new LinkedList<>();
 		Set<Tile> closedSet = new HashSet<>();
 		Map<Tile, Tile> path = new HashMap<>();
@@ -42,7 +30,6 @@ public class BFSPathfinder extends Pathfinder {
 		Tile root;
 
 		while (!queue.isEmpty()) {
-			//log.info("Queue: {}    Closed: {}", queue.size(), closedSet.size());
 			root = queue.remove();
 			
 			if (root.equals(destination)) {
@@ -59,7 +46,7 @@ public class BFSPathfinder extends Pathfinder {
 			
 			closedSet.add(root);
 		}
-		return null;
+		return Collections.emptyList();
 	}
 	
 	private List<Tile> reconstructPath(Tile destination, Map<Tile, Tile> pathMap) {
@@ -80,7 +67,6 @@ public class BFSPathfinder extends Pathfinder {
 			}
 		}
 		return null;
-
 	}
 
 }

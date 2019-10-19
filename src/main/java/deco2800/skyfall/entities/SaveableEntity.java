@@ -57,9 +57,6 @@ public abstract class SaveableEntity extends AbstractEntity
         this.setEntityID(memento.entityID);
         setRenderOrder(memento.renderOrder);
         this.obstructed = memento.obstructed;
-        /*
-         * this.setBody(memento.body); this.setFixture(memento.fixture);
-         */
         this.setCollidable(memento.isCollidable);
         this.setTexture(memento.texture);
         this.setColRenderLength(memento.colRenderLength);

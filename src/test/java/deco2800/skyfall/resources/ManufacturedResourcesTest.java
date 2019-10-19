@@ -3,7 +3,6 @@ package deco2800.skyfall.resources;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.util.HexVector;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,18 +15,14 @@ public class ManufacturedResourcesTest {
     private HexVector testPosition;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
 
-        hatchet = new Hatchet(testOwner,testPosition);
-        pickAxe = new PickAxe(testOwner,testPosition);
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
+        hatchet = new Hatchet();
+        pickAxe = new PickAxe();
 
     }
+
 
     @Test
     public void isCarryableTest() {
@@ -42,10 +37,6 @@ public class ManufacturedResourcesTest {
         assertEquals("Manufactured Resource", pickAxe.getSubtype());
     }
 
-    @Test
-    public void getCoordsTest() {
-
-    }
 
     @Test
     public void toStringTest() {

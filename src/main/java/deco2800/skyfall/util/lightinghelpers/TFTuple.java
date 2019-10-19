@@ -57,4 +57,14 @@ public class TFTuple implements Comparable<TFTuple> {
     public int compareTo(TFTuple tup) {
         return Float.compare(this.time, tup.getHour());
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

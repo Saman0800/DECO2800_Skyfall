@@ -1,9 +1,7 @@
 package deco2800.skyfall.worlds.biomes;
 
-import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.Tile;
 
-import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
 
@@ -29,9 +27,10 @@ public class OceanBiome extends AbstractBiome {
 
     /**
      * Loads a biome from a memento
+     *
      * @param memento The memento that holds the save data
      */
-    public OceanBiome(AbstractBiomeMemento memento){
+    public OceanBiome(AbstractBiomeMemento memento) {
         super(memento);
         textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 5, 160, 0.9);
     }
