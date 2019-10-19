@@ -24,6 +24,11 @@ public abstract class SaveableEntity extends AbstractEntity
         super(col, row, renderOrder, fixtureDef);
     }
 
+    public SaveableEntity(float col, float row, int height, float colRenderLength, float rowRenderLength) {
+        super(col, row, height, colRenderLength, rowRenderLength);
+    }
+
+
     @Override
     public SaveableEntityMemento save() {
         return new SaveableEntityMemento(this);
@@ -52,9 +57,6 @@ public abstract class SaveableEntity extends AbstractEntity
         this.setEntityID(memento.entityID);
         setRenderOrder(memento.renderOrder);
         this.obstructed = memento.obstructed;
-        /*
-         * this.setBody(memento.body); this.setFixture(memento.fixture);
-         */
         this.setCollidable(memento.isCollidable);
         this.setTexture(memento.texture);
         this.setColRenderLength(memento.colRenderLength);

@@ -1,14 +1,9 @@
 package deco2800.skyfall.worlds;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
-
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
@@ -21,6 +16,9 @@ import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import org.javatuples.Pair;
 
+import java.util.*;
+import java.util.Map.Entry;
+
 public class Tile {
     private static int nextID = 0;
     private double perlinValue;
@@ -32,6 +30,9 @@ public class Tile {
     public static void resetID() {
         nextID = 0;
     }
+
+    // String Constant
+    private static final String WATER = "water";
 
     @Expose
     private String texture;
@@ -59,7 +60,7 @@ public class Tile {
     static final int[] NORTHS = { NORTH_WEST, NORTH, NORTH_EAST };
     static final int[] SOUTHS = { SOUTH_WEST, SOUTH, SOUTH_EAST };
 
-    private transient Map<Integer, Tile> neighbours;
+    private Map<Integer, Tile> neighbours;
 
     @Expose
     private int index = -1;
@@ -67,7 +68,6 @@ public class Tile {
     @Expose
     private int tileID = 0;
 
-    // FIXME:Ontonator Consider removing these; they are only useful for tests.
     private WorldGenNode node;
     private VoronoiEdge edge;
 
@@ -101,6 +101,7 @@ public class Tile {
 
     /**
      * Returns a integer to represent the tile type
+     * 
      * @param tileType Name of tile texture
      * @return int representation of the tile type
      */
@@ -111,7 +112,7 @@ public class Tile {
             return 1;
         } else if (tileType.contains("mountain")) {
             return 2;
-        } else if (tileType.contains("water") || tileType.contains("lake") || tileType.contains("ocean")) {
+        } else if (tileType.contains(WATER) || tileType.contains("lake") || tileType.contains("ocean")) {
             return 3;
         } else if (tileType.contains("snow")) {
             return 4;
@@ -150,12 +151,13 @@ public class Tile {
 
     /**
      * Gets the friction value for the tile
+     * 
      * @param tileType The type of the tile
      * @return The friction value for the tile
      */
     public static float getFriction(String tileType) {
-        //Gets the friction map for the world
-        Map<String, Float> frictionMap = GameManager.get().getWorld().frictionMap;
+        // Gets the friction map for the world
+        Map<String, Float> frictionMap = GameManager.get().getWorld().getfrictionMap();
         // Checks the type of the tile
         switch (Tile.getTileType(tileType)) {
         case 0:
@@ -165,7 +167,7 @@ public class Tile {
         case 2:
             return frictionMap.get("mountain");
         case 3:
-            return frictionMap.get("water");
+            return frictionMap.get(WATER);
         case 4:
             return frictionMap.get("snow");
         case 5:
@@ -176,7 +178,8 @@ public class Tile {
     }
 
     /**
-     * Gets a {@link NoiseGenerator} that is appropriate for generating tile offset noise for biome determination.
+     * Gets a {@link NoiseGenerator} that is appropriate for generating tile offset
+     * noise for biome determination.
      *
      * @param random      the instance of {@link Random} for the world
      * @param nodeSpacing the node spacing for the world
@@ -193,12 +196,13 @@ public class Tile {
 
     /**
      * Gets the location of the tile with noise added.
+     * 
      * @param noiseFactor the amplitude of the noise
      * @return the new column coordinate
      */
     private double getNoisyCol(double noiseFactor) {
-        return getCol() + world.getTileOffsetNoiseGeneratorX().getOctavedPerlinValue(getCol(), getRow()) * noiseFactor -
-                noiseFactor / 2d;
+        return getCol() + world.getTileOffsetNoiseGeneratorX().getOctavedPerlinValue(getCol(), getRow()) * noiseFactor
+                - noiseFactor / 2d;
     }
 
     /**
@@ -209,8 +213,8 @@ public class Tile {
      * @return the new row coordinate
      */
     private double getNoisyRow(double noiseFactor) {
-        return getRow() + world.getTileOffsetNoiseGeneratorY().getOctavedPerlinValue(getCol(), getRow()) * noiseFactor -
-                noiseFactor / 2d;
+        return getRow() + world.getTileOffsetNoiseGeneratorY().getOctavedPerlinValue(getCol(), getRow()) * noiseFactor
+                - noiseFactor / 2d;
     }
 
     /**
@@ -228,14 +232,11 @@ public class Tile {
         // Assign node to the tile
         node = nodes.get(minDistanceIndex);
         // Assign tile to the node
-        // TODO see if this is necessary
-        //node.addTile(this);
         node.getBiome().addTile(this);
     }
 
     private VoronoiEdge findNearestEdge(VoronoiEdge currentEdge, List<VoronoiEdge> edges, double maxDistance,
-                                        int nodeSpacing, double noiseFactor) {
-        // TODO make noise contiguous
+            int nodeSpacing) {
         double tileX = getNoisyCol(nodeSpacing);
         double tileY = getNoisyRow(nodeSpacing);
 
@@ -266,31 +267,10 @@ public class Tile {
                     squareDistance = this.squareDistanceTo(ax, smallY);
                 }
             } else {
-                double dxA = tileX - ax;
-                double dxB = tileX - bx;
-                double dyA = tileY - ay;
-                double dyB = tileY - by;
-
-                double edgeLength = voronoiEdge.getSquareOfLength();
-                double dotProduct = (dxA * (bx - ax) + dyA * (by - ay));
-
-                if (dotProduct < 0 || dotProduct > edgeLength) {
-                    double squareDistanceToA = dxA * dxA + dyA * dyA;
-                    double squareDistanceToB = dxB * dxB + dyB * dyB;
-                    squareDistance = Math.min(squareDistanceToA,
-                            squareDistanceToB);
-                } else {
-                    double gradient = (ay - by) / (ax - bx);
-                    // A quantity used to calculate the distance
-                    double distanceNumerator = -1 * gradient * tileX + tileY
-                            + gradient * bx - by;
-                    // Get the square distance
-                    squareDistance = distanceNumerator * distanceNumerator / (gradient * gradient + 1);
-                }
+                squareDistance = getSquareDistanceInvalidY(tileX, tileY, voronoiEdge, ax, ay, bx, by);
             }
 
-            if (squareDistance < closestDistance
-                    && squareDistance < maxDistance * maxDistance) {
+            if (squareDistance < closestDistance && squareDistance < maxDistance * maxDistance) {
                 closestDistance = squareDistance;
                 closestEdge = voronoiEdge;
             }
@@ -298,31 +278,49 @@ public class Tile {
         return closestEdge;
     }
 
+    private double getSquareDistanceInvalidY(double tileX, double tileY, VoronoiEdge voronoiEdge, double ax, double ay,
+            double bx, double by) {
+        double squareDistance;
+        double dxA = tileX - ax;
+        double dxB = tileX - bx;
+        double dyA = tileY - ay;
+        double dyB = tileY - by;
+
+        double edgeLength = voronoiEdge.getSquareOfLength();
+        double dotProduct = (dxA * (bx - ax) + dyA * (by - ay));
+
+        if (dotProduct < 0 || dotProduct > edgeLength) {
+            double squareDistanceToA = dxA * dxA + dyA * dyA;
+            double squareDistanceToB = dxB * dxB + dyB * dyB;
+            squareDistance = Math.min(squareDistanceToA, squareDistanceToB);
+        } else {
+            double gradient = (ay - by) / (ax - bx);
+            // A quantity used to calculate the distance
+            double distanceNumerator = -1 * gradient * tileX + tileY + gradient * bx - by;
+            // Get the square distance
+            squareDistance = distanceNumerator * distanceNumerator / (gradient * gradient + 1);
+        }
+        return squareDistance;
+    }
+
     /**
      * Assigns the nearest river or beach edge to this node, giving priority to
-     * rivers. It will only assign for tiles within a certain distance of an
-     * edge
+     * rivers. It will only assign for tiles within a certain distance of an edge
      *
      * @param riverEdges A list of edges that are in rivers
      * @param beachEdges A list of edges that are in beaches
      * @param riverWidth The maximum distance away for rivers
      * @param beachWidth The maximum distance away for edges
      */
-    public void assignEdge(LinkedHashMap<VoronoiEdge, RiverBiome> riverEdges,
-                           LinkedHashMap<VoronoiEdge, BeachBiome> beachEdges,
-                           int nodeSpacing, double riverWidth, double beachWidth) {
-        /* TODO do something better than this to prevent rivers from being on
-            the origin
-         */
+    public void assignEdge(Map<VoronoiEdge, RiverBiome> riverEdges, Map<VoronoiEdge, BeachBiome> beachEdges,
+            int nodeSpacing, double riverWidth, double beachWidth) {
+
         if (getBiome().getBiomeName().equals("ocean")) {
             return;
         }
-        // FIXME:Ontonator Fix the beaches' noise.
-        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, nodeSpacing,
-                                                  beachWidth * 2);
+        VoronoiEdge closestEdge = findNearestEdge(null, new ArrayList<>(beachEdges.keySet()), beachWidth, nodeSpacing);
         if (!(Math.abs(getCol()) < riverWidth && Math.abs(getRow()) < riverWidth)) {
-            closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, nodeSpacing,
-                                          riverWidth * 2);
+            closestEdge = findNearestEdge(closestEdge, new ArrayList<>(riverEdges.keySet()), riverWidth, nodeSpacing);
         }
         this.edge = closestEdge;
         // Add the tile to the biome for the beach/river
@@ -386,15 +384,9 @@ public class Tile {
             }
         }
 
-        GameManager.get().getManager(NetworkManager.class).deleteTile(this);
-
         this.removeReferanceFromNeighbours();
         Pair<Integer, Integer> chunk = Chunk.getChunkForCoordinates(getCol(), getRow());
-        GameManager.get()
-                .getWorld()
-                .getChunk(chunk.getValue0(), chunk.getValue1())
-                .getTiles()
-                .remove(this);
+        GameManager.get().getWorld().getChunk(chunk.getValue0(), chunk.getValue1()).getTiles().remove(this);
     }
 
     public int calculateIndex() {
@@ -439,8 +431,7 @@ public class Tile {
 
     public boolean checkObstructed(String texture) {
         ArrayList<String> obstructables = new ArrayList<>();
-        obstructables.add("water");
-        // TODO This list needs to be kept up-to-date.
+        obstructables.add(WATER);
         for (String obstructable : obstructables) {
             if (texture.contains(obstructable)) {
                 return true;
@@ -484,7 +475,7 @@ public class Tile {
     private boolean checkIsBuildable(String texture) {
         ArrayList<String> buildables = new ArrayList<>();
         // List of buildable tiles
-        buildables.add("water");
+        buildables.add(WATER);
         buildables.add("sand");
         for (String obstructable : buildables) {
             if (texture.contains(obstructable)) {

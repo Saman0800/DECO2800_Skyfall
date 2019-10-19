@@ -4,8 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.entities.Peon;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.managers.GameManager;
@@ -15,11 +13,12 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.AnimationLinker;
 
+import java.util.Random;
+
 /**
- * An instance to abstract the basic variables and  methods of an enemy.
+ * An instance to abstract the basic variables and methods of an enemy.
  */
-public class Enemy extends Peon
-        implements Animatable, ICombatEntity, Tickable {
+public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     // Logger for tracking enemy information
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -28,17 +27,19 @@ public class Enemy extends Peon
     private int health;
     private int strength;
     private float attackRange;
+    private float chaseRange = 10;
     private float walkingSpeed;
     private float chasingSpeed;
+
+    // Enemy target error
+    private int targetError = -2 + new Random().nextInt(3);
 
     // Name of the biome the enemy is in.
     private String biome;
 
     // Enemy types
     public enum EnemyType {
-        ABDUCTOR,
-        HEAVY,
-        SCOUT
+        ABDUCTOR, HEAVY, SCOUT
     }
 
     // type this enemy is
@@ -60,20 +61,13 @@ public class Enemy extends Peon
     // Main character instance in the game.
     private MainCharacter mainCharacter;
 
-    // A routine for destination
-    private HexVector destination = null;
-
-    //world coordinate of this enemy
-    private float[] originalPosition = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
-
-
-    public Enemy(float col, float row, String hitBoxPath, EnemyType enemyType,
-                 float speed, String biome, String textureName) {
+    public Enemy(float col, float row, String hitBoxPath, EnemyType enemyType, float speed, String biome,
+            String textureName) {
         super(row, col, speed, textureName, 10);
 
         // Sets the spawning location and all the collision
         this.setPosition(col, row);
-        // this.initialiseBox2D(col, row, hitBoxPath);
+        this.initialiseBox2D(col, row);
         this.setCollidable(true);
 
         // Sets the main character in the game.
@@ -95,8 +89,9 @@ public class Enemy extends Peon
     }
 
     /**
-     *This constructor is written for testing.
-     *  @param col the x-coordinate of the enemy.
+     * This constructor is written for testing.
+     *
+     * @param col the x-coordinate of the enemy.
      * @param row the y-coordinate of the enemy.
      */
     public Enemy(float col, float row) {
@@ -105,15 +100,39 @@ public class Enemy extends Peon
     }
 
     /**
-     * Enemy chase the player, if player position is in range,
-     * enemy attacks player.
+     * Enemy chase the player, if player position is in range, enemy attacks player.
      */
-    private void attackPlayer() {
-           if(!(mainCharacter.isDead() ||
-                    mainCharacter.isRecovering() || mainCharacter.isHurt())) {
+    private void attackAction() {
+        if (!(mainCharacter.isDead() || mainCharacter.isRecovering() || mainCharacter.isHurt())) {
             this.setSpeed(getChasingSpeed());
-            this.destination = new HexVector(mainCharacter.getPosition());
-            this.position.moveToward(destination, this.getChasingSpeed());
+
+            float targetShift = (float) targetError / 2;
+
+            double xDestination;
+            double yDestination;
+
+            float xDirection;
+            float yDirection;
+
+            double playerAngle = Math.toRadians(-mainCharacter.getPlayerDirectionAngle() + 90);
+
+            if (distance(mainCharacter) < targetShift) {
+                xDirection = mainCharacter.getPosition().getCol() - getBody().getPosition().x;
+                yDirection = mainCharacter.getPosition().getRow() - getBody().getPosition().y;
+            } else {
+                xDestination = mainCharacter.getPosition().getCol() + targetShift * Math.cos(playerAngle);
+                yDestination = mainCharacter.getPosition().getRow() + targetShift * Math.sin(playerAngle);
+
+                xDirection = (float) xDestination - getBody().getPosition().x;
+                yDirection = (float) yDestination - getBody().getPosition().y;
+            }
+
+            getBody().setLinearVelocity(xDirection, yDirection);
+            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(chasingSpeed));
+
+            this.position.set(getBody().getPosition().x, getBody().getPosition().y);
+
+            this.setCurrentState(AnimationRole.MOVE);
 
             // if the player in attack range then attack player
             if (distance(mainCharacter) < getAttackRange()) {
@@ -125,7 +144,28 @@ public class Enemy extends Peon
     }
 
     /**
+     * under normal situation the enemy will random wandering in 100 radius circle
+     */
+    private void randomMoveAction() {
+        setAttacking(false);
+        setCurrentState(AnimationRole.MOVE);
+
+        if (!isAttacking) {
+            double moveAngle = new Random().nextDouble() * 2 * Math.PI;
+
+            float xDirection = (float) Math.cos(moveAngle);
+            float yDirection = (float) Math.sin(moveAngle);
+
+            getBody().setLinearVelocity(xDirection, yDirection);
+            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(getWalkingSpeed()));
+
+            this.position.set(getBody().getPosition().x, getBody().getPosition().y);
+        }
+    }
+
+    /**
      * Damage taken
+     *
      * @param damage hero damage
      */
     @Override
@@ -143,6 +183,7 @@ public class Enemy extends Peon
 
     /**
      * Deals damage to the main character by lowering their health
+     *
      * @param mc The main character
      */
     @Override
@@ -155,6 +196,7 @@ public class Enemy extends Peon
 
     /**
      * Determines whether the enemy can deal damage
+     *
      * @return True if they can deal damage, false otherwise
      */
     @Override
@@ -164,6 +206,7 @@ public class Enemy extends Peon
 
     /**
      * Get enemy's current strength
+     *
      * @return enemy's current strength.
      */
     @Override
@@ -173,6 +216,7 @@ public class Enemy extends Peon
 
     /**
      * Return a list of resistance attributes.
+     *
      * @return A list of resistance attributes.
      */
     @Override
@@ -182,6 +226,7 @@ public class Enemy extends Peon
 
     /**
      * Set the type of enemy.
+     *
      * @param enemyType the type of the enemy.
      */
     public void setType(EnemyType enemyType) {
@@ -189,12 +234,14 @@ public class Enemy extends Peon
     }
 
     /**
-     * If the animation is moving sets the animation state to be Move
-     * else NULL. Also sets the direction
+     * If the animation is moving sets the animation state to be Move else NULL.
+     * Also sets the direction
      */
     public void updateAnimation() {
         setTexture(getDefaultTexture());
-        setCurrentDirection(movementDirection(this.position.getAngle()));
+        double angle = Math.atan2(getBody().getLinearVelocity().y, getBody().getLinearVelocity().x);
+
+        setCurrentDirection(movementDirection(angle));
 
         /* Short Animations */
         if (getToBeRun() != null) {
@@ -213,7 +260,8 @@ public class Enemy extends Peon
     }
 
     /**
-     *  Handles the action of the enemy per time tick in game.
+     * Handles the action of the enemy per time tick in game.
+     *
      * @param tick number of second tin the game.
      */
     @Override
@@ -226,26 +274,22 @@ public class Enemy extends Peon
                 die();
             }
         } else {
-            this.randomMoving();
-            this.setCurrentState(AnimationRole.MOVE);
-            this.updateAnimation();
-
-            if (distance(mainCharacter) < 4) {
-                attackPlayer();
+            if (distance(mainCharacter) < chaseRange) {
+                attackAction();
             } else {
-                randomMoving();
-                setAttacking(false);
-                setSpeed(getWalkingSpeed());
-                setCurrentState(AnimationRole.MOVE);
+                randomMoveAction();
+
             }
             if (isHurt) {
                 checkIfHurtEnded();
             }
+            this.updateAnimation();
         }
     }
 
     /**
      * To set enemy heal
+     *
      * @param health set heal of enemy
      */
     public void setHealth(int health) {
@@ -254,6 +298,7 @@ public class Enemy extends Peon
 
     /**
      * Return the health this enemy has.
+     *
      * @return The health this enemy has.
      */
     public int getHealth() {
@@ -296,105 +341,65 @@ public class Enemy extends Peon
     }
 
     /**
-     * Deploy the animation of the enemy in 8 different directions,
-     * and for moving, hurting attacking and dead animations.
+     * Deploy the animation of the enemy in 8 different directions, and for moving,
+     * hurting attacking and dead animations.
      */
     @Override
     public void configureAnimations() {
         String enemyName = this.enemy.name();
 
         // Move animations
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH, new AnimationLinker(
-                        enemyName + "MoveN", AnimationRole.MOVE, Direction.NORTH,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH_EAST, new AnimationLinker(
-                        enemyName + "MoveNE", AnimationRole.MOVE, Direction.NORTH_EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.NORTH_WEST, new AnimationLinker(
-                        enemyName + "MoveNW", AnimationRole.MOVE, Direction.NORTH_WEST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH, new AnimationLinker(
-                        enemyName + "MoveS", AnimationRole.MOVE, Direction.SOUTH,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.WEST, new AnimationLinker(
-                        enemyName + "MoveW", AnimationRole.MOVE, Direction.WEST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH_EAST, new AnimationLinker(
-                        enemyName + "MoveSE", AnimationRole.MOVE, Direction.SOUTH_EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.MOVE, Direction.SOUTH_WEST, new AnimationLinker(
-                        enemyName + "MoveSW", AnimationRole.MOVE, Direction.SOUTH_WEST,
-                        true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.NORTH,
+                new AnimationLinker(enemyName + "MoveN", AnimationRole.MOVE, Direction.NORTH, true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.NORTH_EAST,
+                new AnimationLinker(enemyName + "MoveNE", AnimationRole.MOVE, Direction.NORTH_EAST, true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.NORTH_WEST,
+                new AnimationLinker(enemyName + "MoveNW", AnimationRole.MOVE, Direction.NORTH_WEST, true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.SOUTH,
+                new AnimationLinker(enemyName + "MoveS", AnimationRole.MOVE, Direction.SOUTH, true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.WEST,
+                new AnimationLinker(enemyName + "MoveW", AnimationRole.MOVE, Direction.WEST, true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.SOUTH_EAST,
+                new AnimationLinker(enemyName + "MoveSE", AnimationRole.MOVE, Direction.SOUTH_EAST, true, true));
+        this.addAnimations(AnimationRole.MOVE, Direction.SOUTH_WEST,
+                new AnimationLinker(enemyName + "MoveSW", AnimationRole.MOVE, Direction.SOUTH_WEST, true, true));
 
         // Attack animations
-        this.addAnimations(
-                AnimationRole.ATTACK, Direction.EAST, new AnimationLinker(
-                        enemyName + "AttackE", AnimationRole.ATTACK, Direction.EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.ATTACK, Direction.NORTH, new AnimationLinker(
-                        enemyName + "AttackN", AnimationRole.ATTACK, Direction.NORTH,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.ATTACK, Direction.SOUTH, new AnimationLinker(
-                        enemyName + "AttackS", AnimationRole.ATTACK, Direction.SOUTH,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.ATTACK, Direction.SOUTH_EAST, new AnimationLinker(
-                        enemyName + "AttackSE", AnimationRole.ATTACK, Direction.SOUTH_EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.ATTACK, Direction.SOUTH_WEST, new AnimationLinker(
-                        enemyName + "AttackSW", AnimationRole.ATTACK, Direction.SOUTH_WEST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.ATTACK, Direction.WEST, new AnimationLinker(
-                        enemyName + "AttackW", AnimationRole.ATTACK, Direction.WEST,
-                        true, true));
+        this.addAnimations(AnimationRole.ATTACK, Direction.EAST,
+                new AnimationLinker(enemyName + "AttackE", AnimationRole.ATTACK, Direction.EAST, true, true));
+        this.addAnimations(AnimationRole.ATTACK, Direction.NORTH,
+                new AnimationLinker(enemyName + "AttackN", AnimationRole.ATTACK, Direction.NORTH, true, true));
+        this.addAnimations(AnimationRole.ATTACK, Direction.SOUTH,
+                new AnimationLinker(enemyName + "AttackS", AnimationRole.ATTACK, Direction.SOUTH, true, true));
+        this.addAnimations(AnimationRole.ATTACK, Direction.SOUTH_EAST,
+                new AnimationLinker(enemyName + "AttackSE", AnimationRole.ATTACK, Direction.SOUTH_EAST, true, true));
+        this.addAnimations(AnimationRole.ATTACK, Direction.SOUTH_WEST,
+                new AnimationLinker(enemyName + "AttackSW", AnimationRole.ATTACK, Direction.SOUTH_WEST, true, true));
+        this.addAnimations(AnimationRole.ATTACK, Direction.WEST,
+                new AnimationLinker(enemyName + "AttackW", AnimationRole.ATTACK, Direction.WEST, true, true));
 
         // Hurt animations
-        this.addAnimations(
-                AnimationRole.HURT, Direction.EAST, new AnimationLinker(
-                        enemyName + "DamageE", AnimationRole.HURT, Direction.EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.HURT, Direction.NORTH, new AnimationLinker(
-                        enemyName + "DamageN", AnimationRole.HURT, Direction.NORTH,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.HURT, Direction.SOUTH, new AnimationLinker(
-                        enemyName + "DamageS", AnimationRole.HURT, Direction.SOUTH,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.HURT, Direction.SOUTH_EAST, new AnimationLinker(
-                        enemyName + "DamageSE", AnimationRole.HURT, Direction.SOUTH_EAST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.HURT, Direction.SOUTH_WEST, new AnimationLinker(
-                        enemyName + "DamageSW", AnimationRole.HURT, Direction.SOUTH_WEST,
-                        true, true));
-        this.addAnimations(
-                AnimationRole.HURT, Direction.WEST, new AnimationLinker(
-                        enemyName + "DamageW", AnimationRole.HURT, Direction.WEST,
-                        true, true));
+        this.addAnimations(AnimationRole.HURT, Direction.EAST,
+                new AnimationLinker(enemyName + "DamageE", AnimationRole.HURT, Direction.EAST, true, true));
+        this.addAnimations(AnimationRole.HURT, Direction.NORTH,
+                new AnimationLinker(enemyName + "DamageN", AnimationRole.HURT, Direction.NORTH, true, true));
+        this.addAnimations(AnimationRole.HURT, Direction.SOUTH,
+                new AnimationLinker(enemyName + "DamageS", AnimationRole.HURT, Direction.SOUTH, true, true));
+        this.addAnimations(AnimationRole.HURT, Direction.SOUTH_EAST,
+                new AnimationLinker(enemyName + "DamageSE", AnimationRole.HURT, Direction.SOUTH_EAST, true, true));
+        this.addAnimations(AnimationRole.HURT, Direction.SOUTH_WEST,
+                new AnimationLinker(enemyName + "DamageSW", AnimationRole.HURT, Direction.SOUTH_WEST, true, true));
+        this.addAnimations(AnimationRole.HURT, Direction.WEST,
+                new AnimationLinker(enemyName + "DamageW", AnimationRole.HURT, Direction.WEST, true, true));
 
         // Dead animation
-        this.addAnimations(
-                AnimationRole.DEAD, Direction.DEFAULT, new AnimationLinker(
-                        "enemyDie", AnimationRole.DEAD, Direction.DEFAULT,
-                        false, true));
+        this.addAnimations(AnimationRole.DEAD, Direction.DEFAULT,
+                new AnimationLinker("enemyDie", AnimationRole.DEAD, Direction.DEFAULT, false, true));
     }
 
     /**
-     * Setter of the enemy's speed when walking,
-     * will be used in {@link #setValues(float, int, int, float, float, float)}.
+     * Setter of the enemy's speed when walking, will be used in
+     * {@link #setValues(float, int, int, float, float, float)}.
      *
      * @param walkingSpeed the enemy's walking speed.
      */
@@ -404,6 +409,7 @@ public class Enemy extends Peon
 
     /**
      * Getter of the enemy's speed when walking.
+     *
      * @return the walking speed of this enemy.
      */
     private float getWalkingSpeed() {
@@ -431,8 +437,8 @@ public class Enemy extends Peon
     /**
      * Getter if the enemy's sound when chasing the player.
      *
-     * @return the name of the chasing sound
-     *          (defined in {@link SoundManager}) of this enemy.
+     * @return the name of the chasing sound (defined in {@link SoundManager}) of
+     *         this enemy.
      */
     public String getChaseSound() {
         return this.chasingSound;
@@ -441,8 +447,8 @@ public class Enemy extends Peon
     /**
      * Getter of the enemy's sound when enemy is dying.
      *
-     * @return the name of the dead sound
-     *               (defined in {@link SoundManager}) of this enemy.
+     * @return the name of the dead sound (defined in {@link SoundManager}) of this
+     *         enemy.
      */
     public String getDeadSound() {
         return this.diedSound;
@@ -451,8 +457,8 @@ public class Enemy extends Peon
     /**
      * Getter of the enemy's sound when enemy is attacking.
      *
-     * @return the name of the dead sound
-     *               (defined in {@link SoundManager}) of this enemy.
+     * @return the name of the dead sound (defined in {@link SoundManager}) of this
+     *         enemy.
      */
     public String getAttackSound() {
         return this.attackingSound;
@@ -460,6 +466,7 @@ public class Enemy extends Peon
 
     /**
      * Set the amount of damage for this enemy.
+     *
      * @param strength the new amount of damage to be set.
      */
     public void setStrength(int strength) {
@@ -467,8 +474,8 @@ public class Enemy extends Peon
     }
 
     /**
-     * Set the biome the enemy is located at,
-     * will be used in {@link #setValues(float, int, int, float, float, float)}.
+     * Set the biome the enemy is located at, will be used in
+     * {@link #setValues(float, int, int, float, float, float)}.
      *
      * @param biome the name of the biome the enemy is located at.
      */
@@ -478,6 +485,7 @@ public class Enemy extends Peon
 
     /**
      * Get the name of the biome this enemy is located at.
+     *
      * @return the name of the biome this enemy is located.
      */
     public String getBiome() {
@@ -486,6 +494,7 @@ public class Enemy extends Peon
 
     /**
      * Getter and setter of the main character object in the game.
+     *
      * @param mainCharacter the main character in the game.
      */
     public void setMainCharacter(MainCharacter mainCharacter) {
@@ -494,6 +503,7 @@ public class Enemy extends Peon
 
     /**
      * Get the main character instance in the game
+     *
      * @return the main character object in the game.
      */
     public MainCharacter getMainCharacter() {
@@ -501,8 +511,8 @@ public class Enemy extends Peon
     }
 
     /**
-     * Set the attack range for the enemy,
-     * will be called in {@link #setValues(float, int, int, float, float, float)}.
+     * Set the attack range for the enemy, will be called in
+     * {@link #setValues(float, int, int, float, float, float)}.
      *
      * @param attackRange the attack range of the enemy.
      */
@@ -512,6 +522,7 @@ public class Enemy extends Peon
 
     /**
      * Get the attack range of the enemy.
+     *
      * @return the attack range of the enemy.
      */
     public float getAttackRange() {
@@ -519,14 +530,15 @@ public class Enemy extends Peon
     }
 
     /**
-     *  Get whether enemy is hurt.
+     * Get whether enemy is hurt.
      */
     public boolean getHurt() {
         return isHurt;
     }
 
     /**
-     *  Set whether enemy is hurt.
+     * Set whether enemy is hurt.
+     *
      * @param isHurt the player's "hurt" status
      */
     public void setHurt(boolean isHurt) {
@@ -534,8 +546,8 @@ public class Enemy extends Peon
     }
 
     /**
-     * Check whether the hurt time is within 2 seconds,
-     * therefore casting hurt effects on enemy.
+     * Check whether the hurt time is within 2 seconds, therefore casting hurt
+     * effects on enemy.
      */
     public void checkIfHurtEnded() {
         hurtTime += 20; // hurt for 1 second
@@ -551,13 +563,12 @@ public class Enemy extends Peon
      */
     private void die() {
         if (isDead()) {
-            if(getChaseSound() != null) {
+            if (getChaseSound() != null) {
                 SoundManager.stopSound(getChaseSound());
             }
-            if(getDeadSound() != null) {
+            if (getDeadSound() != null) {
                 SoundManager.playSound(getDeadSound());
 
-                this.destination = new HexVector(this.getCol(), this.getRow());
                 this.setDead(true);
                 logger.info("Enemy destroyed.");
 
@@ -568,31 +579,14 @@ public class Enemy extends Peon
     }
 
     /**
-     * under normal situation the enemy will random wandering in 100 radius circle
-     */
-    private void randomMoving() {
-        if ((!isAttacking)) {
-            logger.info("{} is moving randomly.", getName());
-            float[] targetPosition = new float[2];
-            targetPosition[0] = (float)
-                    (Math.random() * 1200 + originalPosition[0]);
-            targetPosition[1]=(float)
-                    (Math.random() * 1200 + originalPosition[1]);
-            float[] randomPositionWorld = WorldUtil.worldCoordinatesToColRow
-                    (targetPosition[0], targetPosition[1]);
-            destination = new HexVector(randomPositionWorld[0],
-                    randomPositionWorld[1]);
-        }
-    }
-
-    /**
      * Get movement direction
+     *
      * @param angle the angle between to tile
      */
     public Direction movementDirection(double angle) {
         angle = Math.toDegrees(angle - Math.PI);
 
-        if(angle < 0) {
+        if (angle < 0) {
             angle += 360;
         }
 
@@ -604,7 +598,7 @@ public class Enemy extends Peon
             return Direction.SOUTH;
         } else if (between(angle, 136, 180.5)) {
             return Direction.SOUTH_EAST;
-        }else if (between(angle, 181, 225.5)) {
+        } else if (between(angle, 181, 225.5)) {
             return Direction.EAST;
         } else if (between(angle, 226, 270.9)) {
             return Direction.NORTH_EAST;
@@ -627,23 +621,24 @@ public class Enemy extends Peon
 
     /**
      * Get the duration main character hurts.
+     *
      * @return the duration main character hurts.
      */
     public long getHurtTime() {
         return hurtTime;
     }
+
     public void setHurtTime(long hurtTime) {
         this.hurtTime = hurtTime;
     }
 
     /**
-     * @return string representation of this class including its
-     *  enemy type, biome and x,y coordinates
+     * @return string representation of this class including its enemy type, biome
+     *         and x,y coordinates
      */
     @Override
     public String toString() {
-        return String.format("%s at (%d, %d) %s biome",
-                enemy, (int)getCol(), (int)getRow(), getBiome());
+        return String.format("%s at (%d, %d) %s biome", enemy, (int) getCol(), (int) getRow(), getBiome());
     }
 
     /**
@@ -654,14 +649,12 @@ public class Enemy extends Peon
      */
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Enemy &&
-                this.hashCode() == obj.hashCode();
+        return obj instanceof Enemy && this.hashCode() == obj.hashCode();
     }
 
     /**
-     * The hashcode of the enemy based on {@link #toString()}.
-     * It will be used in {@link #equals(Object)} for comparing
-     * objects.
+     * The hashcode of the enemy based on {@link #toString()}. It will be used in
+     * {@link #equals(Object)} for comparing objects.
      *
      * @return the hashcode of the enemy instance.
      */

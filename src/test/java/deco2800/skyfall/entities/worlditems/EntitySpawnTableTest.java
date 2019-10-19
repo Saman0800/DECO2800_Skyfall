@@ -208,39 +208,4 @@ public class EntitySpawnTableTest {
         // count after spawning
         assertTrue(countWorldEntities() > 0);
     }
-
-    // @Test
-    // @Ignore // This is no longer a valid test, since the minimum and maximum
-    // values are no longer guaranteed.
-    // public void maxMinPlacementTest() {
-    // WorldBuilder worldBuilder = new WorldBuilder();
-    // WorldDirector.constructTestWorld(worldBuilder);
-    // World newWorld = worldBuilder.getWorld();
-    //
-    // // create tile map, add tiles and push to testWorld
-    // CopyOnWriteArrayList<Tile> newTileMap = new CopyOnWriteArrayList<>();
-    //
-    // for (int i = 0; i < worldSize; i++) {
-    // Tile tile = new Tile(null, 1.0f * i, 0.0f);
-    // newTileMap.add(tile);
-    // biome.addTile(tile);
-    // }
-    //
-    // newWorld.setTileMap(newTileMap);
-    //
-    // EntitySpawnRule newRule = new EntitySpawnRule(2, 4, null, true);
-    // newRule.setChance(1.0);
-    //
-    // ForestRock rock = new ForestRock();
-    // EntitySpawnTable.spawnEntity(rock, newRule, newWorld);
-    //
-    // int count = 0;
-    // for (Tile tile : newWorld.getTileMap()) {
-    // if (tile.hasParent()) {
-    // count++;
-    // }
-    // }
-    //
-    // assertTrue("Count was " + count, count <= 4);
-    // }
 }

@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Timer;
-import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.gamemenu.popupmenu.PauseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,10 +31,10 @@ public class SoundManager extends AbstractManager {
     /* Boolean to state whether the sound manager is paused or not */
     private static boolean paused = false;
 
-    private static float FADE_CONSTANT = 0.1f;
+    private static float fadeConstant = 0.1f;
 
-    private static float gameSoundVolume;
-    private static float gameMusicVolume;
+    private static float gameSoundVolume = 1f;
+    private static float gameMusicVolume = 1f;
 
 
     /**
@@ -44,149 +42,149 @@ public class SoundManager extends AbstractManager {
      */
     public SoundManager() {
 
-        gameSoundVolume = 1f;
-        gameMusicVolume = 1f;
 
         LOGGER.info("soundManager song list");
 
         try {
-            String PATH = "resources/sounds/";
+            String path = "resources/sounds/";
+            soundMap.put("axe_standard", Gdx.audio.newSound
+                    (Gdx.files.internal(path + "sword_standard.mp3")));
             soundMap.put("be_hit", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "be_hit.mp3")));
+                    (Gdx.files.internal(path + "be_hit.mp3")));
             soundMap.put("bow_desert", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "bow_desert.mp3")));
+                    (Gdx.files.internal(path + "bow_desert.mp3")));
             soundMap.put("bow_standard", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "bow_standard.mp3")));
+                    (Gdx.files.internal(path + "bow_standard.mp3")));
             soundMap.put("bow_volcano", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "bow_volcano.mp3")));
+                    (Gdx.files.internal(path + "bow_volcano.mp3")));
             soundMap.put("coins", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "coins.mp3")));
+                    (Gdx.files.internal(path + "coins.mp3")));
             soundMap.put("collect_stone", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "collect_stone.mp3")));
+                    (Gdx.files.internal(path + "collect_stone.mp3")));
             soundMap.put("cut_tree", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "cut_tree.mp3")));
+                    (Gdx.files.internal(path + "cut_tree.mp3")));
             soundMap.put("died", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "died.mp3")));
+                    (Gdx.files.internal(path + "died.mp3")));
             soundMap.put("door_close", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "door_close.mp3")));
+                    (Gdx.files.internal(path + "door_close.mp3")));
             soundMap.put("door_open", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "door_open.mp3")));
+                    (Gdx.files.internal(path + "door_open.mp3")));
             soundMap.put("dragon_fly", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "dragon_fly.mp3")));
+                    (Gdx.files.internal(path + "dragon_fly.mp3")));
             soundMap.put("draw_arrow", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "draw_arrow.mp3")));
+                    (Gdx.files.internal(path + "draw_arrow.mp3")));
             soundMap.put("eat_aloe_vera", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "eat_aloe_vera.mp3")));
+                    (Gdx.files.internal(path + "eat_aloe_vera.mp3")));
             soundMap.put("eat_apple", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "eat_apple.mp3")));
+                    (Gdx.files.internal(path + "eat_apple.mp3")));
             soundMap.put("eat_berry", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "eat_berry.mp3")));
+                    (Gdx.files.internal(path + "eat_berry.mp3")));
             soundMap.put("eat_mushroom", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "eat_mushroom.mp3")));
+                    (Gdx.files.internal(path + "eat_mushroom.mp3")));
             soundMap.put("fist_attack", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "fist_attack.mp3")));
+                    (Gdx.files.internal(path + "fist_attack.mp3")));
             soundMap.put("flower_death", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "flower_death.mp3")));
+                    (Gdx.files.internal(path + "flower_death.mp3")));
             soundMap.put("flower_open", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "flower_open.mp3")));
+                    (Gdx.files.internal(path + "flower_open.mp3")));
             soundMap.put("get_money", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "get_money.mp3")));
+                    (Gdx.files.internal(path + "get_money.mp3")));
             soundMap.put("horse_run", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "horse_run.mp3")));
+                    (Gdx.files.internal(path + "horse_run.mp3")));
             soundMap.put("menu", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "menu.mp3")));
+                    (Gdx.files.internal(path + "menu.mp3")));
             soundMap.put("pick_up_axe_and_hatchet", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "pick_up_axe_and_hatchet.mp3")));
+                    (Gdx.files.internal(path + "pick_up_axe_and_hatchet.mp3")));
             soundMap.put("pick_up_metal", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "pick_up_metal.mp3")));
+                    (Gdx.files.internal(path + "pick_up_metal.mp3")));
             soundMap.put("pick_up_sand", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "pick_up_sand.mp3")));
+                    (Gdx.files.internal(path + "pick_up_sand.mp3")));
             soundMap.put("pick_up_stone", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "pick_up_stone.mp3")));
+                    (Gdx.files.internal(path + "pick_up_stone.mp3")));
             soundMap.put("pick_up_vine", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "pick_up_vine.mp3")));
+                    (Gdx.files.internal(path + "pick_up_vine.mp3")));
             soundMap.put("pick_up_wood", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "pick_up_wood.mp3")));
+                    (Gdx.files.internal(path + "pick_up_wood.mp3")));
             soundMap.put("pick_up", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "pick_up.mp3")));
+                    (Gdx.files.internal(path + "pick_up.mp3")));
             soundMap.put("robot_death", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "robot_death.mp3")));
+                    (Gdx.files.internal(path + "robot_death.mp3")));
             soundMap.put("robot_movement", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "robot_movement.mp3")));
+                    (Gdx.files.internal(path + "robot_movement.mp3")));
             soundMap.put("robot_walk", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "robot_walk.mp3")));
+                    (Gdx.files.internal(path + "robot_walk.mp3")));
             soundMap.put("robot", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "robot.mp3")));
+                    (Gdx.files.internal(path + "robot.mp3")));
             soundMap.put("shield", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "shield.mp3")));
+                    (Gdx.files.internal(path + "shield.mp3")));
             soundMap.put("spear", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "spear.mp3")));
+                    (Gdx.files.internal(path + "spear.mp3")));
             soundMap.put("spell_fire", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "spell_fire.mp3")));
+                    (Gdx.files.internal(path + "spell_fire.mp3")));
             soundMap.put("spell_firewall", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "spell_firewall.mp3")));
+                    (Gdx.files.internal(path + "spell_firewall.mp3")));
             soundMap.put("spell_tornado", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "spell_tornado.mp3")));
+                    (Gdx.files.internal(path + "spell_tornado.mp3")));
             soundMap.put("spider_death", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "spider_death.mp3")));
+                    (Gdx.files.internal(path + "spider_death.mp3")));
             soundMap.put("spider", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "spider.mp3")));
+                    (Gdx.files.internal(path + "spider.mp3")));
             soundMap.put("stone_attack", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "stone_attack.mp3")));
+                    (Gdx.files.internal(path + "stone_attack.mp3")));
             soundMap.put("stone_death", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "stone_death.mp3")));
+                    (Gdx.files.internal(path + "stone_death.mp3")));
             soundMap.put("stone_die", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "stone_die.mp3")));
+                    (Gdx.files.internal(path + "stone_die.mp3")));
             soundMap.put("stone_move", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "stone_move.mp3")));
+                    (Gdx.files.internal(path + "stone_move.mp3")));
             soundMap.put("stone_walk", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "stone_walk.mp3")));
+                    (Gdx.files.internal(path + "stone_walk.mp3")));
             soundMap.put("sword_desert", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "sword_desert.mp3")));
+                    (Gdx.files.internal(path + "sword_desert.mp3")));
             soundMap.put("sword_fire", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "sword_fire.mp3")));
+                    (Gdx.files.internal(path + "sword_fire.mp3")));
             soundMap.put("sword_standard", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "sword_standard.mp3")));
+                    (Gdx.files.internal(path + "sword_standard.mp3")));
             soundMap.put("walk_D", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "walk_D.mp3")));
+                    (Gdx.files.internal(path + "walk_D.mp3")));
             soundMap.put("walk_N", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "walk_N.mp3")));
+                    (Gdx.files.internal(path + "walk_N.mp3")));
             soundMap.put("bike_animation", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "bike-movement.wav")));
+                    (Gdx.files.internal(path + "bike-movement.wav")));
             soundMap.put("sand_car_animation", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "movement-car.wav")));
+                    (Gdx.files.internal(path + "movement-car.wav")));
             soundMap.put("running", Gdx.audio.newSound
-                    (Gdx.files.internal(PATH + "run.wav")));
+                    (Gdx.files.internal(path + "run.wav")));
 
             // make into for-loop for nicer code :)
             musicMap.put("forest_day", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "forest_day.mp3")));
+                    (Gdx.files.internal(path + "forest_day.mp3")));
             musicMap.put("forest_night", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "forest_night.mp3")));
+                    (Gdx.files.internal(path + "forest_night.mp3")));
             musicMap.put("beach_day", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "beach_day.mp3")));
+                    (Gdx.files.internal(path + "beach_day.mp3")));
             musicMap.put("beach_night", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "beach_night.mp3")));
+                    (Gdx.files.internal(path + "beach_night.mp3")));
             musicMap.put("swamp_day", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "swamp_day.mp3")));
+                    (Gdx.files.internal(path + "swamp_day.mp3")));
             musicMap.put("swamp_night", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "swamp_night.mp3")));
+                    (Gdx.files.internal(path + "swamp_night.mp3")));
             musicMap.put("desert_day", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "desert_day.mp3")));
+                    (Gdx.files.internal(path + "desert_day.mp3")));
             musicMap.put("desert_night", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "desert_night.mp3")));
+                    (Gdx.files.internal(path + "desert_night.mp3")));
             musicMap.put("mountain_day", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "mountain_day.mp3")));
+                    (Gdx.files.internal(path + "mountain_day.mp3")));
             musicMap.put("mountain_night", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "mountain_night.mp3")));
+                    (Gdx.files.internal(path + "mountain_night.mp3")));
             musicMap.put("snowy_mountains_day", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "snowy_mountains_day.mp3")));
+                    (Gdx.files.internal(path + "snowy_mountains_day.mp3")));
             musicMap.put("snowy_mountains_night", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "snowy_mountains_night.mp3")));
+                    (Gdx.files.internal(path + "snowy_mountains_night.mp3")));
             musicMap.put("volcanic_mountains_day", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "volcanic_mountains_day.mp3")));
+                    (Gdx.files.internal(path + "volcanic_mountains_day.mp3")));
             musicMap.put("volcanic_mountains_night", Gdx.audio.newMusic
-                    (Gdx.files.internal(PATH + "volcanic_mountains_night.mp3")));
+                    (Gdx.files.internal(path + "volcanic_mountains_night.mp3")));
 
         } catch (Exception e) {
             LOGGER.error("no song be found");
@@ -229,7 +227,6 @@ public class SoundManager extends AbstractManager {
                 playing = soundName;
                 return true;
             } else {
-                // LOGGER.info("There does not exist a {} sound", soundName);
                 return false;
             }
         }
@@ -257,8 +254,6 @@ public class SoundManager extends AbstractManager {
                 music.setVolume(gameMusicVolume);
                 playing = soundName;
                 music.setLooping(true);
-            } else {
-                // LOGGER.info("There does not exist a {} sound", soundName);
             }
         }
     }
@@ -272,7 +267,7 @@ public class SoundManager extends AbstractManager {
             @Override
             public void run() {
                 if (music.getVolume() < gameMusicVolume) {
-                    music.setVolume(music.getVolume() + FADE_CONSTANT);
+                    music.setVolume(music.getVolume() + fadeConstant);
                 } else {
                     music.setVolume(gameMusicVolume);
                     this.cancel();
@@ -286,8 +281,8 @@ public class SoundManager extends AbstractManager {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                if (music.getVolume() >= FADE_CONSTANT) {
-                    music.setVolume(music.getVolume() - FADE_CONSTANT);
+                if (music.getVolume() >= fadeConstant) {
+                    music.setVolume(music.getVolume() - fadeConstant);
                 } else {
                     music.stop();
                     this.cancel();
@@ -314,7 +309,6 @@ public class SoundManager extends AbstractManager {
             music.stop();
             return true;
         } else {
-            // LOGGER.info("There does not exist a {} sound", soundName);
             return false;
         }
     }
@@ -336,7 +330,6 @@ public class SoundManager extends AbstractManager {
             music.pause();
             return true;
         } else {
-            // LOGGER.info("There does not exist a {} sound", soundName);
             return false;
         }
     }
@@ -359,7 +352,6 @@ public class SoundManager extends AbstractManager {
                 music.play();
                 return true;
             } else {
-                // LOGGER.info("There does not exist a {} sound", soundName);
                 return false;
             }
         }

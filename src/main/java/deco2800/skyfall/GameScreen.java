@@ -1,67 +1,92 @@
 package deco2800.skyfall;
 
-import com.badlogic.gdx.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.LifecycleListener;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import deco2800.skyfall.buildings.ForestPortal;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.enemies.Abductor;
+import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.entities.enemies.EnemySpawnTable;
+import deco2800.skyfall.entities.enemies.Heavy;
+import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
-import deco2800.skyfall.graphics.types.vec3;
+import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.handlers.KeyboardManager;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.EnvironmentManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.PathFindingService;
+import deco2800.skyfall.managers.QuestManager;
+import deco2800.skyfall.managers.SpawningManager;
+import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.renderers.OverlayRenderer;
 import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.saving.Save;
-import deco2800.skyfall.util.lightinghelpers.*;
-import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.lightinghelpers.FunctionalSpectralValue;
+import deco2800.skyfall.util.lightinghelpers.IntensityFunction;
+import deco2800.skyfall.util.lightinghelpers.LinearSpectralValue;
+import deco2800.skyfall.util.lightinghelpers.SpectralValue;
+import deco2800.skyfall.util.lightinghelpers.TFTuple;
 import deco2800.skyfall.worlds.packing.BirthPlacePacking;
 import deco2800.skyfall.worlds.packing.EnvironmentPacker;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * An instance of a Game screen.
  */
 public class GameScreen implements Screen, KeyDownObserver {
     private final Logger logger = LoggerFactory.getLogger(GameScreen.class);
+
     @SuppressWarnings("unused")
     private final SkyfallGame game;
     /**
      * Set the renderer. 3D is for Isometric worlds Check the documentation for each
      * renderer to see how it handles WorldEntity coordinates
      */
-    Renderer3D renderer = new Renderer3D();
-    OverlayRenderer rendererDebug = new OverlayRenderer();
-    World world;
-    Save save;
+    private Renderer3D renderer = new Renderer3D();
+    private OverlayRenderer rendererDebug = new OverlayRenderer();
+    private World world;
+    private Save save;
 
     /**
      * Create a camera for panning and zooming. Camera must be updated every render
      * cycle.
      */
-    PotateCamera camera;
-    PotateCamera cameraDebug;
+    private PotateCamera camera;
+    private PotateCamera cameraDebug;
     private Stage stage = new Stage(new ExtendViewport(1280, 720));
 
-    long lastGameTick = 0;
+    private long lastGameTick = 0;
 
-    /**
-     * Create an EnvironmentManager for ToD.
-     */
-    EnvironmentManager timeOfDay;
     private static boolean isPaused = false;
 
     public static boolean getIsPaused() {
@@ -90,6 +115,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     public GameScreen(final SkyfallGame game, long seed, boolean isHost) {
         /* Create an example world for the engine */
         this.game = game;
+
         this.save = new Save();
 
         GameManager gameManager = initializeMenuManager();
@@ -102,38 +128,30 @@ public class GameScreen implements Screen, KeyDownObserver {
             save.setCurrentWorld(world);
             world.setSave(save);
             MainCharacter.getInstance().setSave(save);
-
-            gameManager.getManager(NetworkManager.class).connectToHost("localhost", "duck1234");
+            save.setMainCharacter(MainCharacter.getInstance());
         } else {
             if (GameManager.get().getIsTutorial()) {
                 world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed).getWorld();
             } else {
                 // Creating the world
-                world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), seed, 4, true).getWorld();
+                world = WorldDirector.constructSingleBiomeWorld(new WorldBuilder(), seed, true, "forest").getWorld();
             }
             save.getWorlds().add(world);
             save.setCurrentWorld(world);
             world.setSave(save);
 
+            WorldBuilder worldBuilder = new WorldBuilder();
+            worldBuilder.generateNotStaticEntities(world, 0.6f);
             EnvironmentPacker packer = new EnvironmentPacker(world);
             packer.addPackingComponent(new BirthPlacePacking(packer));
             packer.doPackings();
 
             MainCharacter.getInstance().setSave(save);
-
-            // FIXME:jeffvan12 implement better way of creating new stuff things
+            save.setMainCharacter(MainCharacter.getInstance());
 
             // Comment this out when generating the data for the tests
             DatabaseManager.get().getDataBaseConnector().saveGame(save);
 
-            // Uncomment this when generating the data for the tests
-            // save.setId(0);
-            // world.setId(0);
-            // MainCharacter.getInstance().setID(0);
-            // DatabaseManager.get().getDataBaseConnector().saveGame(save);
-            // DatabaseManager.get().getDataBaseConnector().saveAllTables();
-
-            gameManager.getManager(NetworkManager.class).startHosting("host");
         }
 
         gameManager.setWorld(world);
@@ -156,8 +174,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         MainCharacter mainCharacter = MainCharacter.getInstance();
         mainCharacter.setSave(save);
         world.addEntity(mainCharacter);
-
-        gameManager.getManager(NetworkManager.class).startHosting("host");
 
         StatisticsManager sm = new StatisticsManager(mainCharacter);
         GameManager.addManagerToInstance(sm);
@@ -187,12 +203,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         GameManager.get().setStage(stage);
         GameManager.get().setCamera(camera);
 
-        /* Add inventory to game manager */
-        gameManager.addManager(new InventoryManager());
-
-        /* Add construction manager to game manager */
-        // gameManager.addManager(new ConstructionManager());
-
         /* Add environment to game manager */
         EnvironmentManager gameEnvironManag = gameManager.getManager(EnvironmentManager.class);
         // For debugging only!
@@ -201,7 +211,7 @@ public class GameScreen implements Screen, KeyDownObserver {
         /* Add Quest Manager to game manager */
         gameManager.addManager(new QuestManager());
 
-        /**
+        /*
          * NOTE: Now that the Environment Manager has been added start creating the
          * SpectralValue instances for the Ambient Light.
          */
@@ -257,6 +267,8 @@ public class GameScreen implements Screen, KeyDownObserver {
         blueKeyFrame.add(new TFTuple(18.5f, 0.8f));
         blueKeyFrame.add(new TFTuple(19.0f, 0.19f));
         ambientBlue = new LinearSpectralValue(blueKeyFrame, gameEnvironManag);
+
+        enemySetUp(gameEnvironManag, world);
 
         // create a spawning manager
         SpawningManager.createSpawningManager();
@@ -350,7 +362,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
         // set ambient light
         shader.setAmbientComponent(
-                new vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
+                new Vec3(ambientRed.getIntensity(), ambientGreen.getIntensity(), ambientBlue.getIntensity()),
                 ambientIntensity.getIntensity());
 
         // Add all the point lights of entities that implement the HasPointLight
@@ -426,21 +438,8 @@ public class GameScreen implements Screen, KeyDownObserver {
         }
 
         if (keycode == Input.Keys.F5) {
-
-            // Create a random world
-            world = WorldDirector.constructNBiomeSinglePlayerWorld(new WorldBuilder(), world.getSeed() + 1, 4, true)
-                    .getWorld();
-
-            // Add this world to the save
-            save.getWorlds().add(world);
-            save.setCurrentWorld(world);
-            world.setSave(save);
-            DatabaseManager.get().getDataBaseConnector().saveGame(save);
-
-            AbstractEntity.resetID();
-            Tile.resetID();
-            GameManager gameManager = GameManager.get();
-            gameManager.setWorld(world);
+            ForestPortal portal = new ForestPortal(0, 0, 1);
+            portal.teleport(save);
         }
 
         if (keycode == Input.Keys.F11) { // F11
@@ -456,17 +455,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         if (keycode == Input.Keys.F10) { // F10
             GameManager.get().toggleDebugMode();
             logger.info("Show Path is now {}", GameManager.get().getShowPath());
-        }
-
-        // FIXME:jeffvan12 should replace with acutal world saving and loading
-        if (keycode == Input.Keys.F3) { // F3
-            // Save the world to the DB
-            // DatabaseManager.saveWorld(null);
-        }
-
-        if (keycode == Input.Keys.F4) { // F4
-            // Load the world to the DB
-            // DatabaseManager.loadWorld(null);
         }
 
         if (keycode == Input.Keys.P) {
@@ -486,21 +474,7 @@ public class GameScreen implements Screen, KeyDownObserver {
                 goFastSpeed *= goFastSpeed * goFastSpeed;
             }
 
-            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                camera.translate(-goFastSpeed, 0, 0);
-            }
-
-            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                camera.translate(goFastSpeed, 0, 0);
-            }
-
-            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                camera.translate(0, -goFastSpeed, 0);
-            }
-
-            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                camera.translate(0, goFastSpeed, 0);
-            }
+            handleCameraTranslation(goFastSpeed);
 
             if (Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {
                 camera.zoom *= 1 - 0.01 * normilisedGameSpeed;
@@ -514,5 +488,210 @@ public class GameScreen implements Screen, KeyDownObserver {
             }
         }
 
+    }
+
+    /**
+     * Sets up enemy spawning for each biome.
+     * 
+     * @param gameEnvironManag The Environment Manager instance used for the game.
+     * 
+     * @param world            The world that the character is playing in.
+     */
+    private void enemySetUp(EnvironmentManager gameEnvironManag, World world) {
+
+        ForestEnemySetup(gameEnvironManag, world);
+        DesertEnemySetup(gameEnvironManag, world);
+        MountainEnemySetup(gameEnvironManag, world);
+        VolcanicMountainEnemySetup(gameEnvironManag, world);
+
+        return;
+    }
+
+    /**
+     * Setups up enemy spawning for the Forest biome.
+     * 
+     * @param gameEnvironManag The Environment Manager instance used for the game.
+     * 
+     * @param world            The world that the character is playing in.
+     */
+    private void ForestEnemySetup(EnvironmentManager gameEnvironManag, World world) {
+
+        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 0.7f,
+                "Forest");
+
+        Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 0.2f,
+                "Forest");
+
+        Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
+        List<Function<HexVector, ? extends Enemy>> forestList = new ArrayList<>();
+        forestList.add(spawnAbductor);
+        forestList.add(spawnScout);
+
+        biomeToConstructor.put("forest", forestList);
+
+        Function<EnvironmentManager, Double> probAdjFunc = environMang -> {
+
+            // Only spawn during the day, 6am - 6pm
+            if ((environMang.getHourDecimal() >= 6) && (environMang.getHourDecimal() <= 18)) {
+                return 0.05;
+            }
+
+            return 0.0;
+        };
+
+        EnemySpawnTable newEnemyTable = new EnemySpawnTable(70, 20, 4, biomeToConstructor, gameEnvironManag,
+                probAdjFunc, world);
+
+        gameEnvironManag.addTimeListener(newEnemyTable);
+
+        return;
+    }
+
+    /**
+     * Setups up enemy spawning for the Desert biome.
+     * 
+     * @param gameEnvironManag The Environment Manager instance used for the game.
+     * 
+     * @param world            The world that the character is playing in.
+     */
+    private void DesertEnemySetup(EnvironmentManager gameEnvironManag, World world) {
+
+        Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 0.9f,
+                "Desert");
+        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(),
+                0.9f, "Desert");
+
+        Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
+        List<Function<HexVector, ? extends Enemy>> desertList = new ArrayList<>();
+        desertList.add(spawnScout);
+        desertList.add(spawnAbductor);
+
+        biomeToConstructor.put("desert", desertList);
+
+        // Set up
+        Function<EnvironmentManager, Double> probAdjFunc = environMang -> {
+
+            // Only spawn during the night, 7pm - 3am
+            if ((environMang.getHourDecimal() >= 19) && (environMang.getHourDecimal() <= 3)) {
+                return 0.02;
+            }
+
+            return 0.0;
+        };
+
+        EnemySpawnTable newEnemyTable = new EnemySpawnTable(100, 30, 2, biomeToConstructor, gameEnvironManag,
+                probAdjFunc, world);
+
+        gameEnvironManag.addTimeListener(newEnemyTable);
+
+        return;
+    }
+
+    /**
+     * Setups up enemy spawning for the Mountain biome.
+     * 
+     * @param gameEnvironManag The Environment Manager instance used for the game.
+     * 
+     * @param world            The world that the character is playing in.
+     */
+    private void MountainEnemySetup(EnvironmentManager gameEnvironManag, World world) {
+
+        Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 1.1f,
+                "Mountain");
+        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(),
+                1.1f, "Mountain");
+        Function<HexVector, ? extends Enemy> spawnHeavy = hexPos -> new Heavy(hexPos.getCol(), hexPos.getRow(), 1.1f,
+                "Mountain");
+
+        Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
+        List<Function<HexVector, ? extends Enemy>> mountainList = new ArrayList<>();
+        mountainList.add(spawnScout);
+        mountainList.add(spawnAbductor);
+        mountainList.add(spawnHeavy);
+
+        biomeToConstructor.put("mountain", mountainList);
+
+        // Set up spawning
+        Function<EnvironmentManager, Double> probAdjFunc = environMang -> {
+
+            // Only spawn during the night, 5pm - 5am
+            if ((environMang.getHourDecimal() >= 17) && (environMang.getHourDecimal() <= 5)) {
+                return 0.04;
+            }
+
+            return 0.0;
+        };
+
+        EnemySpawnTable newEnemyTable = new EnemySpawnTable(70, 20, 2, biomeToConstructor, gameEnvironManag,
+                probAdjFunc, world);
+
+        gameEnvironManag.addTimeListener(newEnemyTable);
+
+        return;
+    }
+
+    /**
+     * Setups up enemy spawning for the VolcanicMountain biome.
+     * 
+     * @param gameEnvironManag The Environment Manager instance used for the game.
+     * 
+     * @param world            The world that the character is playing in.
+     */
+    private void VolcanicMountainEnemySetup(EnvironmentManager gameEnvironManag, World world) {
+
+        Function<HexVector, ? extends Enemy> spawnScout = hexPos -> new Scout(hexPos.getCol(), hexPos.getRow(), 1.1f,
+                "VolcanicMountain");
+        Function<HexVector, ? extends Enemy> spawnAbductor = hexPos -> new Abductor(hexPos.getCol(), hexPos.getRow(),
+                1.1f, "VolcanicMountain");
+        Function<HexVector, ? extends Enemy> spawnHeavy = hexPos -> new Heavy(hexPos.getCol(), hexPos.getRow(), 1.1f,
+                "VolcanicMountain");
+
+        Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor = new HashMap<>();
+        List<Function<HexVector, ? extends Enemy>> volcanicMountainList = new ArrayList<>();
+        volcanicMountainList.add(spawnScout);
+        volcanicMountainList.add(spawnAbductor);
+        volcanicMountainList.add(spawnHeavy);
+
+        biomeToConstructor.put("volcanic", volcanicMountainList);
+
+        Function<EnvironmentManager, Double> probAdjFunc = environMang -> {
+
+            // Only spawn during the night, 6pm - 4am
+            if ((environMang.getHourDecimal() >= 18) && (environMang.getHourDecimal() <= 4)) {
+                return 0.05;
+            }
+
+            return 0.0;
+        };
+
+        EnemySpawnTable newEnemyTable = new EnemySpawnTable(70, 15, 2, biomeToConstructor, gameEnvironManag,
+                probAdjFunc, world);
+
+        gameEnvironManag.addTimeListener(newEnemyTable);
+
+        return;
+    }
+
+    /**
+     * Handles the camera translation
+     * 
+     * @param goFastSpeed The go fast speed?
+     */
+    private void handleCameraTranslation(int goFastSpeed) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            camera.translate(-goFastSpeed, 0, 0);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            camera.translate(goFastSpeed, 0, 0);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            camera.translate(0, -goFastSpeed, 0);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            camera.translate(0, goFastSpeed, 0);
+        }
     }
 }

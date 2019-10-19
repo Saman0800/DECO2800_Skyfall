@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class that represents the biomes
+ * Class that represents the biomes.
  */
 public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBiomeMemento>, Serializable {
     private long id;
@@ -66,8 +66,8 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
      * Sets the tiles in the biome
      * @param tiles The list of tiles for the biome
      */
-    public void setTiles(ArrayList<Tile> tiles){
-        this.tiles = tiles;
+    public void setTiles(List<Tile> tiles){
+        this.tiles = (ArrayList<Tile>) tiles;
     }
 
     /**
@@ -125,7 +125,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
      *
      * @return a list of the child biomes
      */
-    public List<AbstractBiome> getChildBiomes() {
+    private List<AbstractBiome> getChildBiomes() {
         return this.childBiomes;
     }
 
@@ -171,15 +171,6 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         return this.id;
     }
 
-    public void setBiomeID(int id) {
-        this.id = id;
-    }
-
-
-    private void setWorldID(long worldID) {
-        this.worldID = worldID;
-    }
-
     @Override
     public AbstractBiomeMemento save() {
         return new AbstractBiomeMemento(this);
@@ -213,7 +204,6 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
             this.biomeType = biome.getBiomeName();
             this.noiseGeneratorSeed = biome.textureGenerator.getSeed();
             if (biome.getParentBiome() == null) {
-                // TODO find a better value to represent null
                 this.parentBiomeID = -1;
             } else {
                 this.parentBiomeID = biome.parentBiome.id;

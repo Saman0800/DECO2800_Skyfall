@@ -32,7 +32,6 @@ public class WorldParameters {
     //List of the biomes in the world
     private List<AbstractBiome> biomes;
 
-    // TODO:Ontonator Consider removing this.
     //List of the entities in the world
     private List<AbstractEntity> entities;
 
@@ -107,16 +106,16 @@ public class WorldParameters {
      * Sets the sizes of the corresponding biomes
      * @param biomeSizes A list of of corresponding biomessizes for each biome
      */
-    public void setBiomeSizes(ArrayList<Integer> biomeSizes) {
-        this.biomeSizes = biomeSizes;
+    public void setBiomeSizes(List<Integer> biomeSizes) {
+        this.biomeSizes = (ArrayList<Integer>) biomeSizes;
     }
 
     /**
      * Sets the sizes of the lakes
      * @param lakeSizes The size of the lakes
      */
-    public void setLakeSizes(ArrayList<Integer> lakeSizes) {
-        this.lakeSizes = lakeSizes;
+    public void setLakeSizes(List<Integer> lakeSizes) {
+        this.lakeSizes = (ArrayList<Integer>) lakeSizes;
     }
 
     public void setLakeSizes(int[] lakeSizes){
@@ -236,7 +235,7 @@ public class WorldParameters {
      * Gets the biome sizes
      * @return The biome sizes
      */
-    public ArrayList<Integer> getBiomeSizes(){
+    public List<Integer> getBiomeSizes(){
         return biomeSizes;
     }
 
@@ -245,7 +244,7 @@ public class WorldParameters {
      * Gets the lake sizes
      * @return The lake sizes
      */
-    public ArrayList<Integer> getLakeSizes(){
+    public List<Integer> getLakeSizes(){
         return lakeSizes;
     }
 

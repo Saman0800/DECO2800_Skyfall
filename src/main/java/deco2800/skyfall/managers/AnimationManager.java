@@ -76,14 +76,23 @@ public class AnimationManager extends AbstractManager {
 
         // Main Character
         // New Enemies
-        this.generateAnimationObject("SCOUTMoveN", "enemyScout_Move_N", 208, 279, 0.2f);
-        this.generateAnimationObject("SCOUTMoveS", "enemyScout_Move_S", 208, 278, 0.2f);
-        this.generateAnimationObject("SCOUTMoveE", "enemyScout_Move_E", 177, 265, 0.2f);
-        this.generateAnimationObject("SCOUTMoveW", "enemyScout_Move_W", 166, 265, 0.2f);
-        this.generateAnimationObject("SCOUTMoveNE", "enemyScout_Move_NE", 179, 265, 0.2f);
-        this.generateAnimationObject("SCOUTMoveSE", "enemyScout_Move_SE", 178, 255, 0.2f);
-        this.generateAnimationObject("SCOUTMoveSW", "enemyScout_Move_SW", 184, 254, 0.2f);
-        this.generateAnimationObject("SCOUTMoveNW", "enemyScout_Move_NW", 178, 265, 0.2f);
+        this.generateAnimationObject("SCOUTMoveN", "enemyScout_Move_N", 170, 278, 0.2f);
+        this.generateAnimationObject("SCOUTMoveS", "enemyScout_Move_S", 170, 277, 0.2f);
+        this.generateAnimationObject("SCOUTMoveE", "enemyScout_Move_E", 169, 282, 0.2f);
+        this.generateAnimationObject("SCOUTMoveW", "enemyScout_Move_W", 171, 278, 0.2f);
+        this.generateAnimationObject("SCOUTMoveNE", "enemyScout_Move_NE", 171, 276, 0.2f);
+        this.generateAnimationObject("SCOUTMoveSE", "enemyScout_Move_SE", 170, 276, 0.2f);
+        this.generateAnimationObject("SCOUTMoveSW", "enemyScout_Move_SW", 169, 277, 0.2f);
+        this.generateAnimationObject("SCOUTMoveNW", "enemyScout_Move_NW", 175, 278, 0.2f);
+
+        this.generateAnimationObject("SCOUTAttackN", "enemyScout_Attack_N", 283, 299, 0.2f);
+        this.generateAnimationObject("SCOUTAttackS", "enemyScout_Attack_S", 284, 300, 0.2f);
+        this.generateAnimationObject("SCOUTAttackE", "enemyScout_Attack_E", 277, 300, 0.2f);
+        this.generateAnimationObject("SCOUTAttackW", "enemyScout_Attack_W", 288, 299, 0.2f);
+        this.generateAnimationObject("SCOUTAttackNE", "enemyScout_Attack_NE", 294, 297, 0.2f);
+        this.generateAnimationObject("SCOUTAttackSE", "enemyScout_Attack_SE", 277, 302, 0.2f);
+        this.generateAnimationObject("SCOUTAttackSW", "enemyScout_Attack_SW", 277, 300, 0.2f);
+        this.generateAnimationObject("SCOUTAttackNW", "enemyScout_Attack_NW", 285, 297, 0.2f);
 
         this.generateAnimationObject("ABDUCTORMoveN", "enemyAbductor_Move_N", 151, 306, 0.2f);
         this.generateAnimationObject("ABDUCTORMoveS", "enemyAbductor_Move_S", 149, 306, 0.2f);

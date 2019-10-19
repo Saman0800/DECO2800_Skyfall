@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources.items;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -8,19 +7,16 @@ import static org.junit.Assert.*;
 public class Aloe_VeraTest{
 
     // create a Aloe_Vera item
-    private Aloe_Vera aloe_vera;
+    private AloeVera aloe_vera;
 
     /**
      * Create a Aloe vera health resource
      */
     @Before
     public void setUp() {
-        aloe_vera = new Aloe_Vera();
+        aloe_vera = new AloeVera();
     }
 
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Ensure that the getName method returns the name of the subclass

@@ -8,7 +8,6 @@ import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.NetworkManager;
 import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.renderers.Renderable;
 import deco2800.skyfall.resources.HealthResources;
@@ -248,6 +247,16 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     }
 
     /**
+     * Sets the position of this entity.
+     *
+     * @param vec the new vector of this entity
+     */
+    public void setPosition(HexVector vec) {
+        this.position.setCol(vec.getCol());
+        this.position.setRow(vec.getRow());
+    }
+
+    /**
      * Sets the height coordinate for the entity
      */
     public void setHeight(int z) {
@@ -284,7 +293,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     @Override
     public int compareTo(AbstractEntity otherEntity) {
-        return this.renderOrder - otherEntity.getRenderOrder();
+        return -Float.compare(this.getRow(), otherEntity.getRow());
     }
 
     @Override
@@ -421,7 +430,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     public void dispose() {
         body.destroyFixture(fixture);
 
-        GameManager.get().getManager(NetworkManager.class).deleteEntity(this);
         GameManager.get().getWorld().getEntities().remove(this);
     }
 
@@ -456,7 +464,7 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      * @param x the entities x coordinate
      * @param y the entities y coordinate
      */
-    private void initialiseBox2D(float x, float y) {
+    public void initialiseBox2D(float x, float y) {
         if (!(this instanceof StaticEntity || this instanceof NaturalResources ||
                 this instanceof ManufacturedResources || this instanceof HealthResources)) {
             defineBody(x, y);

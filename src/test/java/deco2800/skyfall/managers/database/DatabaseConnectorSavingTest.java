@@ -85,10 +85,38 @@ public class DatabaseConnectorSavingTest {
             assertEquals(1, count);
 
         } catch (SQLException e) {
-            fail("Failed to save world due to an exception occurring : " + e);
+            fail("Failed to save the game due to an exception occurring : " + e);
         }
 
     }
+
+    @Test
+    public void deleteSaveTest(){
+        try{
+            SaveMemento saveMemento = Mockito.mock(SaveMemento.class);
+
+
+            InsertDataQueries insertDataQueries = new InsertDataQueries(dbConnector.getConnection());
+            insertDataQueries.insertSave(0, saveMemento);
+            dbConnector.deleteSave(0);
+
+
+            int count = 0;
+            try (PreparedStatement getSaves = dbConnector.getConnection().prepareStatement("SELECT * FROM SAVES")) {
+                try (ResultSet saveResults = getSaves.executeQuery()) {
+                    while (saveResults.next()) {
+                        count++;
+                    }
+                }
+            }
+            assertEquals(0, count);
+
+
+        } catch (SQLException | IOException e){
+            fail("Failed to delete the save due to an exception occurring : " + e);
+        }
+    }
+
 
     @Test
     public void updateSaveTest(){
@@ -384,5 +412,7 @@ public class DatabaseConnectorSavingTest {
         }
 
     }
+
+
 
 }

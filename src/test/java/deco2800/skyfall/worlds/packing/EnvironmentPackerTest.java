@@ -1,6 +1,7 @@
 package deco2800.skyfall.worlds.packing;
 
 import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.world.World;
@@ -67,6 +68,20 @@ public class EnvironmentPackerTest {
         assertTrue(packing.moveEntityFromTileToTile(0f, 0f, 4f, 2f));
         assertFalse(packing.moveEntityFromTileToTile(0f, 0f, 3f, 2f));
         assertFalse(packing.moveEntityFromTileToTile(3f, 2f, 4f, 2f));
+    }
+
+    @Test
+    public void birthPlacePackingTest() {
+        BirthPlacePacking packing = new BirthPlacePacking(packer);
+        packer.addPackingComponent(packing);
+        Tile tile = mock(Tile.class);
+        when(world.getTile(-1f, 0.5f)).thenReturn(tile);
+        when(tile.getCoordinates()).thenReturn(new HexVector(-1f, 0.5f));
+        try {
+            packer.doPackings();
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     @After

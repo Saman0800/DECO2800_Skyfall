@@ -21,7 +21,7 @@ public class Projectile extends AgentEntity implements Animatable {
     /**
      * How many game ticks all projectiles survive for before being removed.
      */
-    public static final int LIFE_TIME_TICKS = 15;
+    public static final int LIFE_TIME_TICKS = 40;
 
     /**
      * The amount of damage this projectile deals.
@@ -151,8 +151,7 @@ public class Projectile extends AgentEntity implements Animatable {
             ((Enemy) other).takeDamage(this.getDamage());
             ((Enemy) other).setHurt(true);
             toBeDestroyed = true;
-            ((Enemy) other).getBody().setLinearVelocity(
-                    (((Enemy) other).getBody().getLinearVelocity().lerp(new Vector2(0.f, 0.f), 0.5f)));
+            ((Enemy) other).getBody().setLinearVelocity(new Vector2(0.f, 0.f));
         }
     }
 

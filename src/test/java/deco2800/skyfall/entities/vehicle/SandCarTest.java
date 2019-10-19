@@ -76,6 +76,11 @@ public class SandCarTest {
         Assert.assertEquals(sandCar.getSubtype(), "vehicle");
     }
 
+    @Test
+    public void testIsOnUse() {
+        Assert.assertEquals(sandCar.isOnUse(), false);
+    }
+
     /**
      * Test the animation is correct
      */

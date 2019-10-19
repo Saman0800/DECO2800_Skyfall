@@ -16,7 +16,6 @@ public class House extends AbstractBuilding {
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);
 
     private static final String ENTITY_ID_STRING = "HouseID";
-    private int renderOrder;
     private int maxHealth = 10;
     private int currentHealth;
     //Build time in seconds.

@@ -85,7 +85,7 @@ public class ForestMushroomTest {
         testMushroom.pointLightSetUp();
         assertEquals(testMushroom.getPointLight(), testMushroom.getPointLight());
 
-        PointLight testLight = new PointLight(new vec2(0, 0), new vec3(0.17f, 0.98f, 0.31f), 3.0f, 5.0f);
+        PointLight testLight = new PointLight(new Vec2(0, 0), new Vec3(0.17f, 0.98f, 0.31f), 3.0f, 5.0f);
         PointLight mushroomLight = testMushroom.getPointLight();
 
         assertEquals(testLight.getColour(), mushroomLight.getColour());

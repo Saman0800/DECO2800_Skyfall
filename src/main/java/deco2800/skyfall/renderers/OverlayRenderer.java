@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import deco2800.skyfall.graphics.ShaderWrapper;
-import deco2800.skyfall.graphics.types.vec3;
+import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.gui.GuiMaster;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.util.WorldUtil;
@@ -133,23 +133,11 @@ public class OverlayRenderer implements Renderer {
         debugLine(batch, camera, line++, GameManager.get().getManager(PathFindingService.class).toString());
 
         line++;
-        debugLine(batch, camera, line++, "== Networking ==");
-        debugLine(batch, camera, line++,
-                String.format("ID: %d", GameManager.get().getManager(NetworkManager.class).getID()));
-        debugLine(batch, camera, line++, String.format("Messages Received: %d",
-                GameManager.get().getManager(NetworkManager.class).getMessagesReceived()));
-        debugLine(batch, camera, line++, String.format("Messages Sent: %d",
-                GameManager.get().getManager(NetworkManager.class).getMessagesSent()));
-        debugLine(batch, camera, line++,
-                String.format("Username: %s", GameManager.get().getManager(NetworkManager.class).getUsername()));
-        debugLine(batch, camera, line++, String.format("World seed: %d", GameManager.get().getWorld().getSeed()));
-
-        line++;
 
         debugLine(batch, camera, line++, "== Graphics ==");
         debugLine(batch, camera, line++, String.format("Extended shading: %s", shader.getActive() ? "True" : "False"));
         debugLine(batch, camera, line++, String.format("Ambient Intensity: %f", shader.getAmbientIntensity()));
-        vec3 colour = shader.getAmbientColour();
+        Vec3 colour = shader.getAmbientColour();
         debugLine(batch, camera, line++,
                 String.format("Ambient Colour: (%f, %f, %f)", colour.getX(), colour.getY(), colour.getZ()));
         debugLine(batch, camera, line++,

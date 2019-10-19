@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.BlueprintShop;
 import deco2800.skyfall.entities.Chest;
+import deco2800.skyfall.entities.enemies.*;
 import deco2800.skyfall.entities.weapons.Axe;
 import deco2800.skyfall.entities.weapons.Bow;
 import deco2800.skyfall.entities.weapons.Spear;
@@ -11,6 +12,7 @@ import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.managers.ChestManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.LootRarity;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
@@ -161,7 +163,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(chestRule);
     }
 
-    private void spawnBlueprintShop(World world, Random random, List<EntitySpawnRule> biomeSpawnRules) {
+    private void spawnBlueprintShop(Random random, List<EntitySpawnRule> biomeSpawnRules) {
         // Spawn chests
         EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), random.nextInt(), 0.002);
         biomeSpawnRules.add(chestRule);
@@ -169,12 +171,11 @@ public class WorldBuilder implements WorldBuilderInterface {
 
     /**
      * The method to be used to spawn gold into a particular woorld
-     * 
-     * @param world           The world that will get static entities
+     *
      * @param random          Generates random integers
      * @param biomeSpawnRules The hashmap which stores all the biome spawn rules
      */
-    private void spawnGold(World world, Random random, List<EntitySpawnRule> biomeSpawnRules) {
+    private void spawnGold(Random random, List<EntitySpawnRule> biomeSpawnRules) {
         // Spawn gold pieces
         EntitySpawnRule goldRule = new EntitySpawnRule(tile -> new GoldPiece(tile, true), random.nextInt(), 0.002);
         biomeSpawnRules.add(goldRule);
@@ -194,14 +195,6 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule.setNoiseSeed(worldSeed);
 
         Random random = new Random(worldSeed);
-
-        // FIXME:Ontonator Make this work properly.
-        // You can't spawn things here.
-        // Tile torchTile1 = world.getTile(0.0f, 5.0f);
-        // world.addEntity(new TikiTorch(torchTile1, false));
-        //
-        // Tile torchTile2 = world.getTile(0.0f, -3.0f);
-        // world.addEntity(new TikiTorch(torchTile2, false));
 
         for (AbstractBiome biome : world.getBiomes()) {
             ArrayList<EntitySpawnRule> biomeSpawnRules = new ArrayList<>();
@@ -237,9 +230,6 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateOceanEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
-        // Spawn some bows
-        EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.03);
-        biomeSpawnRules.add(bowRule);
 
         EntitySpawnRule shipwrecks = new EntitySpawnRule(tile -> new Shipwrecks(tile, true), random.nextInt(), 0.003);
         biomeSpawnRules.add(shipwrecks);
@@ -262,7 +252,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(spearRule);
 
         // Spawn some bows
-        EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.03);
+        EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.003);
         biomeSpawnRules.add(bowRule);
 
         // Create a new perlin noise map
@@ -273,7 +263,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(treeRule);
 
         spawnChests(world, random, biomeSpawnRules);
-        spawnBlueprintShop(world, random, biomeSpawnRules);
+        spawnBlueprintShop(random, biomeSpawnRules);
 
         // Spawn some ForestShrub uniformly
         EntitySpawnRule forestShrub = new EntitySpawnRule(tile -> new ForestShrub(tile, true), random.nextInt(), 0.03);
@@ -285,7 +275,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(rockRule);
 
         // Spawn gold pieces
-        spawnGold(world, random, biomeSpawnRules);
+        spawnGold(random, biomeSpawnRules);
 
         // This generator will cause the mushrooms to clump togteher more
         NoiseGenerator mushroomGen = new NoiseGenerator(new Random(worldSeed).nextLong(), 10, 20, 0.9);
@@ -310,7 +300,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(mTreeControl);
 
         // Spawn gold pieces
-        spawnGold(world, random, biomeSpawnRules);
+        spawnGold(random, biomeSpawnRules);
 
         spawnChests(world, random, biomeSpawnRules);
 
@@ -342,7 +332,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(cactiRule);
 
         // Spawn gold pieces
-        spawnGold(world, random, biomeSpawnRules);
+        spawnGold(random, biomeSpawnRules);
 
         // Spawn some bones
         EntitySpawnRule boneRule = new EntitySpawnRule(tile -> new Bone(tile, true), random.nextInt(), 0.004);
@@ -357,16 +347,16 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(dRockRule);
 
         // Spawn desert environment
-        EntitySpawnRule DesertEnvironment = new EntitySpawnRule(tile -> new DesertEnvironment(tile, true),
+        EntitySpawnRule desertEnvironment = new EntitySpawnRule(tile -> new DesertEnvironment(tile, true),
                 random.nextInt(), 0.01);
-        biomeSpawnRules.add(DesertEnvironment);
+        biomeSpawnRules.add(desertEnvironment);
 
         // Spawn ruined robot
-        EntitySpawnRule ruinedRobot = new EntitySpawnRule(tile -> new ruinedRobot(tile, true), random.nextInt(), 0.01);
+        EntitySpawnRule ruinedRobot = new EntitySpawnRule(tile -> new RuinedRobot(tile, true), random.nextInt(), 0.01);
         biomeSpawnRules.add(ruinedRobot);
 
         // Spawn ruined city
-        EntitySpawnRule ruinedCity = new EntitySpawnRule(tile -> new ruinedCity(tile, true), random.nextInt(), 0.01);
+        EntitySpawnRule ruinedCity = new EntitySpawnRule(tile -> new RuinedCity(tile, true), random.nextInt(), 0.01);
         biomeSpawnRules.add(ruinedCity);
     }
 
@@ -384,7 +374,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(swordRule);
 
         // Spawn gold pieces
-        spawnGold(world, random, biomeSpawnRules);
+        spawnGold(random, biomeSpawnRules);
 
         // Create a new perlin noise map
         SpawnControl sSnowControl = x -> (x * x * x * x * x * x) / 2d + 0.05;
@@ -410,7 +400,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(mTreeControl);
 
         // Spawn gold pieces
-        spawnGold(world, random, biomeSpawnRules);
+        spawnGold(random, biomeSpawnRules);
 
         spawnChests(world, random, biomeSpawnRules);
 
@@ -448,7 +438,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(swampShrubRule);
 
         // Spawn gold pieces
-        spawnGold(world, random, biomeSpawnRules);
+        spawnGold(random, biomeSpawnRules);
 
         // Spawn some Rocks uniformly
         EntitySpawnRule rockRule = new EntitySpawnRule(tile -> new SwampRock(tile, true), random.nextInt(), 0.015);
@@ -465,6 +455,100 @@ public class WorldBuilder implements WorldBuilderInterface {
                 true, mushroomControl);
         mushroomRule.setNoiseGenerator(mushroomGen);
         biomeSpawnRules.add(mushroomRule);
+    }
+
+    /**
+     * The method to be used to spawn an electric enemies on a tile, while the electric enemy is
+     * randomly chosen from Abductor, Heavy, Scout enemy types with impact of factors.
+     *
+     * @param random        :     an random generator
+     * @param tile          :     a tile that will spawn an enemy
+     * @param world         :     the game world
+     * @param enemyScaling  :     scaling factor to enemy states
+     */
+    private void spawnAnElectricEnemyOnTile(Random random, Tile tile, World world, float enemyScaling) {
+        // factor or ratio between Abductor, Heavy, Scout enemies
+        int abductorFactor = 3;
+        int heavyFactor = 3;
+        int scoutFactor = 4;
+
+        // check the tile whether is empty or not
+        for (AbstractEntity entity : world.getEntities()) {
+            if (entity.getPosition().equals(tile.getCoordinates())) {
+                return;
+            }
+        }
+
+        // spawn an random electric enemy on a empty tile only
+        int start = 0;
+        int factor = random.nextInt(abductorFactor + heavyFactor + scoutFactor);
+        // chance to choose abductor enemy
+        if ((start <= factor) && (factor <= (start + abductorFactor))) {
+            world.addEntity(new Abductor(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
+            return;
+        } else {
+            start += abductorFactor;
+        }
+        // chance to choose heavy enemy
+        if ((start <= factor) && (factor <= (start + heavyFactor))) {
+            world.addEntity(new Heavy(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
+            return;
+        } else {
+            start += heavyFactor;
+        }
+        // chance to choose scout enemy
+        if ((start <= factor) && (factor <= (start + scoutFactor))) {
+            world.addEntity(new Scout(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
+        }
+    }
+
+    /**
+     * The method to be used to spawn electric enemies.
+     *
+     * @param random        :     an random generator
+     * @param chance        :     chance to spawn an enemy
+     * @param biome         :     biome where enemy spawned on
+     * @param world         :     the game world
+     * @param enemyScaling  :     scaling factor to enemy states
+     */
+    private void spawnEnemies(Random random, float chance, AbstractBiome biome, World world, float enemyScaling) {
+        // NOTE: biome.getTiles() and world.getWorldGenNodes() return a list of loaded tiles only
+        int worldSize = world.getWorldParameters().getWorldSize();
+        int spawnGap = 3;
+        for (float col = worldSize * -1f; col <= worldSize; col += spawnGap) {
+            float offset = (col % 2) * 0.5f;
+            for (float row = (worldSize * -1f) + offset; row <= worldSize; row += spawnGap) {
+                if (random.nextFloat() <= chance) {
+                    Tile tile = world.getTile(col, row);
+                    if ((tile != null) && (tile.getBiome().getBiomeName().equals(biome.getBiomeName()))) {
+                        spawnAnElectricEnemyOnTile(random, tile, world, enemyScaling);
+                    }
+                }
+            }
+        }
+    }
+
+    public void generateNotStaticEntities(World world, float enemyScaling) {
+        Random random = new Random(world.getSeed());
+
+        for (AbstractBiome biome : world.getBiomes()) {
+            switch (biome.getBiomeName()) {
+                case "forest":
+                    spawnEnemies(random, 0.02f, biome, world, enemyScaling);
+                    break;
+                case "mountain":
+                    spawnEnemies(random, 0.015f, biome, world, enemyScaling);
+                    break;
+                case "desert":
+                    spawnEnemies(random, 0.01f, biome, world, enemyScaling);
+                    break;
+                case "snowy_mountains":
+                    spawnEnemies(random, 0.025f, biome, world, enemyScaling);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     /**
