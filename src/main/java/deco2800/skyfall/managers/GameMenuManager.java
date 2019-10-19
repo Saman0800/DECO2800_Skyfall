@@ -26,11 +26,8 @@ public class GameMenuManager extends TickableManager {
     private EnvironmentManager em;
     private InventoryManager inventory;
     private Skin skin;
-    private String[] characters;
     private SkyfallGame game;
 
-    // Number of characters in the game.
-    public static final int NUMBEROFCHARACTERS = 5;
     private StatisticsManager sm;
 
     //Refactor Code
@@ -64,13 +61,6 @@ public class GameMenuManager extends TickableManager {
         em = GameManager.get().getManager(EnvironmentManager.class);
         stage = null;
         skin = null;
-        characters = new String[NUMBEROFCHARACTERS];
-        // testing
-        characters[0] = "MainCharacter";
-        characters[1] = "bowman";
-        characters[2] = "robot";
-        characters[3] = "spider";
-        characters[4] = "spacman_ded";
         uiElements = new HashMap<>();
         popUps = new HashMap<>();
     }
@@ -233,16 +223,6 @@ public class GameMenuManager extends TickableManager {
             return MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
         }
     }
-    /**
-     * Getter of all characters in the game.
-     *
-     * @return Texture names of the characters.
-     */
-    public String[] getCharacters() {
-        return characters;
-    }
-
-    //refactor
 
     /**
      * Before elements can be drawn a statistic manager needs to be added
@@ -312,11 +292,6 @@ public class GameMenuManager extends TickableManager {
                 skin));
 
         popUps.put("pauseTable", new PauseTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject(exitText)),
-                null, textureManager, this,
-                skin));
-
-        popUps.put("playerSelectTable", new PlayerSelectTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this,
                 skin));
