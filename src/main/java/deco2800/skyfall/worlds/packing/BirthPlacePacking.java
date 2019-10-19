@@ -3,6 +3,7 @@ package deco2800.skyfall.worlds.packing;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.worlds.world.World;
 
 public class BirthPlacePacking extends AbstractPacking {
@@ -23,6 +24,10 @@ public class BirthPlacePacking extends AbstractPacking {
 
         // limit to static entities that are not appear too close to initial start point
         emptyEntityOnTile(world, StaticEntity.class, 3);
+
+        // modify some entities to realize the environment
+        addEntityWithOrder(world, new Sword(world.getTile(-1f, 0.5f), false), -1);
+        removeEntityOnTile(-1f, 0.5f);
     }
 
     /**

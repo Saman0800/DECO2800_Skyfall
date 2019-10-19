@@ -515,10 +515,11 @@ public class WorldBuilder implements WorldBuilderInterface {
         // NOTE: biome.getTiles() and world.getWorldGenNodes() return a list of loaded tiles only
         int worldSize = world.getWorldParameters().getWorldSize();
         int spawnGap = 3;
-        for (int col = worldSize * -1; col <= worldSize; col += spawnGap) {
-            for (int row = worldSize * -1; row <= worldSize; row += spawnGap) {
+        for (float col = worldSize * -1f; col <= worldSize; col += spawnGap) {
+            float offset = (col % 2) * 0.5f;
+            for (float row = (worldSize * -1f) + offset; row <= worldSize; row += spawnGap) {
                 if (random.nextFloat() <= chance) {
-                    Tile tile = world.getTile((float)col, (float)row);
+                    Tile tile = world.getTile(col, row);
                     if ((tile != null) && (tile.getBiome().getBiomeName().equals(biome.getBiomeName()))) {
                         spawnAnElectricEnemyOnTile(random, tile, world, enemyScaling);
                     }
