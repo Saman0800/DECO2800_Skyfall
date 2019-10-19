@@ -103,12 +103,9 @@ public class GameScreen implements Screen, KeyDownObserver {
             MainCharacter.getInstance().setSave(save);
             save.setMainCharacter(MainCharacter.getInstance());
         } else {
-            if (GameManager.get().getIsTutorial()) {
-                world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed).getWorld();
-            } else {
-                // Creating the world
-                world = WorldDirector.constructSingleBiomeWorld(new WorldBuilder(), seed, true, "forest").getWorld();
-            }
+            // Creating the world
+            world = WorldDirector.constructSingleBiomeWorld(new WorldBuilder(), seed, true, "forest").getWorld();
+
             save.getWorlds().add(world);
             save.setCurrentWorld(world);
             world.setSave(save);
