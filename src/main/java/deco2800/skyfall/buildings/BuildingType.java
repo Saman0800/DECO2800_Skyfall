@@ -10,8 +10,10 @@ import java.util.*;
  */
 public enum BuildingType implements Blueprint {
 
-    CABIN(cabinString, 10, 1, 1, 7, cabinString0), STORAGE_UNIT(storageUnitString, 5, 2, 2, 6, storageUnitStringLower),
-    TOWNCENTRE(townCentreString, 80, 3, 3, 0, townCentreStringLower), FENCE("Fence", 5, 1, 1, 3, "fenceN-S"),
+    CABIN(BluePrintNames.CABIN_STRING, 10, 1, 1, 7, BluePrintNames.CABIN_STRING_0), STORAGE_UNIT(
+        BluePrintNames.STORAGE_UNIT_STRING, 5, 2, 2, 6,
+        BluePrintNames.STORAGE_UNIT_STRING_LOWER),
+    TOWNCENTRE(BluePrintNames.TOWN_CENTRE_STRING, 80, 3, 3, 0, BluePrintNames.TOWN_CENTRE_STRING_LOWER), FENCE("Fence", 5, 1, 1, 3, "fenceN-S"),
     SAFEHOUSE("SafeHouse", 5, 5, 5, 7, "safe_house_0"), WATCHTOWER("WatchTower", 8, 1, 1, 8, "watchtower_0"),
     CASTLE("Castle", 10, 1, 1, 6, "castle_0"), FORESTPORTAL("ForestPortal", 10, 1, 1, 6, "portal_forest"),
     DESERTPORTAL("DesertPortal", 10, 1, 1, 6, "portal_desert"),
@@ -37,13 +39,13 @@ public enum BuildingType implements Blueprint {
 
         // adding all of the possible textures for each building type
         switch (name) {
-        case cabinString:
+        case BluePrintNames.CABIN_STRING:
             initialiseCabin();
             break;
-        case storageUnitString:
+        case BluePrintNames.STORAGE_UNIT_STRING:
             initialiseStorageUnit();
             break;
-        case townCentreString:
+        case BluePrintNames.TOWN_CENTRE_STRING:
             initialiseTownCentre();
             break;
         case "Wall":
@@ -86,19 +88,19 @@ public enum BuildingType implements Blueprint {
         buildingTextures = new ArrayList<>();
         // Need to add initialise textures back.
 
-        buildingTextures.add(cabinString0);
+        buildingTextures.add(BluePrintNames.CABIN_STRING_0);
         buildingTextures.add("cabin_90");
         buildingTextures.add("cabin_180");
         buildingTextures.add("cabin_270");
 
         buildingCost = new HashMap<>();
-        buildingCost.put(woodString, 5);
-        buildingCost.put(stoneString, 2);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 5);
+        buildingCost.put(BluePrintNames.STONE_STRING, 2);
     }
 
     public List<String> initialiseCabinTextures() {
         List<String> cabinTextures = new ArrayList<>();
-        cabinTextures.add(cabinString0);
+        cabinTextures.add(BluePrintNames.CABIN_STRING_0);
         cabinTextures.add("cabin_90");
         cabinTextures.add("cabin_180");
         cabinTextures.add("cabin_270");
@@ -111,16 +113,16 @@ public enum BuildingType implements Blueprint {
      */
     public void initialiseStorageUnit() {
         buildingTextures = new ArrayList<>();
-        buildingTextures.add(storageUnitStringLower);
+        buildingTextures.add(BluePrintNames.STORAGE_UNIT_STRING_LOWER);
 
         buildingCost = new HashMap<>();
-        buildingCost.put(woodString, 4);
-        buildingCost.put(stoneString, 2);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 4);
+        buildingCost.put(BluePrintNames.STONE_STRING, 2);
     }
 
     public List<String> initialiseStorageUnitTextures() {
         List<String> storageTextures = new ArrayList<>();
-        storageTextures.add(storageUnitStringLower);
+        storageTextures.add(BluePrintNames.STORAGE_UNIT_STRING_LOWER);
         return storageTextures;
     }
 
@@ -130,17 +132,17 @@ public enum BuildingType implements Blueprint {
      */
     public void initialiseTownCentre() {
         buildingTextures = new ArrayList<>();
-        buildingTextures.add(townCentreStringLower);
+        buildingTextures.add(BluePrintNames.TOWN_CENTRE_STRING_LOWER);
 
         buildingCost = new HashMap<>();
-        buildingCost.put(woodString, 10);
-        buildingCost.put(stoneString, 5);
-        buildingCost.put(metalString, 2);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 10);
+        buildingCost.put(BluePrintNames.STONE_STRING, 5);
+        buildingCost.put(BluePrintNames.METAL_STRING, 2);
     }
 
     public List<String> initialiseTownCentreTextures() {
         List<String> townTextures = new ArrayList<>();
-        townTextures.add(townCentreStringLower);
+        townTextures.add(BluePrintNames.TOWN_CENTRE_STRING_LOWER);
         return townTextures;
     }
 
@@ -150,9 +152,9 @@ public enum BuildingType implements Blueprint {
      */
     public void initialiseCastle() {
         buildingCost = new HashMap<>();
-        buildingCost.put(woodString, 20);
-        buildingCost.put(stoneString, 10);
-        buildingCost.put(metalString, 5);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 20);
+        buildingCost.put(BluePrintNames.STONE_STRING, 10);
+        buildingCost.put(BluePrintNames.METAL_STRING, 5);
     }
 
     public List<String> initialiseCastleTextures() {
@@ -170,9 +172,9 @@ public enum BuildingType implements Blueprint {
      */
     public void initialiseSafeHouse() {
         buildingCost = new HashMap<>();
-        buildingCost.put(woodString, 10);
-        buildingCost.put(stoneString, 5);
-        buildingCost.put(metalString, 2);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 10);
+        buildingCost.put(BluePrintNames.STONE_STRING, 5);
+        buildingCost.put(BluePrintNames.METAL_STRING, 2);
     }
 
     public List<String> initialiseSafeHouseTextures() {
@@ -190,16 +192,16 @@ public enum BuildingType implements Blueprint {
      */
     public void initialiseWatchTower() {
         buildingCost = new HashMap<>();
-        buildingCost.put(woodString, 10);
-        buildingCost.put(stoneString, 7);
-        buildingCost.put(metalString, 3);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 10);
+        buildingCost.put(BluePrintNames.STONE_STRING, 7);
+        buildingCost.put(BluePrintNames.METAL_STRING, 3);
     }
 
     public void initialiseForestPortal() {
         buildingCost = new HashMap<>();
-        buildingCost.put(woodString, 0);
-        buildingCost.put(stoneString, 0);
-        buildingCost.put(metalString, 0);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 0);
+        buildingCost.put(BluePrintNames.STONE_STRING, 0);
+        buildingCost.put(BluePrintNames.METAL_STRING, 0);
 
         buildingTextures = new ArrayList<>();
         // Need to add initialise textures back.
@@ -209,9 +211,9 @@ public enum BuildingType implements Blueprint {
 
     public void initialiseDesertPortal() {
         buildingCost = new HashMap<>();
-        buildingCost.put(woodString, 0);
-        buildingCost.put(stoneString, 0);
-        buildingCost.put(metalString, 0);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 0);
+        buildingCost.put(BluePrintNames.STONE_STRING, 0);
+        buildingCost.put(BluePrintNames.METAL_STRING, 0);
 
         buildingTextures = new ArrayList<>();
         // Need to add initialise textures back.
@@ -221,9 +223,9 @@ public enum BuildingType implements Blueprint {
 
     public void initialiseMountainPortal() {
         buildingCost = new HashMap<>();
-        buildingCost.put(woodString, 0);
-        buildingCost.put(stoneString, 0);
-        buildingCost.put(metalString, 0);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 0);
+        buildingCost.put(BluePrintNames.STONE_STRING, 0);
+        buildingCost.put(BluePrintNames.METAL_STRING, 0);
 
         buildingTextures = new ArrayList<>();
         // Need to add initialise textures back.
@@ -233,9 +235,9 @@ public enum BuildingType implements Blueprint {
 
     public void initialiseVolcanoPortal() {
         buildingCost = new HashMap<>();
-        buildingCost.put(woodString, 0);
-        buildingCost.put(stoneString, 0);
-        buildingCost.put(metalString, 0);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 0);
+        buildingCost.put(BluePrintNames.STONE_STRING, 0);
+        buildingCost.put(BluePrintNames.METAL_STRING, 0);
 
         buildingTextures = new ArrayList<>();
         // Need to add initialise textures back.
@@ -259,7 +261,7 @@ public enum BuildingType implements Blueprint {
     public void initialiseFence() {
         initialiseFenceTextures();
         buildingCost = new HashMap<>();
-        buildingCost.put(woodString, 2);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 2);
     }
 
     public List<String> initialiseFenceTextures() {
@@ -281,17 +283,17 @@ public enum BuildingType implements Blueprint {
 
     @Override
     public int getRequiredWood() {
-        return buildingCost.get(woodString);
+        return buildingCost.get(BluePrintNames.WOOD_STRING);
     }
 
     @Override
     public int getRequiredStone() {
-        return buildingCost.get(stoneString);
+        return buildingCost.get(BluePrintNames.STONE_STRING);
     }
 
     @Override
     public int getRequiredMetal() {
-        return buildingCost.get(metalString);
+        return buildingCost.get(BluePrintNames.METAL_STRING);
     }
 
     @Override
@@ -311,11 +313,11 @@ public enum BuildingType implements Blueprint {
     @Override
     public int getCost() {
         switch (name) {
-        case cabinString:
+        case BluePrintNames.CABIN_STRING:
             return 100;
-        case storageUnitString:
+        case BluePrintNames.STORAGE_UNIT_STRING:
             return 150;
-        case townCentreString:
+        case BluePrintNames.TOWN_CENTRE_STRING:
             return 200;
         case "Wall":
             return 250;

@@ -1,12 +1,13 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.graphics.Texture;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Texture manager acts as a cache between the file system and the renderers.
@@ -20,6 +21,7 @@ import java.util.*;
  * @Author Tim Hadwen
  */
 public class TextureManager extends AbstractManager {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(TextureManager.class);
 
     /**
@@ -31,6 +33,15 @@ public class TextureManager extends AbstractManager {
      * The height of the tile to use when positioning the tile.
      */
     public static final int TILE_HEIGHT = 278;
+    public static final String WEAPONS_TEXTURE_FOLDER = "resources/weapons";
+    public static final String PORTAL_IMAGE = "resources/world_structures/portal.png";
+    public static final String CABIN_IMAGE = "resources/world_structures/cabin_0.png";
+    public static final String CASTLE_IMAGE = "resources/world_structures/castle_0.png";
+    public static final String SAFE_HOUSE_IMAGE = "resources/world_structures/safe_house_0.png";
+    public static final String WATCH_TOWER_IMAGE = "resources/world_structures/watchtower_0.png";
+    public static final String DESERT_PORTAL_IMAGE = "resources/world_structures/portal_desert.png";
+    public static final String VOLCANO_PORTAL_IMAGE = "resources/world_structures/portal_volcano.png";
+    public static final String SPACEMAN_DED_KEY = "spacman_ded";
 
     /**
      * A HashMap of all textures with string keys
@@ -47,16 +58,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("load_game_back", new Texture("resources/load_game_menu/back.png"));
             textureMap.put("load_game_delete", new Texture("resources/load_game_menu/delete.png"));
 
-            textureMap.put("spacman_ded", new Texture("resources/spacman_ded.png"));
-            textureMap.put("spacman_blue", new Texture("resources/spacman_blue.png"));
-            textureMap.put("bowman", new Texture("resources/bowman.png"));
+            textureMap.put(SPACEMAN_DED_KEY, new Texture("resources/spacman_ded.png"));
             textureMap.put("dialogue_text_background", new Texture("resources/dialogue_text_background.png"));
 
             textureMap.put("tornado_placeholder", new Texture("resources/spells/tornado_3.png"));
             textureMap.put("shield_placeholder", new Texture("resources/spells/shield_3.png"));
             textureMap.put("flame_wall_placeholder", new Texture("resources/spells/fire_3.png"));
-            textureMap.put("range_test", new Texture("resources/projectile.png"));
-            textureMap.put("melee_test", new Texture("resources/punch.png"));
             textureMap.put("camel", new Texture("resources/camel/camel-face(no-player).png"));
             textureMap.put("camel_character", new Texture("resources/camel/camel-withplayer1(left).png"));
             textureMap.put("horse_images", new Texture("resources/horse_images/horse-left-walk1.png"));
@@ -72,21 +79,7 @@ public class TextureManager extends AbstractManager {
             // otherwise it will get
             // overridden in the texture hashmap .
             File[] files = new File("resources/tile_textures").listFiles();
-            if (files == null) {
-                throw new FileNotFoundException();
-            }
-            for (File direc : files) {
-                if (direc.isDirectory()) {
-                    for (File file : Objects.requireNonNull(direc.listFiles())) {
-                        if (file.getName().toLowerCase().endsWith(".png")) {
-                            String path = String.format("resources/tile_textures/%s/%s", direc.getName(),
-                                    file.getName());
-                            textureMap.put(file.getName().substring(0, file.getName().length() - 4), new Texture(path));
-                        }
-                    }
-                }
-
-            }
+            getImagesFromFolder(files);
 
             textureMap.put("gold", new Texture("resources/gold.png"));
 
@@ -232,13 +225,13 @@ public class TextureManager extends AbstractManager {
                     ".png"));
 
             // Weapons attack
-            textureMap.put("sword_attack", new Texture("resources/weapons" +
+            textureMap.put("sword_attack", new Texture(WEAPONS_TEXTURE_FOLDER +
                     "/DesertSword.png"));
-            textureMap.put("axe_attack", new Texture("resources/weapons" +
+            textureMap.put("axe_attack", new Texture(WEAPONS_TEXTURE_FOLDER +
                     "/axe.png"));
-            textureMap.put("bow_attack", new Texture("resources/weapons" +
-                    "/ArrowEast.png"));
-            textureMap.put("spear_attack", new Texture("resources/weapons" +
+            textureMap.put("bow_attack", new Texture(WEAPONS_TEXTURE_FOLDER +
+                    "/ArrowWest.png"));
+            textureMap.put("spear_attack", new Texture(WEAPONS_TEXTURE_FOLDER +
                     "/spear.png"));
 
             textureMap.put("pop up screen", new Texture("resources/pop_up_screen_background.png"));
@@ -267,8 +260,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("fence_right_right", new Texture("resources/world_structures/fence_right_right.png"));
             textureMap.put("fence_top_left", new Texture("resources/world_structures/fence_top_left.png"));
             textureMap.put("fence_top_right", new Texture("resources/world_structures/fence_top_right.png"));
-            textureMap.put("portal", new Texture("resources/world_structures/portal.png"));
-            textureMap.put("portal_inv", new Texture("resources/world_structures/portal.png"));
+            textureMap.put("portal", new Texture(PORTAL_IMAGE));
+            textureMap.put("portal_inv", new Texture(PORTAL_IMAGE));
 
             textureMap.put("big_circle", new Texture("resources/new_ui/OrangeCircle.png"));
             textureMap.put("inner_circle", new Texture("resources/new_ui/RedCircle.png"));
@@ -306,6 +299,7 @@ public class TextureManager extends AbstractManager {
             // Help table
             textureMap.put("help_page1", new Texture("resources/new_ui/helpTable/help_page1.png"));
             textureMap.put("help_page2", new Texture("resources/new_ui/helpTable/help_page2.png"));
+            textureMap.put("help_page3", new Texture("resources/new_ui/helpTable/help_page3.png"));
             textureMap.put("help_arrow", new Texture("resources/new_ui/helpTable/arrow.png"));
 
             // Clock/Season graphics
@@ -317,9 +311,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("winter", new Texture("resources/clock/winter.png"));
             textureMap.put("spring", new Texture("resources/clock/spring.png"));
             textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
-
-            textureMap.put("mana_bar", new Texture("resources/mana_bar.png"));
-            textureMap.put("mana_bar_inner", new Texture("resources/mana_bar_inner.png"));
 
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
             textureMap.put("chest_banner", new Texture("resources/chest_banner.png"));
@@ -335,7 +326,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("menu_panel", new Texture("resources/menu_panel.png"));
             textureMap.put("exitButton", new Texture("resources/exit_button.png"));
             textureMap.put("inv_button", new Texture("resources/inv_button.png"));
-            textureMap.put("Sand", new Texture("resources/temp_sand.png"));
             textureMap.put("Select", new Texture("resources/item_selected.png"));
             textureMap.put("quick_access_panel", new Texture("quick_access_panel.png"));
             textureMap.put("drop", new Texture("resources/inventory/drop_active.png"));
@@ -348,7 +338,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("addqa inactive", new Texture("resources/inventory/add_qa_inactive.png"));
             textureMap.put("removeqa", new Texture("resources/inventory/removeqa_active.png"));
             textureMap.put("removeqa inactive", new Texture("resources/inventory/removeqa_inactive.png"));
-            textureMap.put("takeall", new Texture("resources/takeall.png"));
             textureMap.put("selected", new Texture("resources/items_icons/selected.png"));
             textureMap.put("item_background", new Texture("resources/items_icons/item_background.png"));
             textureMap.put("checked", new Texture("resources/checked.png"));
@@ -446,55 +435,78 @@ public class TextureManager extends AbstractManager {
             textureMap.put("spells_tornado_Anim", new Texture("resources/spells/tornado_spritesheet.png"));
 
             // Textures for structure blueprints
-            textureMap.put("Cabin", new Texture("resources/world_structures/cabin_0.png"));
-            textureMap.put("Castle", new Texture("resources/world_structures/castle_0.png"));
-            textureMap.put("SafeHouse", new Texture("resources/world_structures/safe_house_0.png"));
-            textureMap.put("WatchTower", new Texture("resources/world_structures/watchtower_0.png"));
+            textureMap.put("Cabin", new Texture(CABIN_IMAGE));
+            textureMap.put("Castle", new Texture(CASTLE_IMAGE));
+            textureMap.put("SafeHouse", new Texture(SAFE_HOUSE_IMAGE));
+            textureMap.put("WatchTower", new Texture(WATCH_TOWER_IMAGE));
 
-            textureMap.put("Cabin_inv", new Texture("resources/world_structures/cabin_0.png"));
-            textureMap.put("Castle_inv", new Texture("resources/world_structures/castle_0.png"));
-            textureMap.put("SafeHouse_inv", new Texture("resources/world_structures/safe_house_0.png"));
-            textureMap.put("WatchTower_inv", new Texture("resources/world_structures/watchtower_0.png"));
+            textureMap.put("Cabin_inv", new Texture(CABIN_IMAGE));
+            textureMap.put("Castle_inv", new Texture(CASTLE_IMAGE));
+            textureMap.put("SafeHouse_inv", new Texture(SAFE_HOUSE_IMAGE));
+            textureMap.put("WatchTower_inv", new Texture(WATCH_TOWER_IMAGE));
 
 
-            textureMap.put("cabin_0", new Texture("resources/world_structures/cabin_0.png"));
+            textureMap.put("cabin_0", new Texture(CABIN_IMAGE));
             textureMap.put("cabin_90", new Texture("resources/world_structures/cabin_90.png"));
             textureMap.put("cabin_180", new Texture("resources/world_structures/cabin_180.png"));
             textureMap.put("cabin_270", new Texture("resources/world_structures/cabin_270.png"));
-            textureMap.put("castle_0", new Texture("resources/world_structures/castle_0.png"));
+            textureMap.put("castle_0", new Texture(CASTLE_IMAGE));
             textureMap.put("castle_90", new Texture("resources/world_structures/castle_90.png"));
             textureMap.put("castle_180", new Texture("resources/world_structures/castle_180.png"));
             textureMap.put("castle_270", new Texture("resources/world_structures/castle_270.png"));
-            textureMap.put("safe_house_0", new Texture("resources/world_structures/safe_house_0.png"));
+            textureMap.put("safe_house_0", new Texture(SAFE_HOUSE_IMAGE));
             textureMap.put("safe_house_90", new Texture("resources/world_structures/safe_house_90.png"));
             textureMap.put("safe_house_180", new Texture("resources/world_structures/safe_house_180.png"));
             textureMap.put("safe_house_270", new Texture("resources/world_structures/safe_house_270.png"));
-            textureMap.put("watchtower_0", new Texture("resources/world_structures/watchtower_0.png"));
+            textureMap.put("watchtower_0", new Texture(WATCH_TOWER_IMAGE));
             textureMap.put("watchtower_90", new Texture("resources/world_structures/watchtower_90.png"));
             textureMap.put("watchtower_180", new Texture("resources/world_structures/watchtower_180.png"));
             textureMap.put("watchtower_270", new Texture("resources/world_structures/watchtower_270.png"));
 
             //Portal Textures
-            textureMap.put("portal_desert", new Texture("resources/world_structures/portal_desert.png"));
-            textureMap.put("portal_forest", new Texture("resources/world_structures/portal_desert.png"));
-            textureMap.put("portal_mountain", new Texture("resources/world_structures/portal_desert.png"));
-            textureMap.put("portal_volcano", new Texture("resources/world_structures/portal_volcano.png"));
-            textureMap.put("desertPortal", new Texture("resources/world_structures/portal_desert.png"));
-            textureMap.put("forestPortal", new Texture("resources/world_structures/portal_desert.png"));
-            textureMap.put("volcanoPortal", new Texture("resources/world_structures/portal_volcano.png"));
-            textureMap.put("mountainPortal", new Texture("resources/world_structures/portal.png"));
-            textureMap.put("DesertPortal", new Texture("resources/world_structures/portal_desert.png"));
-            textureMap.put("ForestPortal", new Texture("resources/world_structures/portal_desert.png"));
-            textureMap.put("VolcanoPortal", new Texture("resources/world_structures/portal_volcano.png"));
-            textureMap.put("MountainPortal", new Texture("resources/world_structures/portal.png"));
-            textureMap.put("desertPortal_inv", new Texture("resources/world_structures/portal_desert.png"));
-            textureMap.put("forestPortal_inv", new Texture("resources/world_structures/portal_desert.png"));
-            textureMap.put("volcanoPortal_inv", new Texture("resources/world_structures/portal_volcano.png"));
-            textureMap.put("mountainPortal_inv", new Texture("resources/world_structures/portal.png"));
+            textureMap.put("portal_desert", new Texture(DESERT_PORTAL_IMAGE));
+            textureMap.put("portal_forest", new Texture(DESERT_PORTAL_IMAGE));
+            textureMap.put("portal_mountain", new Texture(DESERT_PORTAL_IMAGE));
+            textureMap.put("portal_volcano", new Texture(VOLCANO_PORTAL_IMAGE));
+            textureMap.put("desertPortal", new Texture(DESERT_PORTAL_IMAGE));
+            textureMap.put("forestPortal", new Texture(DESERT_PORTAL_IMAGE));
+            textureMap.put("volcanoPortal", new Texture(VOLCANO_PORTAL_IMAGE));
+            textureMap.put("mountainPortal", new Texture(PORTAL_IMAGE));
+            textureMap.put("DesertPortal", new Texture(DESERT_PORTAL_IMAGE));
+            textureMap.put("ForestPortal", new Texture(DESERT_PORTAL_IMAGE));
+            textureMap.put("VolcanoPortal", new Texture(VOLCANO_PORTAL_IMAGE));
+            textureMap.put("MountainPortal", new Texture(PORTAL_IMAGE));
+            textureMap.put("desertPortal_inv", new Texture(DESERT_PORTAL_IMAGE));
+            textureMap.put("forestPortal_inv", new Texture(DESERT_PORTAL_IMAGE));
+            textureMap.put("volcanoPortal_inv", new Texture(VOLCANO_PORTAL_IMAGE));
+            textureMap.put("mountainPortal_inv", new Texture(PORTAL_IMAGE));
 
             LOGGER.info("ALL TEXTURES LOADED SUCCESSFULLY");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new TextureException("Unable to find texture one of the textures", e);
+        }
+    }
+
+    /**
+     * Gets the images from a folder
+     * @param folder The folder to start from
+     * @throws FileNotFoundException If the folder does not exist
+     */
+    private void getImagesFromFolder(File[] folder) throws FileNotFoundException {
+        if (folder == null) {
+            throw new FileNotFoundException();
+        }
+        for (File direc : folder) {
+            if (direc.isDirectory()) {
+                for (File file : Objects.requireNonNull(direc.listFiles())) {
+                    if (file.getName().toLowerCase().endsWith(".png")) {
+                        String path = String.format("resources/tile_textures/%s/%s", direc.getName(),
+                                file.getName());
+                        textureMap.put(file.getName().substring(0, file.getName().length() - 4), new Texture(path));
+                    }
+                }
+            }
+
         }
     }
 
@@ -527,11 +539,12 @@ public class TextureManager extends AbstractManager {
             } else {
                 LOGGER.warn("Texture animation could not be found");
 
-                return textureMap.get("spacman_ded");
+                return textureMap.get(SPACEMAN_DED_KEY);
             }
 
         } else {
-            return textureMap.get("lake1.1");
+            LOGGER.warn("Texture {} could not be found", id);
+            return textureMap.get(SPACEMAN_DED_KEY);
         }
     }
 

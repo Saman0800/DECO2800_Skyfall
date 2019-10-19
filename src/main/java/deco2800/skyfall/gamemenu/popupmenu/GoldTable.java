@@ -13,7 +13,6 @@ import java.util.Map;
 public class GoldTable extends AbstractPopUpElement{
     private final Skin skin;
     private final StatisticsManager sm;
-    private Table goldTable;
     private Table goldPanel;
 
     public GoldTable(Stage stage, ImageButton exit, String[] textureNames,
@@ -25,17 +24,6 @@ public class GoldTable extends AbstractPopUpElement{
         this.draw();
     }
 
-    @Override
-    public void hide() {
-        super.hide();
-        goldTable.setVisible(false);
-    }
-
-    @Override
-    public void show() {
-        super.show();
-        goldTable.setVisible(true);
-    }
 
     @Override
     public void update() {
@@ -47,13 +35,13 @@ public class GoldTable extends AbstractPopUpElement{
     public void draw() {
         super.draw();
 
-        goldTable = new Table();
-        goldTable.setSize(700,700);
-        goldTable.setPosition(Gdx.graphics.getWidth()/2f - goldTable.getWidth()/2,
-                (Gdx.graphics.getHeight() + 160) / 2f - goldTable.getHeight()/2);
-        goldTable.top();
-        goldTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
-        goldTable.setName("goldTable");
+        baseTable = new Table();
+        baseTable.setSize(700,700);
+        baseTable.setPosition(Gdx.graphics.getWidth()/2f - baseTable.getWidth()/2,
+                (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight()/2);
+        baseTable.top();
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
+        baseTable.setName("baseTable");
 
         Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("goldBanner"));
         infoBar.setSize(550, 55);
@@ -66,11 +54,11 @@ public class GoldTable extends AbstractPopUpElement{
 
         updateGoldPanel();
 
-        goldTable.addActor(infoBar);
-        goldTable.addActor(this.goldPanel);
-        goldTable.setVisible(false);
+        baseTable.addActor(infoBar);
+        baseTable.addActor(this.goldPanel);
+        baseTable.setVisible(false);
 
-        stage.addActor(goldTable);
+        stage.addActor(baseTable);
     }
 
     /***
@@ -97,12 +85,12 @@ public class GoldTable extends AbstractPopUpElement{
             ImageButton icon = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("goldPiece" + entry.getKey()));
             icon.setName("icon");
             icon.setSize(100, 100);
-            icon.setPosition(xpos + (float) count * 130, ypos);
+            icon.setPosition(xpos + count * 130, ypos);
 
             goldPanel.addActor(icon);
 
             Label num = new Label(entry.getValue().toString(), skin, "white-label");
-            num.setPosition(xpos + 85 + (float) count * 130, (float) ypos + 75);
+            num.setPosition(xpos + 85 + count * 130, ypos + 75);
             goldPanel.addActor(num);
 
             count++;
