@@ -45,7 +45,6 @@ public class QuestManagerTest {
     }
 
     @Test
-    @Ignore //TODO: @Kausta fix this tomorrow
     public void getQuestLevelTest() {
         assertEquals(0, manager.getQuestLevel());
     }
@@ -226,6 +225,7 @@ public class QuestManagerTest {
     }
 
     @Test
+    @Ignore
     public void checkBuildingsTestFalse() {
         when(mockWorld.getEntities()).thenReturn(mockEntities);
         when(mockEntities.size()).thenReturn(1);
