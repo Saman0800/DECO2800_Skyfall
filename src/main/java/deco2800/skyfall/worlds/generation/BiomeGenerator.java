@@ -353,7 +353,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             // If there hasn't been a valid spot for a lake found after enough
             // attempts, assume there is no valid spot
             if (attempts > usedNodes.size()) {
-                throw new DeadEndGenerationException();
+                throw new DeadEndGenerationException("Unable to generate more nodes");
             }
             // Try to find a valid node to start a lake
             WorldGenNode chosenNode = nodes.get(random.nextInt(nodes.size()));
@@ -476,7 +476,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 // If too many unsuccessful attempts are taken, assume that they
                 // world layout does not allow a river to be created
                 if (attempts > chosenLake.nodes.size() * 2) {
-                    throw new DeadEndGenerationException();
+                    throw new DeadEndGenerationException("Unable to generate more nodes");
                 }
                 // Get a random node from the lake
                 WorldGenNode node = chosenLake.nodes.get(random.nextInt(chosenLake.nodes.size()));
@@ -715,7 +715,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         private void growBiome() throws DeadEndGenerationException {
             for (int remainingNodes = biomeSizes[id] - nodes.size(); remainingNodes > 0; remainingNodes--) {
                 if (borderNodes.isEmpty()) {
-                    throw new DeadEndGenerationException();
+                    throw new DeadEndGenerationException("Unable to generate more nodes");
                 }
 
                 // Pick a border node to grow from.

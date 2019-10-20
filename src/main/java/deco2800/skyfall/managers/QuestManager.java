@@ -65,6 +65,8 @@ public class QuestManager extends TickableManager {
     // List of buildings to be placed
     private List<BuildingType> buildingsPlaced = new ArrayList<>();
 
+
+
     /**
      * Constructor, sets up beginning of game goals
      */
@@ -139,7 +141,6 @@ public class QuestManager extends TickableManager {
     /* Getters and Setters */
 
     /**
-     break;
      * Sets quest level, updates milestones
      * @param level The level to be set
      */

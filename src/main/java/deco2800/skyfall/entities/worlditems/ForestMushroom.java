@@ -6,19 +6,17 @@ import deco2800.skyfall.graphics.types.Vec2;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.graphics.types.*;
 import deco2800.skyfall.graphics.*;
-import java.util.Random;
+
 
 public class ForestMushroom extends StaticEntity implements HasPointLight {
 
     private static final String ENTITY_ID_STRING = "forest_mushrooms";
-    private static Random randomGen = new Random();
     private static int nextImage = 1;
     PointLight entityPointLight;
 
     public ForestMushroom() {
         setupParams();
         this.setTexture("mushrooms" + nextImage);
-
     }
 
     public ForestMushroom(Tile tile, boolean obstructed) {
@@ -32,11 +30,6 @@ public class ForestMushroom extends StaticEntity implements HasPointLight {
     public ForestMushroom(SaveableEntityMemento memento) {
         super(memento);
         setupParams();
-    }
-
-    @Override
-    public void onTick(long i) {
-
     }
 
     private void setupParams() {
@@ -65,7 +58,6 @@ public class ForestMushroom extends StaticEntity implements HasPointLight {
     @Override
     public void updatePointLight() {
         // All the values will always stay constant for the mushrooms.
-        return;
     }
 
     @Override
