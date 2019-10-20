@@ -23,4 +23,5 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
         this.blueprintLearned = false;
     }
 
+
 }

@@ -364,7 +364,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 nodesFound.add(chosenNode);
                 expandLakeNodes(size, tempLakeNodes, nodesFound);
 
-                if (nodesFound.size() <= size) {
+                if (nodesFound.size() >= size) {
                     return nodesFound;
                 }
             }

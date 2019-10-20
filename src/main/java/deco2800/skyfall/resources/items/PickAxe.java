@@ -31,7 +31,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     private void init() {
         this.name = "Pick Axe";
         allRequirements = new HashMap<>();
-        allRequirements.put("Wood", 20);
+        allRequirements.put("Wood", 10);
         allRequirements.put("Stone", 10);
         allRequirements.put("Metal", 4);
         description = "This item can be constructed using stone and wood. " + "\n" + "It can farm stone from biomes.";

@@ -2,9 +2,6 @@ package deco2800.skyfall.buildings;
 
 import deco2800.skyfall.resources.Blueprint;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class MountainPortal extends AbstractPortal implements Blueprint {
 
     /**
@@ -23,5 +20,6 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
         this.currentBiome = "mountain";
         blueprintLearned = false;
     }
+
 
 }
