@@ -3,6 +3,8 @@ package deco2800.skyfall.managers;
 import deco2800.skyfall.buildings.*;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
+import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.PickAxe;
 
 import java.util.*;
 
@@ -478,6 +480,8 @@ public class QuestManager extends TickableManager {
         getPlayer().getInventoryManager().dropAll(SPEAR);
         getPlayer().getInventoryManager().dropAll("axe");
         getPlayer().getInventoryManager().dropAll("bow");
+        getPlayer().getInventoryManager().add(new PickAxe());
+        getPlayer().getInventoryManager().add(new Hatchet());
     }
 
 
