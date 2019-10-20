@@ -16,12 +16,10 @@ import deco2800.skyfall.managers.TextureManager;
 public class ProgressTable extends AbstractPopUpElement {
     private final QuestManager qm;
     private Skin skin;
-    private Table baseTable;
     private Label biomeLabel;
     private Label collectLabel;
     private Label createLabel;
     private Label blueprintLabel;
-    private Label weaponsLabel;
 
     public ProgressTable(Stage stage, ImageButton exit, String[] textureNames,
                          TextureManager tm, GameMenuManager gameMenuManager,
@@ -31,26 +29,8 @@ public class ProgressTable extends AbstractPopUpElement {
         this.skin = skin;
         this.qm = qm;
         this.draw();
-        stage.addActor(baseTable);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        baseTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        baseTable.setVisible(true);
-    }
 
     @Override
     public void update() {
@@ -78,10 +58,6 @@ public class ProgressTable extends AbstractPopUpElement {
 
     private void updateBlueprintText(String text) {
         blueprintLabel.setText( "Portal Blueprint: " + text);
-    }
-
-    private void updateWeaponsText(String text) {
-        blueprintLabel.setText( "WEAPONS: " + text);
     }
 
 
@@ -114,11 +90,11 @@ public class ProgressTable extends AbstractPopUpElement {
         baseTable.row();
         baseTable.add(createLabel).expand().left();
         baseTable.row();
-        baseTable.add(weaponsLabel).expand().left();
-        baseTable.row();
         baseTable.add(blueprintLabel).expand().left();
         baseTable.row();
         baseTable.setVisible(false);
+        stage.addActor(baseTable);
+
     }
 
     public Label getBiomeLabel() {

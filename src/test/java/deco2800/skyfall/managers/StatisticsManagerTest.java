@@ -98,7 +98,7 @@ public class StatisticsManagerTest {
      * Private helper method to be called to record picked up inventories
      */
     private void pickUpInventory() {
-        this.testManager.getCharacter().pickUpInventory(new Aloe_Vera());
+        this.testManager.getCharacter().pickUpInventory(new AloeVera());
         this.testManager.getCharacter().pickUpInventory(new Apple());
         this.testManager.getCharacter().pickUpInventory(new Berry());
         this.testManager.getCharacter().pickUpInventory(new Metal());
@@ -107,7 +107,7 @@ public class StatisticsManagerTest {
         this.testManager.getCharacter().pickUpInventory(new Stone());
         this.testManager.getCharacter().pickUpInventory(new Vine());
         this.testManager.getCharacter().pickUpInventory(new Wood());
-        this.testManager.getCharacter().pickUpInventory(new Aloe_Vera());
+        this.testManager.getCharacter().pickUpInventory(new AloeVera());
     }
 
     /**

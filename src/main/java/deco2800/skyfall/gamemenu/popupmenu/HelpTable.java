@@ -11,14 +11,17 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
 /**
- * A class for help table pop up.
+ * A class for help baseTable pop up.
  */
 public class HelpTable extends AbstractPopUpElement{
     private Skin skin;
-    private Table table;
+    private Image[] pages = {new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page1")),
+           new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page2")),
+         new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page3"))};
+    private static final int NUMBER_OF_PAGES = 3;
 
     /**
-     * Constructs a help table.
+     * Constructs a help baseTable.
      *
      * @param stage Current stage.
      * @param exit Exit button if it has one.
@@ -35,48 +38,30 @@ public class HelpTable extends AbstractPopUpElement{
         this.draw();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        table.setVisible(false);
-    }
 
     /**
      * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        table.setVisible(true);
-    }
-
-
-    /**
-     * {@inheritDoc}
-     * Draw help table.
+     * Draw help baseTable.
      */
     @Override
     public void draw() {
         super.draw();
-        // Set up main table
-        table = new Table().top();
-        table.setSize(750, 600);
-        table.setPosition(Gdx.graphics.getWidth()/2f - table.getWidth()/2,
-                Gdx.graphics.getHeight() / 2f - table.getHeight()/2);
-        table.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
+        // Set up main baseTable
+        baseTable = new Table().top();
+        baseTable.setSize(750, 600);
+        baseTable.setPosition(Gdx.graphics.getWidth()/2f - baseTable.getWidth()/2,
+                Gdx.graphics.getHeight() / 2f - baseTable.getHeight()/2);
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
 
         drawBanner();
         // Show first page
-        toPrev();
-        table.setVisible(false);
-        stage.addActor(table);
+        toPage(1);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
     /**
-     * Draws out table banner, i.e. "HELP".
+     * Draws out baseTable banner, i.e. "HELP".
      */
     private void drawBanner() {
         Table banner = new Table();
@@ -85,63 +70,63 @@ public class HelpTable extends AbstractPopUpElement{
         Label title = new Label("HELP", skin, "navy-text");
         banner.add(title);
 
-        table.add(banner).width(700).height(70).padTop(20).colspan(2);
-        table.row().padTop(10);
+
+        baseTable.add(banner).width(700).height(70).padTop(20).colspan(4);
+        baseTable.row().padTop(10);
     }
 
     /**
-     * Show the second page of the table (more commands)
+     * Switch page {page} (more commands).
+     *
+     * @param page page we want to switch to
      */
-    private void toNext() {
-        Image page2 = new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page2"));
-        table.add(page2).width(650).height(1704f / 2556 * 650).colspan(2);
-        table.row();
+    private void toPage(int page) {
+        Image currentPage = pages[page - 1];
+        baseTable.add(currentPage).width(650).height(1704f / 2556 * 650).colspan(4);
+        baseTable.row();
 
         TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("arrow");
-        ImageButton leftArrow = new ImageButton(arrow);
-        // Rotates the arrow
-        leftArrow.setTransform(true);
-        leftArrow.setOrigin(30, 25);
-        leftArrow.setRotation(180);
-        table.add(leftArrow).width(60).height(50).padLeft(10).spaceRight(10);
-        leftArrow.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Redraw the table and switch to first page
-                table.clearChildren();
-                drawBanner();
-                toPrev();
-            }
-        });
 
-        Label next = new Label("PREVIOUS", skin, "white-text");
-        next.setFontScale(0.7f);
-        table.add(next).left().expandX();
-    }
+        // Add left arrow except for the first page
+        if (page > 1) {
+            ImageButton leftArrow = new ImageButton(arrow);
+            // Rotates the arrow
+            leftArrow.setTransform(true);
+            leftArrow.setOrigin(30, 25);
+            leftArrow.setRotation(180);
+            baseTable.add(leftArrow).width(60).height(50).padLeft(10).spaceRight(10);
+            leftArrow.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // Redraws the table and switch to the next page
+                    baseTable.clearChildren();
+                    drawBanner();
+                    toPage(page-1);
+                }
+            });
+            Label prev = new Label("PREVIOUS", skin, "white-text");
+            prev.setFontScale(0.7f);
+            baseTable.add(prev).left().expandX();
+        }
 
-    /**
-     * Shows the previous page, i.e. the first page.
-     */
-    private void toPrev() {
-        Image page1 = new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page1"));
-        table.add(page1).width(650).height(1704f / 2556 * 650).colspan(2);
-        table.row();
+        // Add right arrow except for the last page
+        if (page < NUMBER_OF_PAGES) {
+            Label next = new Label("NEXT", skin, "white-text");
+            next.setFontScale(0.7f);
+            baseTable.add(next).right().expandX();
 
-        Label next = new Label("NEXT", skin, "white-text");
-        next.setFontScale(0.7f);
-        table.add(next).right().expandX();
+            ImageButton rightArrow = new ImageButton(arrow);
+            baseTable.add(rightArrow).width(60).height(50).spaceLeft(10).padRight(10);
+            rightArrow.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    // Redraw the table and switch to the previous page
+                    baseTable.clearChildren();
+                    drawBanner();
+                    toPage(page+1);
+                }
+            });
+        }
 
-        TextureRegionDrawable arrow = gameMenuManager.generateTextureRegionDrawableObject("arrow");
-        ImageButton rightArrow = new ImageButton(arrow);
-        table.add(rightArrow).width(60).height(50).spaceLeft(10).padRight(10);
-        rightArrow.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Redraws the table and switch to the second page
-                table.clearChildren();
-                drawBanner();
-                toNext();
-            }
-        });
     }
 }
