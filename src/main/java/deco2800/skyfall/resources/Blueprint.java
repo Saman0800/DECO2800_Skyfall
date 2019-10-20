@@ -8,9 +8,8 @@ import java.util.*;
  */
 public interface Blueprint {
 
-
-    enum BluePrintNames {
-        ;
+    class BluePrintNames {
+        private BluePrintNames() {}
 
         public static final String CABIN_STRING = "Cabin";
         public static final String CABIN_STRING_0 = "cabin_0";

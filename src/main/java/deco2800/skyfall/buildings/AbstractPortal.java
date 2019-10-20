@@ -7,6 +7,7 @@ import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
@@ -17,13 +18,14 @@ import deco2800.skyfall.worlds.world.WorldDirector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * An AbstractPortal is an item that can transport a players position to the
  * specified Biome, given the player has reached the necessary requirements.
  */
-public abstract class AbstractPortal extends SaveableEntity {
+public abstract class AbstractPortal extends SaveableEntity implements Blueprint {
     // a logger
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPortal.class);
@@ -44,9 +46,15 @@ public abstract class AbstractPortal extends SaveableEntity {
      * @param row         the row position on the world
      * @param renderOrder the height position on the world
      */
-    public AbstractPortal(float col, float row, int renderOrder) {
+    public AbstractPortal(float col, float row, int renderOrder, int requiredWood, int requiredStone,
+                          int requiredMetal) {
         super(col, row, renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
+
+        buildCost = new HashMap<>();
+        buildCost.put("wood", requiredWood);
+        buildCost.put("stone", requiredStone);
+        buildCost.put("metal", requiredMetal);
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             LOGGER.debug("Invalid position");
@@ -112,7 +120,7 @@ public abstract class AbstractPortal extends SaveableEntity {
      * @return The amount of wood needed
      */
     public int getRequiredWood() {
-        return 0;
+        return getBuildCost().get("wood");
     }
 
     /**
@@ -121,7 +129,7 @@ public abstract class AbstractPortal extends SaveableEntity {
      * @return The amount of stone needed
      */
     public int getRequiredStone() {
-        return 0;
+        return getBuildCost().get("stone");
     }
 
     /**
@@ -130,7 +138,7 @@ public abstract class AbstractPortal extends SaveableEntity {
      * @return The amount of metal needed
      */
     public int getRequiredMetal() {
-        return 0;
+        return getBuildCost().get("metal");
     }
 
     /**
