@@ -206,5 +206,4 @@ public abstract class Peon extends AgentEntity implements Tickable {
     	this.health = health;
 	}
 
-
 }

@@ -29,10 +29,7 @@ import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
-import deco2800.skyfall.resources.Blueprint;
-import deco2800.skyfall.resources.GoldPiece;
-import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.ManufacturedResources;
+import deco2800.skyfall.resources.*;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.saving.AbstractMemento;
@@ -457,8 +454,10 @@ public class MainCharacter extends Peon
     public boolean setEquippedItem(Item item) {
         if (item.isEquippable()) {
             this.equippedItem = item;
-            GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
-            GameManager.get().getManager(FeedbackManager.class).setFeedbackText(item.getName() + " equipped");
+            if (GameManager.get().getManager(FeedbackManager.class) != null) {
+                GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
+                GameManager.get().getManager(FeedbackManager.class).setFeedbackText(item.getName() + " equipped");
+            }
             return true;
         } else {
             logger.warn("You can't equip {}.", item.getName());
