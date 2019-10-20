@@ -43,17 +43,5 @@ public class IceWhitebearTest {
         iceWhitebear.destoryice();
         assertEquals(2,iceWhitebear.getHealth());
     }
-
-    /**
-     * destory the ice and get Whitebear
-     */
-    @Test
-    public void harvest() {
-        mockTile = Mockito.mock(Tile.class);
-        iceWhitebear.setHealth(1);
-        iceWhitebear.destoryice();
-        assertTrue(iceWhitebear.harvest(mockTile).get(0) instanceof Whitebear);
-        Whitebear bear = (Whitebear)iceWhitebear.harvest(mockTile).get(0);
-        assertFalse(bear.getDomesticated());
-    }
+    
 }
