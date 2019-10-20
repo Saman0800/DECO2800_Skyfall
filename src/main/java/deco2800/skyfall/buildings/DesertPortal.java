@@ -38,19 +38,4 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
         return allRequirements;
     }
 
-
-    @Override
-    public int getRequiredWood() {
-        return 50;
-    }
-
-    @Override
-    public int getRequiredStone() {
-        return 20;
-    }
-
-    @Override
-    public int getRequiredMetal() {
-        return 10;
-    }
 }

@@ -27,8 +27,8 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
     private void init() {
         this.name = "Hatchet";
         allRequirements = new HashMap<>();
-        allRequirements.put("Wood", 25);
-        allRequirements.put("Stone", 10);
+        allRequirements.put("Wood", 3);
+        allRequirements.put("Stone", 3);
         allRequirements.put("Metal", 0);
         description = "hatchet";
         carryable = true;

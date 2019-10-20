@@ -94,8 +94,10 @@ public enum BuildingType implements Blueprint {
         buildingTextures.add("cabin_270");
 
         buildingCost = new HashMap<>();
-        buildingCost.put(BluePrintNames.WOOD_STRING, 5);
-        buildingCost.put(BluePrintNames.STONE_STRING, 2);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 15);
+        buildingCost.put(BluePrintNames.STONE_STRING, 10);
+        buildingCost.put(BluePrintNames.METAL_STRING, 5);
+
     }
 
     public List<String> initialiseCabinTextures() {
@@ -192,9 +194,9 @@ public enum BuildingType implements Blueprint {
      */
     public void initialiseWatchTower() {
         buildingCost = new HashMap<>();
-        buildingCost.put(BluePrintNames.WOOD_STRING, 10);
-        buildingCost.put(BluePrintNames.STONE_STRING, 7);
-        buildingCost.put(BluePrintNames.METAL_STRING, 3);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 20);
+        buildingCost.put(BluePrintNames.STONE_STRING, 10);
+        buildingCost.put(BluePrintNames.METAL_STRING, 10);
     }
 
     public void initialiseForestPortal() {
