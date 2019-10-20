@@ -11,7 +11,7 @@ import java.util.List;
  */
 class TriangleSoup {
 
-    private List<WorldGenTriangle> triangleSoup;
+    private List<WorldGenTriangle> triangleSoupList;
 
     private List<WorldGenNode> borderNodes;
 
@@ -20,7 +20,7 @@ class TriangleSoup {
      * instance.
      */
     TriangleSoup() {
-        this.triangleSoup = new ArrayList<>();
+        this.triangleSoupList = new ArrayList<>();
         this.borderNodes = new ArrayList<>();
     }
 
@@ -30,7 +30,7 @@ class TriangleSoup {
      * @param triangle The triangle to be added to this triangle soup
      */
     public void add(WorldGenTriangle triangle) {
-        this.triangleSoup.add(triangle);
+        this.triangleSoupList.add(triangle);
     }
 
     /**
@@ -39,7 +39,7 @@ class TriangleSoup {
      * @param triangle The triangle to be removed from this triangle soup
      */
     public void remove(WorldGenTriangle triangle) {
-        this.triangleSoup.remove(triangle);
+        this.triangleSoupList.remove(triangle);
     }
 
     /**
@@ -48,7 +48,7 @@ class TriangleSoup {
      * @return The triangles from this triangle soup
      */
     List<WorldGenTriangle> getTriangles() {
-        return this.triangleSoup;
+        return this.triangleSoupList;
     }
 
     /**
@@ -61,7 +61,7 @@ class TriangleSoup {
      *         specified point or null
      */
     WorldGenTriangle findContainingTriangle(WorldGenNode point) {
-        for (WorldGenTriangle triangle : triangleSoup) {
+        for (WorldGenTriangle triangle : triangleSoupList) {
             if (triangle.contains(point)) {
                 return triangle;
             }
@@ -80,7 +80,7 @@ class TriangleSoup {
      *         no triangle exists
      */
     WorldGenTriangle findNeighbour(WorldGenTriangle triangle, WorldGenEdge edge) {
-        for (WorldGenTriangle triangleFromSoup : triangleSoup) {
+        for (WorldGenTriangle triangleFromSoup : triangleSoupList) {
             if (triangleFromSoup.isNeighbour(edge) && triangleFromSoup != triangle) {
                 return triangleFromSoup;
             }
@@ -98,7 +98,7 @@ class TriangleSoup {
      * @return Returns one triangle that shares the specified edge
      */
     WorldGenTriangle findOneTriangleSharing(WorldGenEdge edge) {
-        for (WorldGenTriangle triangle : triangleSoup) {
+        for (WorldGenTriangle triangle : triangleSoupList) {
             if (triangle.isNeighbour(edge)) {
                 return triangle;
             }
@@ -115,7 +115,7 @@ class TriangleSoup {
     WorldGenEdge findNearestEdge(WorldGenNode point) {
         List<EdgeDistancePack> edgeList = new ArrayList<>();
 
-        for (WorldGenTriangle triangle : triangleSoup) {
+        for (WorldGenTriangle triangle : triangleSoupList) {
             edgeList.add(triangle.findNearestEdge(point));
         }
 
@@ -135,12 +135,12 @@ class TriangleSoup {
     void removeTrianglesUsing(WorldGenNode vertex) {
         List<WorldGenTriangle> trianglesToBeRemoved = new ArrayList<>();
 
-        for (WorldGenTriangle triangle : triangleSoup) {
+        for (WorldGenTriangle triangle : triangleSoupList) {
             if (triangle.hasVertex(vertex)) {
                 trianglesToBeRemoved.add(triangle);
             }
         }
-        triangleSoup.removeAll(trianglesToBeRemoved);
+        triangleSoupList.removeAll(trianglesToBeRemoved);
     }
 
     /**

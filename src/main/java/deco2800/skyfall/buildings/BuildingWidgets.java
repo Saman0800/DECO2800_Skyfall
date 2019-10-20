@@ -438,18 +438,18 @@ public class BuildingWidgets {
             for (AbstractEntity entity : world.getEntities()) {
                 if (entity instanceof BuildingEntity) {
                     Collider collider = ((BuildingEntity) entity).getCollider();
-                    if ((collider != null) && !(collider.getX() <= mousePos[0] && collider.getY() <= mousePos[1]
-                            && collider.getX() + collider.getXLength() >= mousePos[0]
-                            && collider.getY() + collider.getYLength() >= mousePos[1])
-                            || (collider == null) && !tile.getCoordinates().equals(entity.getPosition())) {
-                        continue;
-                    }
+                    float xLength = collider.getX() + collider.getXLength();
+                    float yLength = collider.getY() + collider.getYLength();
 
-                    // show the building widgets if a building is clicked
-                    building = (BuildingEntity) entity;
-                    setWidgets((BuildingEntity) entity);
-                    menu.setVisible(true);
-                    break;
+                    // NOTE: a collider should not be null for every building
+                    if ((collider.getX() <= mousePos[0]) && (mousePos[0] <= xLength)
+                            && (collider.getY() <= mousePos[1]) && (mousePos[1] <= yLength)) {
+                        // show the building widgets if a building is clicked
+                        building = (BuildingEntity)entity;
+                        setWidgets((BuildingEntity)entity);
+                        menu.setVisible(true);
+                        break;
+                    }
                 }
             }
         }

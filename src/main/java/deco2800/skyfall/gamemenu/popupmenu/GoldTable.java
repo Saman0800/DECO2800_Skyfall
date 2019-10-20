@@ -13,7 +13,6 @@ import java.util.Map;
 public class GoldTable extends AbstractPopUpElement{
     private final Skin skin;
     private final StatisticsManager sm;
-    private Table baseTable;
     private Table goldPanel;
 
     public GoldTable(Stage stage, ImageButton exit, String[] textureNames,
@@ -25,17 +24,6 @@ public class GoldTable extends AbstractPopUpElement{
         this.draw();
     }
 
-    @Override
-    public void hide() {
-        super.hide();
-        baseTable.setVisible(false);
-    }
-
-    @Override
-    public void show() {
-        super.show();
-        baseTable.setVisible(true);
-    }
 
     @Override
     public void update() {
@@ -55,18 +43,9 @@ public class GoldTable extends AbstractPopUpElement{
         baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
         baseTable.setName("baseTable");
 
-        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("goldBanner"));
-        infoBar.setSize(550, 55);
-        infoBar.setPosition(90, 600);
-
-        Table infoPanel = new Table();
-        infoPanel.setSize(410, 400);
-        infoPanel.setPosition(25, 18);
-        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
-
+        super.goldAndConstructionTableDuplicatedFunctionality("goldBanner");
         updateGoldPanel();
 
-        baseTable.addActor(infoBar);
         baseTable.addActor(this.goldPanel);
         baseTable.setVisible(false);
 
