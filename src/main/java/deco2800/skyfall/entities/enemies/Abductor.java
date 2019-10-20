@@ -8,12 +8,12 @@ import deco2800.skyfall.util.HexVector;
 public class Abductor extends Enemy implements Spawnable {
 
     public Abductor(float col, float row, float scaling, String biome) {
-        super(col, row, "Abductor", EnemyType.ABDUCTOR, 0.06f, biome, "enemyAbductor");
+        super(col, row, EnemyType.ABDUCTOR, 0.06f, biome, "enemyAbductor");
 
         this.setType(EnemyType.ABDUCTOR);
 
         // Assign values, includes default values
-        this.setValues(scaling, 100, 1, 1, 4f, 6f);
+        this.setValues(scaling, 100, 1, 4, 4f, 6f);
     }
 
     /**

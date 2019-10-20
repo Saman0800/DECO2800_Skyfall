@@ -1,10 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.enemies.Abductor;
-import deco2800.skyfall.entities.enemies.Enemy;
-import deco2800.skyfall.entities.enemies.Heavy;
-import deco2800.skyfall.entities.enemies.Scout;
+import deco2800.skyfall.entities.enemies.*;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.observers.KeyTypedObserver;
 
@@ -60,6 +57,9 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 				break;
 			case "scout":
 				enemyToSpawn = new Scout(col, row, 1.0f, biome);
+				break;
+			case "medium":
+				enemyToSpawn = new Medium(col, row, 1.0f, biome);
 				break;
 			default:
 				return "Invalid option for spawning";
