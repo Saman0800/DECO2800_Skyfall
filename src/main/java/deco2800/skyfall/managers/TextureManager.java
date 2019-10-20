@@ -265,8 +265,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("tutorial_3", new Texture("resources/tutorial/tutorial_3.png"));
             textureMap.put("tutorial_4", new Texture("resources/tutorial/tutorial_4.png"));
             textureMap.put("tutorial_5", new Texture("resources/tutorial/tutorial_5.png"));
-            textureMap.put("next_back_button", new Texture("resources/tutorial/next_back_button.png"));
-            textureMap.put("home_button", new Texture("resources/tutorial/done.png"));
+            textureMap.put("home_button", new Texture("resources/tutorial/home_button.png"));
 
             // End Game Textures
             textureMap.put("continueGame", new Texture("resources/new_ui/endGameTable/continue.png"));
@@ -375,16 +374,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("help_page1", new Texture("resources/new_ui/helpTable/help_page1.png"));
             textureMap.put("help_page2", new Texture("resources/new_ui/helpTable/help_page2.png"));
             textureMap.put("help_page3", new Texture("resources/new_ui/helpTable/help_page3.png"));
-
-            // Clock/Season graphics
-            textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
-            textureMap.put("dusk", new Texture("resources/clock/dusk_clock.png"));
-            textureMap.put("day", new Texture("resources/clock/day_clock.png"));
-            textureMap.put("night", new Texture("resources/clock/night_clock.png"));
-            textureMap.put("summer", new Texture("resources/clock/summer.png"));
-            textureMap.put("winter", new Texture("resources/clock/winter.png"));
-            textureMap.put("spring", new Texture("resources/clock/spring.png"));
-            textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
 
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
             textureMap.put("chest_banner", new Texture("resources/chest_banner.png"));

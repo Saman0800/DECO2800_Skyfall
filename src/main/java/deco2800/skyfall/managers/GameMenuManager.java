@@ -6,15 +6,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.gamemenu.Clock;
 import deco2800.skyfall.gamemenu.*;
 import deco2800.skyfall.gamemenu.popupmenu.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Manages the menu bar during the game
@@ -25,6 +25,7 @@ public class GameMenuManager extends TickableManager {
     private Stage stage;
     private EnvironmentManager em;
     private InventoryManager inventory;
+    private FeedbackManager fm;
     private Skin skin;
     private SkyfallGame game;
 
@@ -60,6 +61,7 @@ public class GameMenuManager extends TickableManager {
         inventory = GameManager.get().getManager(InventoryManager.class);
         questManager = GameManager.get().getManager(QuestManager.class);
         em = GameManager.get().getManager(EnvironmentManager.class);
+        fm = GameManager.get().getManager(FeedbackManager.class);
         stage = null;
         skin = null;
         uiElements = new HashMap<>();
@@ -192,13 +194,6 @@ public class GameMenuManager extends TickableManager {
         return skin;
     }
 
-    /**
-     * Pause the game.
-     */
-    private void pause() {
-        GameManager.setPaused(true);
-        GameScreen.setIsPaused(true);
-    }
 
     /**
      * Generates an instance of TextureRegionDrawable with the given texture name.
@@ -342,7 +337,8 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
         hudElements.put("clock" , new Clock(stage, skin, this, em));
 
-        hudElements.put("feedbackBar", new FeedbackBar(stage, null, textureManager, skin, this));
+        hudElements.put("feedbackBar", new FeedbackBar(stage, new ImageButton(generateTextureRegionDrawableObject(exitText)),
+                null, textureManager, skin, this, fm));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
 
