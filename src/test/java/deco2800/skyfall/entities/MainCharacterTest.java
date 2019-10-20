@@ -447,9 +447,6 @@ public class MainCharacterTest {
 
         // ensure all the pieces have been added
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(180));
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(5), 4);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(10), 1);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(50), 3);
 
         // remove a piece of gold from the pouch
         testCharacter.removeGold(5);
@@ -458,16 +455,12 @@ public class MainCharacterTest {
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(175));
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(5), 3);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(10), 1);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(50), 3);
 
         // remove a piece of gold from the pouch which is the last piece
         testCharacter.removeGold(10);
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(165));
-        Assert.assertFalse(testCharacter.getGoldPouch().containsKey(10));
 
 
     }
