@@ -146,7 +146,6 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 usedNodes = new HashSet<>(nodes.size());
                 borderNodes = new ArrayList<>();
                 nodesBiomes = new HashMap<>();
-
                 growBiomes();
                 growOcean();
                 fillGaps();
@@ -502,7 +501,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
 
             // Generate the path for the river
-            List<VoronoiEdge> riverEdges = VoronoiEdge.generatePath(edges, startingEdge, startingVertex, random, 2);
+            List<VoronoiEdge> riverEdges = VoronoiEdge.generatePath(startingEdge, startingVertex, random, 2);
 
             List<AbstractBiome> parentBiomes = new ArrayList<>();
             // Create a river biome and add all tiles for each edge

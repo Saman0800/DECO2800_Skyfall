@@ -151,8 +151,9 @@ public class DataBaseConnector {
                 updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
                     worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             } else {
+                long id = findValidBiomeID(world, worldGenNode);
                 insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
-                    worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
+                    worldGenNode.getID(), id);
             }
         }
         saveEdges(world, containsQueries, insertQueries, updateQueries);
@@ -160,6 +161,27 @@ public class DataBaseConnector {
         for (Chunk chunk : world.getLoadedChunks().values()) {
             saveChunk(chunk);
         }
+    }
+
+    // NOTE: This function is a super dodge 'fix' that is horrible and suggests that the
+    // world generation code is broken somewhere. I am only including it as I can't find how to
+    // fix it otherwise and it is very close to the due date
+    private long findValidBiomeID(World world, WorldGenNode worldGenNode) {
+        long id;
+        if (worldGenNode.getBiome() != null) {
+            id = worldGenNode.getBiome().getBiomeID();
+        } else {
+            int i = 0;
+            while(true) {
+                if (world.getWorldGenNodes().get(i).getBiome() == null) {
+                    i++;
+                } else {
+                    id = world.getWorldGenNodes().get(i).getBiome().getBiomeID();
+                    break;
+                }
+            }
+        }
+        return id;
     }
 
     /**

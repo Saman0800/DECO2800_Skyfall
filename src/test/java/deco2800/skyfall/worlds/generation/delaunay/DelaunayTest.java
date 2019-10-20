@@ -268,8 +268,8 @@ public class DelaunayTest {
         node2.addVertex(new double[] {2, -2});
         node3.addVertex(new double[] {-2, -2});
 
-        assertNull(WorldGenNode.sharedVertex(node1, node3, null));
-        assertNull(WorldGenNode.sharedVertex(node2, node3, null));
+        assertEquals(0, WorldGenNode.sharedVertex(node1, node3, null).length);
+        assertEquals(0, WorldGenNode.sharedVertex(node2, node3, null).length);
         double[] sharedVertex1 = WorldGenNode.sharedVertex(node1, node2, null);
         assertNotNull(sharedVertex1);
         double[] sharedVertex2 = WorldGenNode.sharedVertex(node1, node2, sharedVertex1);
