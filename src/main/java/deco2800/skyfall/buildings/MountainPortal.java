@@ -13,7 +13,7 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
      * @param renderOrder the height position on the world
      */
     public MountainPortal(float col, float row, int renderOrder) {
-        super(col, row, renderOrder, 25, 10, 0);
+        super(col, row, renderOrder, 100, 40, 30);
         this.setTexture("portal_mountain");
         this.setNext("volcanic_mountains");
         this.entityType = "MountainPortal";

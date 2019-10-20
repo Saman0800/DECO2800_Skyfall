@@ -17,7 +17,7 @@ public class VolcanoPortal extends AbstractPortal implements Blueprint {
      * @param renderOrder the height position on the world
      */
     public VolcanoPortal(float col, float row, int renderOrder) {
-        super(col, row, renderOrder, 25, 10, 0);
+        super(col, row, renderOrder, 0, 0, 0);
         this.setTexture("portal");
         this.setNext("volcanic_mountains");
         this.entityType = "VolcanoPortal";

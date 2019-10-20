@@ -12,7 +12,7 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
      * @param renderOrder the height position on the world
      */
     public DesertPortal(float col, float row, int renderOrder) {
-        super(col, row, renderOrder, 25, 10, 0);
+        super(col, row, renderOrder, 50, 20, 10);
         this.setTexture("portal_desert");
         this.setNext("mountain");
         this.currentBiome = "desert";
