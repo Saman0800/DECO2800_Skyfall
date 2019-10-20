@@ -34,6 +34,9 @@ public class IceWhitebearTest {
     public void setDirectionTextures() {
     }
 
+    /**
+     * Tempt to destory ice
+     */
     @Test
     public void destoryice() {
         iceWhitebear.setHealth(3);
@@ -41,8 +44,10 @@ public class IceWhitebearTest {
         assertEquals(2,iceWhitebear.getHealth());
     }
 
+    /**
+     * destory the ice and get Whitebear
+     */
     @Test
-    @Ignore
     public void harvest() {
         mockTile = Mockito.mock(Tile.class);
         iceWhitebear.setHealth(1);
