@@ -193,34 +193,17 @@ public class DataBaseConnector {
         // Save nodes
         for (WorldGenNode worldGenNode : world.getWorldGenNodes()) {
             if (containsQueries.containsNode(world.getID(), worldGenNode.getX(), worldGenNode.getY())) {
-                long id = nodeBiomeID(world, worldGenNode);
                 updateQueries.updateNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
-                        worldGenNode.getID(), id);
+                        worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             } else {
-                long id = nodeBiomeID(world, worldGenNode);
                 insertQueries.insertNodes(world.getID(), worldGenNode.getX(), worldGenNode.getY(), worldGenNode.save(),
-                        worldGenNode.getID(), id);
+                        worldGenNode.getID(), worldGenNode.getBiome().getBiomeID());
             }
         }
         saveEdges(world, containsQueries, insertQueries, updateQueries);
 
         for (Chunk chunk : world.getLoadedChunks().values()) {
             saveChunk(chunk);
-        }
-    }
-
-    private long nodeBiomeID(World world, WorldGenNode worldGenNode) {
-        if (worldGenNode.getBiome() != null) {
-            return worldGenNode.getBiome().getBiomeID();
-        } else {
-            int i = 0;
-            while (true) {
-                if (world.getWorldGenNodes().get(i).getBiome() == null) {
-                    i++;
-                } else {
-                    return world.getWorldGenNodes().get(i).getBiome().getBiomeID();
-                }
-            }
         }
     }
 
@@ -946,7 +929,7 @@ public class DataBaseConnector {
 
     /**
      * Deletes a save
-     * 
+     *
      * @param saveId The id of the save to be deleted
      */
     public void deleteSave(long saveId) {

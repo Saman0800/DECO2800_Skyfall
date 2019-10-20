@@ -176,13 +176,13 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = i + 1; j < nodes.size(); j++) {
                 double[] vertexA = sharedVertex(nodes.get(i), nodes.get(j), null);
-                if (vertexA.length == 0) {
+                if (vertexA == null) {
                     continue;
                 }
                 nodes.get(i).assignNeighbour(nodes.get(j));
                 nodes.get(j).assignNeighbour(nodes.get(i));
                 double[] vertexB = sharedVertex(nodes.get(i), nodes.get(j), vertexA);
-                if (vertexB.length != 0) {
+                if (vertexB != null) {
                     VoronoiEdge edge = new VoronoiEdge(vertexA, vertexB, world);
                     edges.add(edge);
                     edge.addEdgeNode(nodes.get(i));
@@ -235,7 +235,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
                 }
             }
         }
-        return new double[]{};
+        return null;
     }
 
     /**
