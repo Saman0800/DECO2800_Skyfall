@@ -40,4 +40,16 @@ public class ForestPortal extends AbstractPortal implements Blueprint {
         return allRequirements;
     }
 
+
+    @Override
+    public int getRequiredWood() {
+        return 25;
+    }
+
+    @Override
+    public int getRequiredStone() {
+        return 10;
+    }
+
+
 }
