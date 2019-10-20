@@ -41,19 +41,13 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon, Blue
     /**
      * Weapon constructor used in the game world
      */
-    public Weapon(Tile tile, String texture, boolean obstructed, String name, String weaponType, String damageType,
-            int attackRate, int damage, int durability) {
+    public Weapon(Tile tile, String texture, boolean obstructed, String name) {
         super(tile, 5, texture, obstructed);
 
         changeCollideability(false);
 
         this.name = name;
         this.texture = texture;
-        this.weaponType = weaponType;
-        this.durability = durability;
-        this.damageType = damageType;
-        this.damage = damage;
-        this.attackRate = attackRate;
         this.carryable = true;
         this.exchangeable = false;
         this.equippable = true;
@@ -126,6 +120,35 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon, Blue
     @Override
     public int getRequiredMetal() {
         return this.metalRequired;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWeaponType(String weaponType) {
+        this.weaponType = weaponType;
+    }
+
+    public void setDamageType(String damageType) {
+        this.damageType = damageType;
+    }
+
+    @Override
+    public void setTexture(String texture) {
+        this.texture = texture;
+    }
+
+    public void setAttackRate(int attackRate) {
+        this.attackRate = attackRate;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public void setDurability(int durability) {
+        this.durability = durability;
     }
 
     /**
@@ -277,7 +300,12 @@ public abstract class Weapon extends StaticEntity implements Item, IWeapon, Blue
     @Override
     public void use(HexVector position) {
         // Use the specific function associated with the item
-        logger.warn("Durability: " + this.getDurability());
+        int dura = this.getDurability();
+        logger.warn(String.format("Durability: %d", dura));
         this.decreaseDurability();
     }
+
+
+
+
 }

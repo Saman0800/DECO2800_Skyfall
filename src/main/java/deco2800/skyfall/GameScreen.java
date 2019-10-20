@@ -251,9 +251,6 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         enemySetUp(gameEnvironManag, world);
 
-        // create a spawning manager
-        SpawningManager.createSpawningManager();
-
         PathFindingService pathFindingService = new PathFindingService();
 
         GameManager.get().addManager(pathFindingService);
