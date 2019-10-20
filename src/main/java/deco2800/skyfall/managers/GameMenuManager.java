@@ -306,11 +306,6 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this,
                 skin));
 
-        popUps.put("goldTable", new GoldTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject(exitText)),
-                null, textureManager, this, sm, skin));
-
-
         popUps.put("gameOverTable", new GameOverTable(stage,
                 null, null, textureManager, this));
 

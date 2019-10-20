@@ -925,7 +925,7 @@ public class MainCharacter extends Peon
                 QuestManager qm = GameManager.getManagerFromInstance(QuestManager.class);
 
                 ConstructionTable bs = (ConstructionTable) gmm.getPopUp(CONSTRUCTION_TABLE);
-                bs.build(GameManager.get().getWorld(), (int) clickedPosition[0], (int) clickedPosition[1]);
+                bs.build(GameManager.get().getWorld(), clickedPosition[0], clickedPosition[1]);
                 qm.addBuilding(bs.selectBuilding(bs.getBuildingID(), 0, 0).getBuildingType());
                 toBuild = false;
             }
