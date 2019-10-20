@@ -303,6 +303,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         spawnGold(random, biomeSpawnRules);
 
         spawnChests(world, random, biomeSpawnRules);
+        spawnBlueprintShop(random, biomeSpawnRules);
 
         // Create a new perlin noise map
         SpawnControl rockControl = x -> (x * x * x * x) / 5.0;
@@ -333,6 +334,19 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         // Spawn gold pieces
         spawnGold(random, biomeSpawnRules);
+        spawnBlueprintShop(random, biomeSpawnRules);
+
+        SpawnControl rockControl = x -> (x * x * x * x) / 3.0;
+        EntitySpawnRule mRockRule = new EntitySpawnRule(tile -> new VolcanicRock(tile, true), random.nextInt(), true,
+                rockControl);
+        mRockRule.setLimitAdjacent(true);
+        biomeSpawnRules.add(mRockRule);
+
+        SpawnControl cubic = x -> (x * x * x) / 6.0 + 0.01;
+        EntitySpawnRule mTreeControl = new EntitySpawnRule(tile -> new VolcanicTree(tile, true), random.nextInt(), true,
+                cubic);
+        mTreeControl.setLimitAdjacent(true);
+        biomeSpawnRules.add(mTreeControl);
 
         // Spawn some bones
         EntitySpawnRule boneRule = new EntitySpawnRule(tile -> new Bone(tile, true), random.nextInt(), 0.004);
@@ -543,10 +557,10 @@ public class WorldBuilder implements WorldBuilderInterface {
                 spawnEnemies(random, 0.02f, biome, world, enemyScaling);
                 break;
             case "mountain":
-                spawnEnemies(random, 0.015f, biome, world, enemyScaling);
+                spawnEnemies(random, 0.04f, biome, world, enemyScaling);
                 break;
             case "desert":
-                spawnEnemies(random, 0.01f, biome, world, enemyScaling);
+                spawnEnemies(random, 0.03f, biome, world, enemyScaling);
                 break;
             case "snowy_mountains":
                 spawnEnemies(random, 0.025f, biome, world, enemyScaling);

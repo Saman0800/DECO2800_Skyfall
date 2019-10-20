@@ -8,16 +8,19 @@ import java.util.*;
  */
 public interface Blueprint {
 
-
-    enum BluePrintNames {
-        ;
+    class BluePrintNames {
+        private BluePrintNames() {}
 
         public static final String CABIN_STRING = "Cabin";
         public static final String CABIN_STRING_0 = "cabin_0";
+        public static final String CASTLE_STRING = "Castle";
         public static final String STORAGE_UNIT_STRING = "StorageUnit";
         public static final String STORAGE_UNIT_STRING_LOWER = "storage_unit";
         public static final String TOWN_CENTRE_STRING = "TownCentre";
         public static final String TOWN_CENTRE_STRING_LOWER = "town_centre";
+        public static final String WALL_STRING = "Wall";
+        public static final String WATCH_TOWER_STRING = "WatchTower";
+
         public static final String WOOD_STRING = "Wood";
         public static final String STONE_STRING = "Stone";
         public static final String METAL_STRING = "Metal";
