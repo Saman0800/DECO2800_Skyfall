@@ -1,6 +1,5 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -16,17 +15,16 @@ import java.util.Map;
 
 
 /**
- * A class for building table pop up.
+ * A class for building baseTable pop up.
  */
 public class BuildingTable extends AbstractPopUpElement {
     private Skin skin;
-    private Table table;
     private Table itemInfo;
     private Blueprint selectedItem = null;
     private InventoryTable inventoryTable;
 
     /**
-     * Constructs a building table.
+     * Constructs a building baseTable.
      *
      * @param stage           Current stage.
      * @param exit            Exit button if it has one.
@@ -50,7 +48,6 @@ public class BuildingTable extends AbstractPopUpElement {
     public void hide() {
         super.hide();
         itemInfo.clearChildren();
-        table.setVisible(false);
     }
 
     /**
@@ -60,36 +57,19 @@ public class BuildingTable extends AbstractPopUpElement {
     public void show() {
         draw();
         super.show();
-        table.setVisible(true);
     }
 
     /**
      * {@inheritDoc}
      *
-     * Draw the whole building table.
+     * Draw the whole building baseTable.
      */
     @Override
     public void draw() {
         super.draw();
 
-        table = new Table();
-        table.setSize(800, 800 * 1346 / 1862f);
-        table.setPosition(Gdx.graphics.getWidth() / 2f - table.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2f - table.getHeight() / 2);
-        table.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
-
-        // table banner
-        Table banner = new Table();
-        banner.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
-
-        Label text = new Label("BUILDING TABLE", skin, "navy-text");
-        text.setFontScale(1.1f);
-        banner.add(text);
-
-        table.add(banner).width(750).height(750 * 188f / 1756).padTop(20).colspan(2);
-        table.row();
-
-        // Left hand side of the table
+        super.buidlingAndBuildWorldCommonFunctionality(skin, "BUILDING TABLE");
+        // Left hand side of the baseTable
         Table blueprint = new Table();
         Label blueprintTitle = new Label("BLUEPRINT", skin, "black-label");
         blueprint.add(blueprintTitle).padTop(10);
@@ -99,7 +79,7 @@ public class BuildingTable extends AbstractPopUpElement {
         itemInfo = new Table();
         blueprint.add(itemInfo);
 
-        // Right hand side of the table (list of blueprints
+        // Right hand side of the baseTable (list of blueprints
         Table items = new Table();
         items.row();
 
@@ -130,9 +110,9 @@ public class BuildingTable extends AbstractPopUpElement {
             items.row();
         }
 
-        table.add(blueprint).width(400).top().expand();
-        table.add(items).width(400).top().expand();
-        table.row();
+        baseTable.add(blueprint).width(400).top().expand();
+        baseTable.add(items).width(400).top().expand();
+        baseTable.row();
 
         TextButton buildIt = new TextButton("BUILD IT", skin, "game");
         buildIt.addListener(new ClickListener() {
@@ -147,22 +127,22 @@ public class BuildingTable extends AbstractPopUpElement {
             }
         });
 
-        table.add(buildIt).colspan(2).expand();
+        baseTable.add(buildIt).colspan(2).expand();
 
-        table.setVisible(false);
-        stage.addActor(table);
+        baseTable.setVisible(false);
+        stage.addActor(baseTable);
     }
 
     /**
      * Shows information, including items required to create that item.
      *
-     * @param table Items' info table.
+     * @param baseTable Items' info baseTable.
      */
-    private void showInfo(Table table, Blueprint item) {
-        table.clearChildren();
+    private void showInfo(Table baseTable, Blueprint item) {
+        baseTable.clearChildren();
         Image test = new Image(gameMenuManager.generateTextureRegionDrawableObject(item.getName() + "_inv"));
-        table.add(test).width(110).height(110).padTop(10).padBottom(10);
-        table.row();
+        baseTable.add(test).width(110).height(110).padTop(10).padBottom(10);
+        baseTable.row();
 
         Table itemsRequired = new Table();
         itemsRequired.top();
@@ -204,7 +184,7 @@ public class BuildingTable extends AbstractPopUpElement {
             itemsRequired.row();
         }
 
-        table.add(itemsRequired).width(250).height(250 * 1346 / 1862f);
+        baseTable.add(itemsRequired).width(250).height(250 * 1346 / 1862f);
 
     }
 }

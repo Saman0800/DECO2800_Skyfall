@@ -40,7 +40,7 @@ public class PetsManager extends AbstractManager {
      * Get all of pets in the inventory
      * @return all of pets
      */
-    public  LinkedList<AbstractPet> allPets(){
+    public List<AbstractPet> allPets(){
         return petList;
     }
 
@@ -69,7 +69,6 @@ public class PetsManager extends AbstractManager {
         if(!petList.isEmpty()){
             //if no pet was summoned then call the first pet
             if(currentSummonedPet()==null){
-                System.out.println(this.inventoryManager);
                 this.inventoryManager.quickAccessRemove(petList.get(0).getName());
                 AbstractPet pet=petList.get(0);
                 pet.setCol(mc.getCol()-1);
@@ -125,9 +124,9 @@ public class PetsManager extends AbstractManager {
      * @return index of pet
      */
     public int petPositionInList(AbstractPet abstractPet){
-        for(int i=0;i<petList.size();i++){
-            if(petList.get(i)==abstractPet){
-                return i;
+        for(int j=0;j<petList.size();j++){
+            if(petList.get(j)==abstractPet){
+                return j;
             }
         }
         return 0;

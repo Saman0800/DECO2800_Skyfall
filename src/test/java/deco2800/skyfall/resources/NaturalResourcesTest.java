@@ -1,7 +1,6 @@
 package deco2800.skyfall.resources;
 
 import deco2800.skyfall.resources.items.*;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,16 +22,12 @@ public class NaturalResourcesTest {
      * Create a new Wood, Sand, Stone, Metal and Vine Natural Resource
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         wood = new Wood();
         sand = new Sand();
         stone = new Stone();
         metal = new Metal();
         vine = new Vine();
-    }
-
-    @After
-    public void tearDown() throws Exception {
     }
 
     /**
@@ -66,25 +61,23 @@ public class NaturalResourcesTest {
      */
     @Test
     public void getSubtype1() {
-        assertEquals("Natural Resource", wood.getSubtype());
-        assertEquals("Natural Resource", sand.getSubtype());
-        assertEquals("Natural Resource", stone.getSubtype());
-        assertEquals("Natural Resource", metal.getSubtype());
-        assertEquals("Natural Resource", vine.getSubtype());
+        String naturalResourceWord = "Natural Resource";
+        assertEquals(naturalResourceWord, wood.getSubtype());
+        assertEquals(naturalResourceWord, sand.getSubtype());
+        assertEquals(naturalResourceWord, stone.getSubtype());
+        assertEquals(naturalResourceWord, metal.getSubtype());
+        assertEquals(naturalResourceWord, vine.getSubtype());
     }
 
 
     @Test
     public void getBiomeTest(){
+        String forestWord = "Forest";
         assertEquals("Beach", sand.getBiome());
-        assertEquals("Forest", vine.getBiome());
-        assertEquals("Forest", wood.getBiome());
-        assertEquals("Forest", stone.getBiome());
+        assertEquals(forestWord, vine.getBiome());
+        assertEquals(forestWord, wood.getBiome());
+        assertEquals(forestWord, stone.getBiome());
         assertEquals("Ruined City", metal.getBiome());
-    }
-
-    @Test
-    public void getCoords1() {
     }
 
     /**

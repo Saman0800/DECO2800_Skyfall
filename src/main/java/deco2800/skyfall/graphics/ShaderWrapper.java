@@ -17,6 +17,12 @@ import static deco2800.skyfall.util.MathUtil.clamp;
  * adding lighting specification
  */
 public class ShaderWrapper {
+    //location of shaders
+    private static final String SHADER_LOCATION = "resources/shaders/";
+
+    //maximum number of point lights, must be same as shader
+    private static final int MAX_POINT_LIGHTS = 20;
+
     // default shader used if not active
     private boolean active = false;
     // links to shaderProgram, or ill-formed program on failure
@@ -41,13 +47,13 @@ public class ShaderWrapper {
         // load shaders
         Logger logger = LoggerFactory.getLogger(ShaderWrapper.class);
         try {
-            String vertexShader = Gdx.files.internal("resources/shaders/" + shaderName + ".vert").readString();
-            String fragmentShader = Gdx.files.internal("resources/shaders/" + shaderName + ".frag").readString();
+            String vertexShader = Gdx.files.internal( SHADER_LOCATION+ shaderName + ".vert").readString();
+            String fragmentShader = Gdx.files.internal(SHADER_LOCATION + shaderName + ".frag").readString();
             shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
         } catch (GdxRuntimeException e) {
             logger.warn("\nShader source not found, check:");
-            logger.warn(String.format("resources/shaders/%s.vert", shaderName));
-            logger.warn(String.format("resources/shaders/%s.frag", shaderName));
+            logger.warn(String.format("%s%s.vert", SHADER_LOCATION, shaderName));
+            logger.warn(String.format("%s%s.frag", SHADER_LOCATION, shaderName));
             logger.warn("Extended shader disabled");
             return;
         }
@@ -161,6 +167,10 @@ public class ShaderWrapper {
      */
     public void addPointLight(PointLight pointLight) {
         if (active) {
+            if (pointLightCount >= MAX_POINT_LIGHTS) {
+                return;
+            }
+
             // creates the string for the target point light
             String target = "pointLights[" + pointLightCount + "]";
 

@@ -1,30 +1,39 @@
 package deco2800.skyfall.renderers;
 
-import java.util.*;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.entities.*;
-import deco2800.skyfall.managers.*;
-import deco2800.skyfall.worlds.world.Chunk;
-import org.javatuples.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.Peon;
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.tasks.AbstractTask;
 import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.Vector2;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.Chunk;
+import org.javatuples.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A ~simple~ complex hex renderer for DECO2800 games
@@ -44,7 +53,6 @@ public class Renderer3D implements Renderer {
     private static final String TEXTURE_SELECTION = "selection";
 
     private static final String TEXTURE_PATH = "path";
-    private float elapsedTime = 0f;
     private int tilesSkipped = 0;
 
     private TextureManager textureManager = GameManager.getManagerFromInstance(TextureManager.class);
@@ -65,7 +73,6 @@ public class Renderer3D implements Renderer {
         Map<Pair<Integer, Integer>, Chunk> chunks = GameManager.get().getWorld().getLoadedChunks();
         int tileCount = chunks.values().stream().mapToInt(chunk -> chunk.getTiles().size()).sum();
         List<Tile> tilesToBeSkipped = new ArrayList<>();
-        elapsedTime += Gdx.graphics.getDeltaTime();
 
         batch.begin();
         // Render elements section by section
@@ -228,7 +235,7 @@ public class Renderer3D implements Renderer {
             /* Draw Peon */
             // Place movement tiles
             if (entity instanceof Peon && GameManager.get().getShowPath()) {
-                renderPeonMovementTiles(batch, camera, entity, entityWorldCoord);
+                renderPeonMovementTiles(batch, camera, entity);
             }
         }
         GameManager.get().setEntitiesRendered(entities.size() - entitiesSkipped);
@@ -251,11 +258,9 @@ public class Renderer3D implements Renderer {
         float width = tex.getWidth() * entity.getColRenderLength() * WorldUtil.SCALE_X * entity.getScale();
         float height = tex.getHeight() * entity.getRowRenderLength() * WorldUtil.SCALE_Y * entity.getScale();
         batch.draw(tempRegion, x, y, width / 2.f, height / 2.f, width, height, 1.f, 1.f, angle);
-        // batch.draw(tex, x, y, width, height);
     }
 
-    private void renderPeonMovementTiles(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity,
-            float[] entityWorldCord) {
+    private void renderPeonMovementTiles(SpriteBatch batch, OrthographicCamera camera, AbstractEntity entity) {
         Peon actor = (Peon) entity;
         AbstractTask task = actor.getTask();
         if (task instanceof MovementTask) {

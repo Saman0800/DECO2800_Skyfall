@@ -21,9 +21,6 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
     // the name of the subtype the item belongs to
     protected String subtype;
 
-    // the co-ordinates of the tile the item has been placed on
-    protected HexVector position;
-
     // an AngnetEntity instance representing the owner of the resource.
     protected MainCharacter owner;
 
@@ -38,17 +35,6 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
     private int durability;
 
     protected String description;
-
-    /***
-     * Creates a default manufactured resource .
-     * 
-     * @param owner    the resource owner.
-     * @param position the Hexvector position of the manufactured resource.
-     */
-    public ManufacturedResources(MainCharacter owner, HexVector position) {
-        this(owner);
-        this.position = position;
-    }
 
     public ManufacturedResources(MainCharacter owner) {
         this();

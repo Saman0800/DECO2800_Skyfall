@@ -1,10 +1,9 @@
 package deco2800.skyfall.worlds.biomes;
 
-import deco2800.skyfall.worlds.Tile;
-
-import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-import java.util.ArrayList;
 import java.util.Random;
+
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
 /**
  * Mountain biome
@@ -23,27 +22,15 @@ public class MountainBiome extends AbstractBiome {
 
     /**
      * Loads a biome from a memento
+     * 
      * @param memento The memento that holds the save data
      */
-    public MountainBiome(AbstractBiomeMemento memento){
-        super(memento);
-        textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 3, 60, 0.5);
+    public MountainBiome(AbstractBiomeMemento memento) {
+        super(memento, memento.noiseGeneratorSeed, 3, 60, 0.5);
     }
 
     @Override
     public void setTileTexture(Tile tile) {
-        ArrayList<String> textures = new ArrayList<>();
-        textures.add("mountain_1");
-        textures.add("mountain_2");
-        textures.add("mountain_3");
-
-        double perlinValue =
-                NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2);
-        int adjustedPerlinValue = (int) Math.floor(perlinValue * textures.size());
-        if (adjustedPerlinValue >= textures.size()) {
-            adjustedPerlinValue = textures.size() - 1;
-        }
-        tile.setPerlinValue(adjustedPerlinValue);
-        tile.setTexture(textures.get(adjustedPerlinValue));
+        super.setTileTexture(tile, "mountain_1", "mountain_2", "mountain_3");
     }
 }
