@@ -76,7 +76,7 @@ public class BikeTest {
      */
     @Test
     public void getDescription() {
-        Assert.assertEquals(bike.getDescription(), "bike");
+        Assert.assertEquals(bike.getDescription(), "vehicle bike");
     }
 
     /**

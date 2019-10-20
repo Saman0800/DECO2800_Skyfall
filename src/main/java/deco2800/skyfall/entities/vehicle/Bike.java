@@ -40,7 +40,7 @@ public class Bike extends AbstractVehicle {
 
     @Override
     public String getDescription() {
-        return "bike";
+        return "vehicle bike";
     }
 
     public void removeBike() {
