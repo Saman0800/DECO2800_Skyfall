@@ -121,8 +121,8 @@ public class PauseTable extends AbstractPopUpElement {
         });
 
         baseTable.row();
-        baseTable.add(resumeText).expandY().padBottom(12f);
-        baseTable.add(resetText).expandY().padBottom(12f);
+        baseTable.add(resumeText).expandY().padBottom(10f);
+        baseTable.add(resetText).expandY().padBottom(8f);
         baseTable.row();
         baseTable.add(resume).width(125).height(125 * 409 / 410f).padBottom(70);
         baseTable.add(reset).width(125).height(125 * 409 / 410f).padBottom(70);

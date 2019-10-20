@@ -2,7 +2,6 @@ package deco2800.skyfall.resources;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 
@@ -153,10 +152,6 @@ public abstract class HealthResources extends AbstractEntity implements Item {
     @Override
     public HexVector getCoords() {
         return location;
-    }
-
-    public int getFoodValue() {
-        return foodValue;
     }
 
     public void setHealthValue(int health){

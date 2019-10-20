@@ -64,6 +64,7 @@ public class MainCharacter extends Peon
     public static final String PICK_AXE = "Pick Axe";
     public static final String HATCHET = "Hatchet";
     private static MainCharacter mainCharacterInstance = null;
+    private static FeedbackManager fm;
     private boolean residualFromPopUp = false;
 
     /**
@@ -291,11 +292,16 @@ public class MainCharacter extends Peon
         this.setTexture(ANIMATION_MAIN_CHARACTER_E_ANIM_0);
         this.setHeight(1);
         this.setObjectName("MainPiece");
+        this.setRecovering(false);
         GameManager.getManagerFromInstance(InputManager.class).addKeyDownListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addKeyUpListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
         this.petsManager = GameManager.getManagerFromInstance(PetsManager.class);
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
+        setUpCharacter();
+    }
+
+    private void setUpCharacter() {
         this.goldPouch = new HashMap<>();
 
         xInput = 0;
@@ -387,6 +393,7 @@ public class MainCharacter extends Peon
         configureAnimations();
 
         spellCaster = new SpellCaster(this);
+        fm  =  GameManager.get().getManager(FeedbackManager.class);
     }
 
     /**
@@ -456,9 +463,14 @@ public class MainCharacter extends Peon
      */
     public boolean setEquippedItem(Item item) {
         if (item.isEquippable()) {
+            if (!this.equippedItem.getName().equals(new EmptyItem().getName())) {
+                this.inventories.add(this.equippedItem);
+            }
             this.equippedItem = item;
-            GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
-            GameManager.get().getManager(FeedbackManager.class).setFeedbackText(item.getName() + " equipped");
+            if (fm != null) {
+                fm.setFeedbackBarUpdate(true);
+                fm.setFeedbackText(item.getName() + " equipped");
+            }
             return true;
         } else {
             logger.warn("You can't equip {}.", item.getName());
@@ -739,7 +751,7 @@ public class MainCharacter extends Peon
                 recoverTime = 0;
                 SoundManager.playSound(HURT_SOUND_NAME);
 
-                if (hurtTime > 400) {
+                if (hurtTime >= 400) {
                     setRecovering(true);
                 }
             }
@@ -756,6 +768,7 @@ public class MainCharacter extends Peon
             logger.info("Hurt ended");
             setHurt(false);
             setRecovering(true);
+            setTexChanging(true);
             hurtTime = 0;
         }
     }
@@ -912,7 +925,7 @@ public class MainCharacter extends Peon
                 QuestManager qm = GameManager.getManagerFromInstance(QuestManager.class);
 
                 ConstructionTable bs = (ConstructionTable) gmm.getPopUp(CONSTRUCTION_TABLE);
-                bs.build(GameManager.get().getWorld(), clickedPosition[0], clickedPosition[1]);
+                bs.build(GameManager.get().getWorld(), (int) clickedPosition[0], (int) clickedPosition[1]);
                 qm.addBuilding(bs.selectBuilding(bs.getBuildingID(), 0, 0).getBuildingType());
                 toBuild = false;
             }
@@ -1041,12 +1054,11 @@ public class MainCharacter extends Peon
         }
 
         // Revive health if character has revived for 100 ticks
-        if (revive == 100) {
+        if (revive == 500) {
             changeHealth(1);
             updateHealth();
             revive = 0;
         }
-
     }
 
     private void onTickNotPaused() {
@@ -1305,13 +1317,33 @@ public class MainCharacter extends Peon
      * @param goldValue The value of the gold piece to be removed from the pouch.
      */
     public void removeGold(Integer goldValue) {
-        // if this gold value does not exist in the pouch
-        if (goldPouch.containsKey(goldValue)) {
-            if (goldPouch.get(goldValue) > 1) {
-                goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
-            } else {
-                goldPouch.remove(goldValue);
-            }
+        int totalGold = getGoldPouchTotalValue();
+
+        if(getGoldPouchTotalValue() >= goldValue){
+            totalGold -= goldValue;
+
+            int goldCount = totalGold;
+
+            int req100 = goldCount / 100;
+            goldCount -= req100 * 100;
+
+            int req50 = goldCount / 50;
+            goldCount -= req50 * 50;
+
+            int req10 = goldCount / 10;
+            goldCount -= req10 * 10;
+
+            int req5 = goldCount / 5;
+
+            goldPouch.clear();
+            goldPouch.put(100, req100);
+            goldPouch.put(50, req50);
+            goldPouch.put(10, req10);
+            goldPouch.put(5, req5);
+
+
+        }else{
+            logger.warn("Not enough gold!");
         }
     }
 
@@ -1518,7 +1550,7 @@ public class MainCharacter extends Peon
      *
      * @return the player direction (units: degrees)
      */
-    private double getPlayerDirectionAngle() {
+    public double getPlayerDirectionAngle() {
         double val;
         if (xInput != 0 || yInput != 0) {
             val = Math.atan2(yInput, xInput);
@@ -1637,7 +1669,6 @@ public class MainCharacter extends Peon
         }
     }
 
-
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
 
@@ -1649,9 +1680,13 @@ public class MainCharacter extends Peon
             break;
         case 2:
             unlocked.add(WATCHTOWER);
+            unlocked.add(new Hatchet());
+            unlocked.add(new PickAxe());
             break;
         case 1:
             unlocked.add(CABIN);
+            unlocked.add(new Hatchet());
+            unlocked.add(new PickAxe());
             break;
         case 0:
             unlocked.add(new Hatchet());
@@ -2077,7 +2112,7 @@ public class MainCharacter extends Peon
         this.setHealth(memento.health);
     }
 
-    public static class MainCharacterMemento extends AbstractMemento implements Serializable {
+    public static class MainCharacterMemento implements AbstractMemento , Serializable {
         private long mainCharacterID;
         private int level;
         private int foodLevel;

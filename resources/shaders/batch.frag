@@ -45,7 +45,7 @@ uniform vec3 sunColour;
 
 //* Component from point lights
 //Maximum number of lights supported
-#define MAX_POINT_LIGHTS 10
+#define MAX_POINT_LIGHTS 20
 //number of lights to render
 uniform int numberOfPointLights;
 //data on Point Lights

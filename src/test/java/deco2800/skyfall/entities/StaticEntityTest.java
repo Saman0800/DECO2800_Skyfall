@@ -94,7 +94,12 @@ public class StaticEntityTest {
         Tile tile1 = new Tile(null, 0.0f, 0.0f);
         tileMap.add(tile1);
         System.out.println("World " + w);
-        w.setTileMap(tileMap);
+        for (Chunk chunk : w.getLoadedChunks().values()) {
+            chunk.getEntities().clear();
+        }
+        for (Tile tile : tileMap) {
+            w.addTile(tile);
+        }
 
         StaticEntity rock1 = new StaticEntity(tile1, 2, "rock", true);
 
@@ -114,7 +119,12 @@ public class StaticEntityTest {
         CopyOnWriteArrayList<Tile> tileMap = new CopyOnWriteArrayList<>();
         Tile tile1 = new Tile(null, 0.0f, 0.0f);
         tileMap.add(tile1);
-        w.setTileMap(tileMap);
+        for (Chunk chunk : w.getLoadedChunks().values()) {
+            chunk.getEntities().clear();
+        }
+        for (Tile tile : tileMap) {
+            w.addTile(tile);
+        }
 
         Map<HexVector, String> texture = new HashMap<>();
         texture.put(new HexVector(0.0f, 0.0f), "rock");
@@ -184,7 +194,12 @@ public class StaticEntityTest {
         Tile tile2 = new Tile(null, 0.0f, 1.0f);
         tileMap.add(tile1);
         tileMap.add(tile2);
-        w.setTileMap(tileMap);
+        for (Chunk chunk : w.getLoadedChunks().values()) {
+            chunk.getEntities().clear();
+        }
+        for (Tile tile : tileMap) {
+            w.addTile(tile);
+        }
 
         StaticEntity rock1 = new StaticEntity(tile1, 2, "rock", true);
         StaticEntity rock2 = rock1.newInstance(tile2);

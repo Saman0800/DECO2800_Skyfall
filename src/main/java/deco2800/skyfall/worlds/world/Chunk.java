@@ -137,6 +137,40 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
         generateNeighbours();
     }
 
+    private  void reduceCognitive(Map<Integer, Map<Integer, Tile>> tileMap,Tile tile, int col, int row){
+        // West
+        if (tileMap.containsKey(col - 2)&&tileMap.get(col - 2).containsKey(row + 1)){
+            tile.addNeighbour(Tile.NORTH_WEST, tileMap.get(col - 2).get(row + 1));
+            tileMap.get(col - 2).get(row + 1).addNeighbour(Tile.SOUTH_EAST, tile);
+        }
+        if (tileMap.containsKey(col - 2)&&tileMap.get(col - 2).containsKey(row - 1)){
+            tile.addNeighbour(Tile.SOUTH_WEST, tileMap.get(col - 2).get(row - 1));
+            tileMap.get(col - 2).get(row - 1).addNeighbour(Tile.NORTH_EAST, tile);
+        }
+
+        // Central.North
+        if (tileMap.containsKey(col)&&tileMap.get(col).containsKey(row + 2)) {
+            tile.addNeighbour(Tile.NORTH, tileMap.get(col).get(row + 2));
+            tileMap.get(col).get(row + 2).addNeighbour(Tile.SOUTH, tile);
+        }
+        // Central.South
+        if (tileMap.containsKey(col)&&tileMap.get(col).containsKey(row - 2)) {
+            tile.addNeighbour(Tile.SOUTH, tileMap.get(col).get(row - 2));
+            tileMap.get(col).get(row - 2).addNeighbour(Tile.NORTH, tile);
+        }
+
+        // North East
+        if (tileMap.containsKey(col + 2)&&tileMap.get(col + 2).containsKey(row + 1)) {
+            tile.addNeighbour(Tile.NORTH_EAST, tileMap.get(col + 2).get(row + 1));
+            tileMap.get(col + 2).get(row + 1).addNeighbour(Tile.SOUTH_WEST, tile);
+        }
+        // South East
+        if (tileMap.containsKey(col + 2)&&tileMap.get(col + 2).containsKey(row - 1)) {
+            tile.addNeighbour(Tile.SOUTH_EAST, tileMap.get(col + 2).get(row - 1));
+            tileMap.get(col + 2).get(row - 1).addNeighbour(Tile.NORTH_WEST, tile);
+        }
+    }
+
     /**
      * Generates the neighbours for the tiles.
      */
@@ -174,50 +208,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
             int col = (int) (tile.getCol() * 2);
             int row = (int) (tile.getRow() * 2);
 
-            // West
-            if (tileMap.containsKey(col - 2)) {
-                // North West
-                if (tileMap.get(col - 2).containsKey(row + 1)) {
-                    tile.addNeighbour(Tile.NORTH_WEST, tileMap.get(col - 2).get(row + 1));
-                    tileMap.get(col - 2).get(row + 1).addNeighbour(Tile.SOUTH_EAST, tile);
-                }
-
-                // South West
-                if (tileMap.get(col - 2).containsKey(row - 1)) {
-                    tile.addNeighbour(Tile.SOUTH_WEST, tileMap.get(col - 2).get(row - 1));
-                    tileMap.get(col - 2).get(row - 1).addNeighbour(Tile.NORTH_EAST, tile);
-                }
-            }
-
-            // Central
-            if (tileMap.containsKey(col)) {
-                // North
-                if (tileMap.get(col).containsKey(row + 2)) {
-                    tile.addNeighbour(Tile.NORTH, tileMap.get(col).get(row + 2));
-                    tileMap.get(col).get(row + 2).addNeighbour(Tile.SOUTH, tile);
-                }
-
-                // South
-                if (tileMap.get(col).containsKey(row - 2)) {
-                    tile.addNeighbour(Tile.SOUTH, tileMap.get(col).get(row - 2));
-                    tileMap.get(col).get(row - 2).addNeighbour(Tile.NORTH, tile);
-                }
-            }
-
-            // East
-            if (tileMap.containsKey(col + 2)) {
-                // North East
-                if (tileMap.get(col + 2).containsKey(row + 1)) {
-                    tile.addNeighbour(Tile.NORTH_EAST, tileMap.get(col + 2).get(row + 1));
-                    tileMap.get(col + 2).get(row + 1).addNeighbour(Tile.SOUTH_WEST, tile);
-                }
-
-                // South East
-                if (tileMap.get(col + 2).containsKey(row - 1)) {
-                    tile.addNeighbour(Tile.SOUTH_EAST, tileMap.get(col + 2).get(row - 1));
-                    tileMap.get(col + 2).get(row - 1).addNeighbour(Tile.NORTH_WEST, tile);
-                }
-            }
+            reduceCognitive(tileMap,tile,col,row);
         }
     }
 
@@ -349,7 +340,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
     /**
      * The memento storing the information required to reproduce a chunk.
      */
-    public static class ChunkMemento extends AbstractMemento implements Serializable {
+    public static class ChunkMemento implements Serializable, AbstractMemento {
         private int x;
         private int y;
 

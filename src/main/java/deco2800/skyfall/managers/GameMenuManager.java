@@ -49,6 +49,7 @@ public class GameMenuManager extends TickableManager {
 
     private float bottomRightX = 0;
     private float bottomRightY = 0;
+    private boolean drawn = false;
 
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
@@ -241,6 +242,10 @@ public class GameMenuManager extends TickableManager {
             logger.info("Please add skin and stats manager before drawing");
             return;
         }
+
+        if (drawn) {
+            return;
+        }
         String whiteText = "white";
         String exitText = "exitButton";
 
@@ -367,6 +372,7 @@ public class GameMenuManager extends TickableManager {
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, sm, skin));
 
+        drawn = true;
     }
 
     /**

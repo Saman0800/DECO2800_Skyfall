@@ -465,7 +465,7 @@ public class InventoryManager extends TickableManager implements Serializable {
     /**
      * Removes an item from the inventory
      */
-    private void remove(String itemName) {
+    public void remove(String itemName) {
         this.inventory.remove(itemName);
         this.quickAccessRemove((itemName));
         this.positions.remove(itemName);

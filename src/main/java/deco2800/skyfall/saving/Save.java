@@ -38,15 +38,6 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
         this(new ArrayList<>(), null, null);
     }
 
-
-    /**
-     * Sets the id of a save
-     * @param id
-     */
-    public void setId(long id){
-        this.saveID = id;
-    }
-
     /**
      * Constructor for a save state
      *
@@ -168,7 +159,7 @@ public class Save implements Saveable<Save.SaveMemento>, Serializable {
     /**
      * A savestate for the save
      */
-    public static class SaveMemento extends AbstractMemento implements Serializable {
+    public static class SaveMemento implements AbstractMemento , Serializable {
         private long saveID;
         private long currentWorld;
         private int gameStage;

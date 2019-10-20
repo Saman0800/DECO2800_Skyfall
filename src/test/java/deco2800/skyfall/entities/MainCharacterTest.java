@@ -23,6 +23,7 @@ import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 
 import org.junit.*;
+import org.lwjgl.Sys;
 import org.mockito.Mock;
 
 import org.junit.runner.RunWith;
@@ -447,9 +448,6 @@ public class MainCharacterTest {
 
         // ensure all the pieces have been added
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(180));
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(5), 4);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(10), 1);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(50), 3);
 
         // remove a piece of gold from the pouch
         testCharacter.removeGold(5);
@@ -458,16 +456,12 @@ public class MainCharacterTest {
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(175));
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(5), 3);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(10), 1);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(50), 3);
 
         // remove a piece of gold from the pouch which is the last piece
         testCharacter.removeGold(10);
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(165));
-        Assert.assertFalse(testCharacter.getGoldPouch().containsKey(10));
 
 
     }
@@ -622,12 +616,15 @@ public class MainCharacterTest {
         Apple apple = new Apple();
         Berry berry = new Berry();
 
+        testCharacter.getInventoryManager().add(alo);
+        testCharacter.getInventoryManager().add(apple);
+        testCharacter.getInventoryManager().add(berry);
+
         testCharacter.changeHealth(-8);
 
         int currentHealth = testCharacter.getHealth();
 
         // Check that health increases by 2
-        testCharacter.pickUpInventory(alo);
         testCharacter.setEquippedItem(alo);
         testCharacter.useEquipped();
         Assert.assertEquals(currentHealth + 2, testCharacter.getHealth());
@@ -793,6 +790,17 @@ public class MainCharacterTest {
 
         assertEquals(testCharacter, gameMenuManager.getMainCharacter());
         assertEquals(gameMenuManager.getPopUp("gameOverTable"), gameMenuManager.getCurrentPopUp());
+    }
+
+    /**
+     * Test the pop up methods work.
+     */
+    @Test
+    public void getMaxHealthTest() {
+        GameMenuManager gameMenuManager = new GameMenuManager();
+        testCharacter.setMaxHealth(50);
+
+        assertEquals(50, testCharacter.getMaxHealth());
     }
 
     @After

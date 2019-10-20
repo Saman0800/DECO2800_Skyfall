@@ -2,27 +2,20 @@ package deco2800.skyfall.util;
 
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BFSPathfinder implements Pathfinder {
-	
-	@SuppressWarnings("unused")
-	private final Logger log = LoggerFactory.getLogger(BFSPathfinder.class);
-
 
 	public List<Tile> pathfind(World world, HexVector origin, HexVector destination) {
 
 		Tile originTile = getTileByHexVector(world, origin);
 		Tile destinationTile = getTileByHexVector(world, destination);
 		if (originTile == null || destinationTile == null) {
-			return null;
+			return new LinkedList<>();
 		}
-
 		return pathfindBFS(originTile, destinationTile);
-
 	}
 
 	private List<Tile> pathfindBFS(Tile origin, Tile destination) {
@@ -65,13 +58,13 @@ public class BFSPathfinder implements Pathfinder {
 	}
 
 	private Tile getTileByHexVector(World world, HexVector vector) {
-		for (Tile tile : world.getTileMap()) {
+		for (Tile tile : world.getLoadedChunks().values().stream().flatMap(chunk ->
+				chunk.getTiles().stream()).collect(Collectors.toList())) {
 			if ((int) tile.getCol() == (int) vector.getCol() && (int) tile.getRow() == (int) vector.getRow()) {
 				return tile;
 			}
 		}
 		return null;
-
 	}
 
 }
