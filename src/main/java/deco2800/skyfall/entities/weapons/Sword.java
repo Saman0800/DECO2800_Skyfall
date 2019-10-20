@@ -5,7 +5,12 @@ import deco2800.skyfall.worlds.Tile;
 public class Sword extends Weapon {
 
     public Sword(Tile tile, boolean obstructed) {
-        super(tile, "sword_tex", obstructed, "sword", "melee", "slash", 5, 3, 6);
+        super(tile, "sword_tex", obstructed, "sword");
+        this.setWeaponType("melee");
+        this.setDamageType("slash");
+        this.setAttackRate(5);
+        this.setDamage(3);
+        this.setDurability(6);
         setCostValues(30, 30, 10, 10);
     }
 
