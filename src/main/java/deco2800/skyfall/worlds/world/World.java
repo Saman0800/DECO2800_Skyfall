@@ -49,7 +49,8 @@ import java.util.stream.Collectors;
  * items.
  */
 public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
-    public static final int LOADED_RADIUS = 50;
+    public static final int LOADED_RADIUS = 25;
+
     protected long id;
 
     protected int width;
@@ -93,7 +94,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
     // Import coin sound effect
     public static final String GOLD_SOUND_EFFECT = "coins";
-
     // Item pick-up sound effect
     private static final String PICK_UP_SOUND = "pick_up";
 
