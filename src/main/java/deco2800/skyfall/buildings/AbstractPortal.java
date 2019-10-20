@@ -28,6 +28,7 @@ public abstract class AbstractPortal extends SaveableEntity {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPortal.class);
     private static final String ENTITY_ID_STRING = "PortalID";
+    public static final int COST = 100;
     // The next biome to teleport to
     String nextBiome;
 
@@ -94,6 +95,7 @@ public abstract class AbstractPortal extends SaveableEntity {
         World nextWorld = WorldDirector.constructSingleBiomeWorld(new WorldBuilder(), currentWorld.getSeed() + 1, true, nextBiome).getWorld();
         // Add this world to the save
         save.getWorlds().add(nextWorld);
+        save.incrementGameStage();
         save.setCurrentWorld(nextWorld);
         nextWorld.setSave(save);
         // Move main character to origin of new world
@@ -181,7 +183,7 @@ public abstract class AbstractPortal extends SaveableEntity {
      * @return - cost of building the building
      */
     public int getCost() {
-        return 0;
+        return COST;
     }
 
     public void unlocknext(MainCharacter character, String next) {

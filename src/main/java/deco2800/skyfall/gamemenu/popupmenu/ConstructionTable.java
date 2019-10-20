@@ -5,9 +5,7 @@ import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingFactory;
@@ -17,7 +15,6 @@ import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.worlds.world.World;
-
 import java.util.List;
 
 /**
@@ -27,6 +24,9 @@ public class ConstructionTable extends AbstractPopUpElement {
     private final StatisticsManager sm;
     private Table blueprintPanel;
     private BuildingType buildingID;
+
+    //Game skin
+    private Skin skin;
 
     /**
      * Constructs a blueprint shop table.
@@ -38,10 +38,12 @@ public class ConstructionTable extends AbstractPopUpElement {
      * @param gameMenuManager Current game menu manager.
      */
     public ConstructionTable(Stage stage, ImageButton exit, String[] textureNames, TextureManager tm,
-            GameMenuManager gameMenuManager, StatisticsManager sm) {
+            GameMenuManager gameMenuManager, StatisticsManager sm, Skin skin) {
         super(stage, exit, textureNames, tm, gameMenuManager);
-        this.draw();
         this.sm = sm;
+        this.skin = skin;
+        this.draw();
+
     }
 
     /**
@@ -54,21 +56,25 @@ public class ConstructionTable extends AbstractPopUpElement {
         super.draw();
         baseTable = new Table();
         baseTable.setSize(910, 510);
-        baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2,
+        baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2 + 40,
                 (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight() / 2);
         baseTable.setDebug(true);
         baseTable.top();
-        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("pop up screen"));
-        baseTable.setName("chestTable");
+        baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
+        baseTable.setName("constructionTable");
 
-        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject("building_banner"));
+        Table infoBar = new Table();
+        infoBar.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_banner"));
         infoBar.setSize(650, 55);
-        infoBar.setPosition(130, 435);
+        infoBar.setPosition(130, 430);
+
+        Label text = new Label("CONSTRUCTION", skin, "navy-text");
+        infoBar.add(text);
 
         Table infoPanel = new Table();
         infoPanel.setSize(410, 400);
         infoPanel.setPosition(25, 18);
-        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
+        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("construction_info"));
 
         this.blueprintPanel = new Table();
 
@@ -87,7 +93,7 @@ public class ConstructionTable extends AbstractPopUpElement {
         blueprintPanel.setName("resourcePanel");
         blueprintPanel.setSize(410, 400);
         blueprintPanel.setPosition(475, 18);
-        blueprintPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("menu_panel"));
+        blueprintPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("inventory_panel"));
 
         List<BuildingType> unlocked = sm.getCharacter().getCraftedBuildings();
 

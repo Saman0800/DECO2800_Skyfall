@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.observers.DayNightObserver;
 import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
@@ -317,4 +318,18 @@ public class EnvironmentManagerTest {
         manager.setTime(24, 80);
         assertEquals(1, manager.getHourDecimal(), 0);
     }
+
+    @Test
+    public void getMinutesTest() {
+        manager.setTime(24, 8);
+        assertEquals(8, manager.getMinutes());
+    }
+
+    @Test
+    public void setPlayerTest() {
+       AbstractEntity player = mockPlayer;
+       manager.setPlayer(player);
+        assertEquals(player, manager.getPlayer());
+    }
+
 }

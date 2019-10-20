@@ -303,6 +303,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         spawnGold(random, biomeSpawnRules);
 
         spawnChests(world, random, biomeSpawnRules);
+        spawnBlueprintShop(random, biomeSpawnRules);
 
         // Create a new perlin noise map
         SpawnControl rockControl = x -> (x * x * x * x) / 5.0;
@@ -333,6 +334,19 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         // Spawn gold pieces
         spawnGold(random, biomeSpawnRules);
+        spawnBlueprintShop(random, biomeSpawnRules);
+
+        SpawnControl rockControl = x -> (x * x * x * x) / 3.0;
+        EntitySpawnRule mRockRule = new EntitySpawnRule(tile -> new VolcanicRock(tile, true), random.nextInt(), true,
+                rockControl);
+        mRockRule.setLimitAdjacent(true);
+        biomeSpawnRules.add(mRockRule);
+
+        SpawnControl cubic = x -> (x * x * x) / 6.0 + 0.01;
+        EntitySpawnRule mTreeControl = new EntitySpawnRule(tile -> new VolcanicTree(tile, true), random.nextInt(), true,
+                cubic);
+        mTreeControl.setLimitAdjacent(true);
+        biomeSpawnRules.add(mTreeControl);
 
         // Spawn some bones
         EntitySpawnRule boneRule = new EntitySpawnRule(tile -> new Bone(tile, true), random.nextInt(), 0.004);

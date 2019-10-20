@@ -195,6 +195,8 @@ public class WorldDirector {
         builder.setSeed(2);
         builder.setStaticEntities(true);
         builder.addEntity(new Heavy(4, 1, 2f, WorldDirector.FOREST_STRING));
+
+        builder.addEntity(new Heavy(4, 1, 2f, WorldDirector.FOREST_STRING));
         builder.addBiome(new ForestBiome(random), 20);
         builder.addBiome(new DesertBiome(random), 20);
         builder.addBiome(new MountainBiome(random), 20);

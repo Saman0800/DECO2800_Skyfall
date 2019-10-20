@@ -64,6 +64,7 @@ public class MainCharacter extends Peon
     public static final String PICK_AXE = "Pick Axe";
     public static final String HATCHET = "Hatchet";
     private static MainCharacter mainCharacterInstance = null;
+    private static FeedbackManager fm;
     private boolean residualFromPopUp = false;
 
     /**
@@ -360,7 +361,39 @@ public class MainCharacter extends Peon
         this.level = 1;
 
         // create a new goldPouch object
-        setUpCharacter();
+        this.goldPouch = new HashMap<>();
+
+        // Initialises the players velocity properties
+        xInput = 0;
+        yInput = 0;
+        setAcceleration(10.f);
+        setMaxSpeed(5.f);
+        vel = 0;
+        velHistoryX = new ArrayList<>();
+        velHistoryY = new ArrayList<>();
+
+        blueprintsLearned = new ArrayList<>();
+
+        this.equippedItem = new EmptyItem();
+        isMoving = false;
+
+        // Sets the filters so that MainCharacter doesn't collide with projectile.
+        for (Fixture fix : getBody().getFixtureList()) {
+            Filter filter = fix.getFilterData();
+            filter.categoryBits = (short) 0x2; // Set filter category to 2
+            filter.maskBits = (short) (0xFFFF ^ 0x4); // remove mask category 4 (projectiles)
+            fix.setFilterData(filter);
+        }
+
+        isSprinting = false;
+
+        canSwim = false;
+        this.scale = 0.4f;
+        setDirectionTextures();
+        configureAnimations();
+
+        spellCaster = new SpellCaster(this);
+        fm  =  GameManager.get().getManager(FeedbackManager.class);
     }
 
     /**
@@ -434,6 +467,10 @@ public class MainCharacter extends Peon
                 this.inventories.add(this.equippedItem);
             }
             this.equippedItem = item;
+            if (fm != null) {
+                fm.setFeedbackBarUpdate(true);
+                fm.setFeedbackText(item.getName() + " equipped");
+            }
             return true;
         } else {
             logger.warn("You can't equip {}.", item.getName());
@@ -778,7 +815,6 @@ public class MainCharacter extends Peon
         if (recoverTime > 1000) {
             logger.info("Recovered");
             setRecovering(false);
-            setTexChanging(false);
             changeCollideability(true);
             recoverTime = 0;
         }
@@ -889,7 +925,7 @@ public class MainCharacter extends Peon
                 QuestManager qm = GameManager.getManagerFromInstance(QuestManager.class);
 
                 ConstructionTable bs = (ConstructionTable) gmm.getPopUp(CONSTRUCTION_TABLE);
-                bs.build(GameManager.get().getWorld(), (int) clickedPosition[0], (int) clickedPosition[1]);
+                bs.build(GameManager.get().getWorld(), clickedPosition[0], clickedPosition[1]);
                 qm.addBuilding(bs.selectBuilding(bs.getBuildingID(), 0, 0).getBuildingType());
                 toBuild = false;
             }
@@ -965,6 +1001,7 @@ public class MainCharacter extends Peon
         onTickNotPaused();
         this.movementSound();
         this.centreCameraAuto();
+        this.setRecovering(false);
 
         // Mana restoration.
         this.manaCD++;
@@ -1017,12 +1054,11 @@ public class MainCharacter extends Peon
         }
 
         // Revive health if character has revived for 100 ticks
-        if (revive == 100) {
+        if (revive == 500) {
             changeHealth(1);
             updateHealth();
             revive = 0;
         }
-
     }
 
     private void onTickNotPaused() {
@@ -1281,13 +1317,33 @@ public class MainCharacter extends Peon
      * @param goldValue The value of the gold piece to be removed from the pouch.
      */
     public void removeGold(Integer goldValue) {
-        // if this gold value does not exist in the pouch
-        if (goldPouch.containsKey(goldValue)) {
-            if (goldPouch.get(goldValue) > 1) {
-                goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
-            } else {
-                goldPouch.remove(goldValue);
-            }
+        int totalGold = getGoldPouchTotalValue();
+
+        if(getGoldPouchTotalValue() >= goldValue){
+            totalGold -= goldValue;
+
+            int goldCount = totalGold;
+
+            int req100 = goldCount / 100;
+            goldCount -= req100 * 100;
+
+            int req50 = goldCount / 50;
+            goldCount -= req50 * 50;
+
+            int req10 = goldCount / 10;
+            goldCount -= req10 * 10;
+
+            int req5 = goldCount / 5;
+
+            goldPouch.clear();
+            goldPouch.put(100, req100);
+            goldPouch.put(50, req50);
+            goldPouch.put(10, req10);
+            goldPouch.put(5, req5);
+
+
+        }else{
+            logger.warn("Not enough gold!");
         }
     }
 
@@ -1607,6 +1663,12 @@ public class MainCharacter extends Peon
         }
     }
 
+    public void removeBlueprint(Blueprint blueprint) {
+        if (blueprint != null) {
+            this.blueprintsLearned.remove(blueprint);
+        }
+    }
+
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
 
@@ -1618,9 +1680,13 @@ public class MainCharacter extends Peon
             break;
         case 2:
             unlocked.add(WATCHTOWER);
+            unlocked.add(new Hatchet());
+            unlocked.add(new PickAxe());
             break;
         case 1:
             unlocked.add(CABIN);
+            unlocked.add(new Hatchet());
+            unlocked.add(new PickAxe());
             break;
         case 0:
             unlocked.add(new Hatchet());
@@ -1648,11 +1714,13 @@ public class MainCharacter extends Peon
             break;
         case 1:
             if (qm.questFinished()) {
+                logger.info("QUEST FINISHED ADDED DESERT PORTAL");
                 unlocked.add(new DesertPortal(0, 0, 0));
             }
             break;
         case 0:
             if (qm.questFinished()) {
+                logger.info("QUEST FINISHED ADDED FOREST PORTAL");
                 unlocked.add(new ForestPortal(0, 0, 0));
             }
             break;
@@ -1969,7 +2037,7 @@ public class MainCharacter extends Peon
     /**
      * Toggles if the camera should follow the player
      */
-    private void toggleCameraLock() {
+    public void toggleCameraLock() {
         if (!cameraLock) {
             cameraLock = true;
             centreCameraManual();
@@ -1985,7 +2053,6 @@ public class MainCharacter extends Peon
         if (cameraLock) {
             float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
             GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
-
         }
     }
 
@@ -2043,6 +2110,7 @@ public class MainCharacter extends Peon
         this.foodLevel = memento.foodLevel;
         this.foodAccum = memento.foodAccum;
         this.goldPouch = memento.goldPouch;
+        this.setHealth(memento.health);
     }
 
     public static class MainCharacterMemento implements AbstractMemento , Serializable {
@@ -2065,5 +2133,12 @@ public class MainCharacter extends Peon
             this.foodAccum = character.foodAccum;
             this.goldPouch = character.goldPouch;
         }
+    }
+
+    /**
+     * Gets the players camera lock status
+     */
+    public Boolean getCameraStatus(){
+        return this.cameraLock;
     }
 }

@@ -46,6 +46,9 @@ public class InventoryManager extends TickableManager implements Serializable {
 
     private Map<String, Tuple> positions;
 
+    //Feedback manager for inventory updates
+    private final FeedbackManager fm = GameManager.get().getManager(FeedbackManager.class);
+
     @Override
     public void onTick(long i) {
         // Auto-generated method stub
@@ -263,12 +266,13 @@ public class InventoryManager extends TickableManager implements Serializable {
      */
     public boolean add(Item item) {
         String name = item.getName();
+        boolean successful;
 
         if (this.inventory.get(name) != null) {
             List<Item> itemsList = this.inventory.get(name);
             itemsList.add(item);
             this.inventory.put(name, itemsList);
-            return true;
+            successful = true;
         } else {
             List<Item> itemsList = new ArrayList<>();
             itemsList.add(item);
@@ -278,13 +282,20 @@ public class InventoryManager extends TickableManager implements Serializable {
             }
 
             if (processPosition(name, itemsList, pos)) {
-                return true;
+                successful = true;
             } else {
                 logger.warn("Not enough space in inventory");
-                return false;
+                successful = false;
             }
         }
-
+        if (successful) {
+            fm.setFeedbackBarUpdate(true);
+            fm.setFeedbackText("" + item.getName() + " added to inventory");
+        } else {
+            fm.setFeedbackBarUpdate(true);
+            fm.setFeedbackText("Inventory full");
+        }
+        return successful;
     }
 
     private boolean processPosition(String name, List<Item> itemsList, List<Tuple> pos) {
@@ -306,6 +317,10 @@ public class InventoryManager extends TickableManager implements Serializable {
         return false;
     }
 
+    /**
+     * Adds multiple of an item type to inventory
+     * @param items list of items to add to the inventory
+     */
     public void inventoryAddMultiple(Map<String, List<Item>> items) {
         for (Map.Entry<String, List<Item>> e : items.entrySet()) {
             if (inventory.get(e.getKey()) != null) {
@@ -384,6 +399,8 @@ public class InventoryManager extends TickableManager implements Serializable {
 
                 processItem(item, col, row);
             }
+            fm.setFeedbackBarUpdate(true);
+            fm.setFeedbackText(itemName + " removed from inventory");
             return items;
 
         }
@@ -448,36 +465,12 @@ public class InventoryManager extends TickableManager implements Serializable {
     /**
      * Removes an item from the inventory
      */
-    private void remove(String itemName) {
+    public void remove(String itemName) {
         this.inventory.remove(itemName);
         this.quickAccessRemove((itemName));
         this.positions.remove(itemName);
     }
 
-    /**
-     * Returns the description of item
-     *
-     * @param itemName String name of item
-     * @return Description of item
-     */
-    public String getItemDescription(String itemName) {
-        if (this.inventory.get(itemName) != null) {
-            int num = this.inventory.get(itemName).size();
-
-            if (num == 1) {
-                Item item = this.inventory.get(itemName).get(0);
-                return item.getDescription();
-            } else if (num > 1) {
-                List<Item> itemsList = this.inventory.get(itemName);
-                Item item = itemsList.get(num - 1);
-                return item.getDescription();
-            }
-        }
-
-        logger.warn("You don't have that!");
-
-        return null;
-    }
 
     /**
      * Returns an instance of a particular item type
