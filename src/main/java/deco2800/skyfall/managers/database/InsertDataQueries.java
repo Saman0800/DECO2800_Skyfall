@@ -1,5 +1,12 @@
 package deco2800.skyfall.managers.database;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import deco2800.skyfall.entities.MainCharacter.MainCharacterMemento;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.saving.Save.SaveMemento;
@@ -8,12 +15,6 @@ import deco2800.skyfall.worlds.generation.VoronoiEdge.VoronoiEdgeMemento;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode.WorldGenNodeMemento;
 import deco2800.skyfall.worlds.world.Chunk.ChunkMemento;
 import deco2800.skyfall.worlds.world.World.WorldMemento;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 /**
  * Used to insert data into the database
@@ -40,7 +41,7 @@ public class InsertDataQueries {
      */
     public void insertSave(long id, SaveMemento data) throws SQLException, IOException {
         try (PreparedStatement preparedStatement = connection
-            .prepareStatement("insert into SAVES (save_id, data) values (?, ?)")) {
+                .prepareStatement("insert into SAVES (save_id, data) values (?, ?)")) {
             preparedStatement.setLong(1, id);
             writeObjectToDatabase(preparedStatement, 2, data);
             preparedStatement.executeUpdate();
@@ -57,9 +58,9 @@ public class InsertDataQueries {
      * @throws SQLException If an error occurs in the sql insertion
      */
     public void insertWorld(long saveId, long worldId, boolean isCurrentWorld, WorldMemento data)
-        throws SQLException, IOException {
+            throws SQLException, IOException {
         try (PreparedStatement preparedStatement = connection
-            .prepareStatement("insert into WORLDS (save_id, world_id, is_current_world, data) values (?,?,?,?)")) {
+                .prepareStatement("insert into WORLDS (save_id, world_id, is_current_world, data) values (?,?,?,?)")) {
             preparedStatement.setLong(1, saveId);
             preparedStatement.setLong(2, worldId);
             preparedStatement.setBoolean(3, isCurrentWorld);
@@ -73,12 +74,13 @@ public class InsertDataQueries {
      *
      * @param id     The id of the main character
      * @param saveId The save id
-     * @param data   Other data related to the main character stored in the character's memento
+     * @param data   Other data related to the main character stored in the
+     *               character's memento
      * @throws SQLException
      */
     public void insertMainCharacter(long id, long saveId, MainCharacterMemento data) throws SQLException, IOException {
         try (PreparedStatement preparedStatement = connection
-            .prepareStatement("insert into MAIN_CHARACTER (character_id, save_id, data) values (?,?,?)")) {
+                .prepareStatement("insert into MAIN_CHARACTER (character_id, save_id, data) values (?,?,?)")) {
             preparedStatement.setLong(1, id);
             preparedStatement.setLong(2, saveId);
             writeObjectToDatabase(preparedStatement, 3, data);
@@ -98,10 +100,9 @@ public class InsertDataQueries {
      * @throws SQLException If an error occurs in the sql insertion
      */
     public void insertNodes(long worldId, double xPos, double yPos, WorldGenNodeMemento data, long nodeId, long biomeId)
-        throws SQLException, IOException {
-        try (PreparedStatement preparedStatement = connection
-            .prepareStatement("insert into NODES (world_id, x_pos, y_pos, data, node_id, biome_id) values "
-                + "(?,?,?,?,?,?)")) {
+            throws SQLException, IOException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "insert into NODES (world_id, x_pos, y_pos, data, node_id, biome_id) values " + "(?,?,?,?,?,?)")) {
             preparedStatement.setLong(1, worldId);
             preparedStatement.setDouble(2, xPos);
             preparedStatement.setDouble(3, yPos);
@@ -120,9 +121,9 @@ public class InsertDataQueries {
      * @throws SQLException If an error occurs in the sql insertion
      */
     public void insertEdges(long worldID, long edgeID, long biomeID, VoronoiEdgeMemento data)
-        throws SQLException, IOException {
+            throws SQLException, IOException {
         try (PreparedStatement preparedStatement = connection
-            .prepareStatement("insert into EDGES (world_id, edge_id, biome_id, data) values (?, ?, ?, ?)")) {
+                .prepareStatement("insert into EDGES (world_id, edge_id, biome_id, data) values (?, ?, ?, ?)")) {
             preparedStatement.setLong(1, worldID);
             preparedStatement.setLong(2, edgeID);
             preparedStatement.setLong(3, biomeID);
@@ -139,9 +140,9 @@ public class InsertDataQueries {
      * @throws SQLException If an error occurs in the sql insertion
      */
     public void insertBiome(long biomeId, long worldId, String biomeType, AbstractBiomeMemento data)
-        throws SQLException, IOException {
+            throws SQLException, IOException {
         try (PreparedStatement preparedStatement = connection
-            .prepareStatement("insert into BIOMES (biome_id, world_id, biome_type, data) values (?, ?, ?, ?)")) {
+                .prepareStatement("insert into BIOMES (biome_id, world_id, biome_type, data) values (?, ?, ?, ?)")) {
             preparedStatement.setLong(1, biomeId);
             preparedStatement.setLong(2, worldId);
             preparedStatement.setString(3, biomeType);
@@ -149,6 +150,15 @@ public class InsertDataQueries {
 
             preparedStatement.executeUpdate();
         }
+    }
+
+    public void writeObjectToDatabase(PreparedStatement preparedStatement, int index, Object object)
+            throws SQLException, IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(object);
+        objectOutputStream.close();
+        preparedStatement.setBytes(index, byteArrayOutputStream.toByteArray());
     }
 
     /**
@@ -160,7 +170,7 @@ public class InsertDataQueries {
      */
     public void insertChunk(long worldId, int x, int y, ChunkMemento data) throws SQLException, IOException {
         try (PreparedStatement preparedStatement = connection
-            .prepareStatement("insert into CHUNKS (world_id, x, y, data) values (?, ?, ?, ?)")) {
+                .prepareStatement("insert into CHUNKS (world_id, x, y, data) values (?, ?, ?, ?)")) {
             preparedStatement.setLong(1, worldId);
             preparedStatement.setInt(2, x);
             preparedStatement.setInt(3, y);
@@ -170,43 +180,31 @@ public class InsertDataQueries {
         }
     }
 
-
     /**
      * @param type     The type of the entity
-     * @param x        The x position of the entity
-     * @param y        The y position of the entity
-     * @param chunkX   The x position of the chunk that the entity is in
-     * @param chunkY   The y position of the chunk that the entity is in
+     * @param chunkX   the entity's chunk's x position
+     * @param chunkY   the entity's chunk's y position
      * @param worldId  The world id
      * @param data     Other data related to the entities
      * @param entityId The entitiy id
+     * @param position The position of the chunk that the entity is in
      * @throws SQLException If an error occurs in the sql insertion
      */
-    public void insertEntity(String type, double x, double y, int chunkX, int chunkY, long worldId,
-        SaveableEntityMemento data,
-        long entityId) throws SQLException, IOException {
+    public void insertEntity(String type, int chunkX, int chunkY, long worldId, SaveableEntityMemento data,
+            long entityId, double... position) throws SQLException, IOException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
-            "insert into ENTITIES (type, x, y, chunk_x, chunk_y, world_id, data, entity_id) values (?, ?, ?, ?, ?, ?, ?, ?)")) {
-            preparedStatement.setString(1, type);
-            preparedStatement.setDouble(2, x);
-            preparedStatement.setDouble(3, y);
+                "insert into ENTITIES (type, x, y, chunk_x, chunk_y, world_id, data, entity_id) values (?, ?, ?, ?, ?, ?, ?, ?)")) {
+
             preparedStatement.setInt(4, chunkX);
             preparedStatement.setInt(5, chunkY);
             preparedStatement.setLong(6, worldId);
+
+            preparedStatement.setString(1, type);
+            preparedStatement.setDouble(2, position[0]);
+            preparedStatement.setDouble(3, position[1]);
             writeObjectToDatabase(preparedStatement, 7, data);
             preparedStatement.setLong(8, entityId);
             preparedStatement.executeUpdate();
         }
-    }
-
-
-    public void writeObjectToDatabase(PreparedStatement preparedStatement, int index, Object object)
-        throws SQLException,
-        IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-        objectOutputStream.writeObject(object);
-        objectOutputStream.close();
-        preparedStatement.setBytes(index, byteArrayOutputStream.toByteArray());
     }
 }

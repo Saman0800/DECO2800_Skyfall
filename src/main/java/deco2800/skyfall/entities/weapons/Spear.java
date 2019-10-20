@@ -5,7 +5,12 @@ import deco2800.skyfall.worlds.Tile;
 public class Spear extends Weapon {
 
     public Spear(Tile tile, boolean obstructed) {
-        super(tile, "spear_tex", obstructed, "spear", "range", "splash", 4, 5, 7);
+        super(tile, "spear_tex", obstructed, "spear");
+        this.setWeaponType("range");
+        this.setDamageType("splash");
+        this.setAttackRate(4);
+        this.setDamage(5);
+        this.setDurability(7);
         setCostValues(20, 20, 20, 10);
     }
 

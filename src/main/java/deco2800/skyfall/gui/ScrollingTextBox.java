@@ -18,7 +18,7 @@ import deco2800.skyfall.managers.TextureManager;
  * set speed.
  */
 public class ScrollingTextBox extends AbstractGui {
-    private static final long TimePerChar = 20;
+    private static final long TIMEPERCHAR = 20;
     private String printedString;
 
     // Labels and images to be added to the stage
@@ -114,14 +114,14 @@ public class ScrollingTextBox extends AbstractGui {
             residueTime += (int)(System.currentTimeMillis() - lastTime);
 
             if (printedString.length()
-                    < currentIndex + (int)(residueTime / TimePerChar)) {
+                    < currentIndex + (int)(residueTime / TIMEPERCHAR)) {
                 finished = true;
             }
 
             currentIndex = Math.min(printedString.length(),
-                    currentIndex + (int)(residueTime / TimePerChar));
+                    currentIndex + (int)(residueTime / TIMEPERCHAR));
 
-            residueTime %= TimePerChar;
+            residueTime %= TIMEPERCHAR;
 
             lastTime = System.currentTimeMillis();
         }

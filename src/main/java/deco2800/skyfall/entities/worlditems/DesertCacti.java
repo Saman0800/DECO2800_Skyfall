@@ -17,6 +17,8 @@ public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
     private static int nextImage = 1;
     protected static final String ENTITY_ID_STRING = "desert_cacti";
 
+    private static Random random = new Random();
+
     public DesertCacti(SaveableEntityMemento memento) {
         super(memento);
         setCactiParams();
@@ -84,12 +86,11 @@ public class DesertCacti extends StaticEntity implements Tickable, Harvestable {
      */
     @Override
     public void onTick(long tick) {
+        //do nothing.
     }
 
     @Override
     public List<AbstractEntity> harvest(Tile tile) {
-        Random random = new Random();
-
         int dropCount = random.nextInt(this.woodAmount) + 2;
         List<AbstractEntity> drops = new ArrayList<>();
         for (int i = 0; i < dropCount; i++) {

@@ -26,11 +26,8 @@ public class GameMenuManager extends TickableManager {
     private EnvironmentManager em;
     private InventoryManager inventory;
     private Skin skin;
-    private String[] characters;
     private SkyfallGame game;
 
-    // Number of characters in the game.
-    public static final int NUMBEROFCHARACTERS = 5;
     private StatisticsManager sm;
 
     //Refactor Code
@@ -52,6 +49,7 @@ public class GameMenuManager extends TickableManager {
 
     private float bottomRightX = 0;
     private float bottomRightY = 0;
+    private boolean drawn = false;
 
     /**
      * Initialise a new GameMenuManager with stage and skin including the characters in the game.
@@ -64,13 +62,6 @@ public class GameMenuManager extends TickableManager {
         em = GameManager.get().getManager(EnvironmentManager.class);
         stage = null;
         skin = null;
-        characters = new String[NUMBEROFCHARACTERS];
-        // testing
-        characters[0] = "MainCharacter";
-        characters[1] = "bowman";
-        characters[2] = "robot";
-        characters[3] = "spider";
-        characters[4] = "spacman_ded";
         uiElements = new HashMap<>();
         popUps = new HashMap<>();
     }
@@ -233,16 +224,6 @@ public class GameMenuManager extends TickableManager {
             return MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
         }
     }
-    /**
-     * Getter of all characters in the game.
-     *
-     * @return Texture names of the characters.
-     */
-    public String[] getCharacters() {
-        return characters;
-    }
-
-    //refactor
 
     /**
      * Before elements can be drawn a statistic manager needs to be added
@@ -259,6 +240,10 @@ public class GameMenuManager extends TickableManager {
     public void drawAllElements(){
         if (sm == null || skin == null) {
             logger.info("Please add skin and stats manager before drawing");
+            return;
+        }
+
+        if (drawn) {
             return;
         }
         String whiteText = "white";
@@ -316,28 +301,15 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this,
                 skin));
 
-        popUps.put("playerSelectTable", new PlayerSelectTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject(exitText)),
-                null, textureManager, this,
-                skin));
-
         popUps.put("buildingTable", new BuildingTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this,
                 skin));
 
-        popUps.put("goldTable", new GoldTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject(exitText)),
-                null, textureManager, this, sm, skin));
-
-
         popUps.put("gameOverTable", new GameOverTable(stage,
                 null, null, textureManager, this));
 
 
-        popUps.put("constructionTable", new ConstructionTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this, sm));
         popUps.put("collectTable", new CollectCreateTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, skin, "collect"));
@@ -391,6 +363,11 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this,
                 skin));
 
+        popUps.put("constructionTable",new ConstructionTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
+                null, textureManager, this, sm, skin));
+
+        drawn = true;
     }
 
     /**

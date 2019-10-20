@@ -36,16 +36,6 @@ public class Chest extends StaticEntity implements HasHealth {
         // Do nothing on tick
     }
 
-    @Override
-    public int getHealth() {
-        return health;
-    }
-
-    @Override
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
     /**
      * The newInstance method implemented for the MountainRock class to allow for
      * item dispersal on game start up.
@@ -59,5 +49,15 @@ public class Chest extends StaticEntity implements HasHealth {
 
     public ChestManager getManager() {
         return manager;
+    }
+
+    @Override
+    public int getHealth() {
+        return health;
+    }
+
+    @Override
+    public void setHealth(int health) {
+        this.health = health;
     }
 }

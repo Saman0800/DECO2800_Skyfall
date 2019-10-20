@@ -1,11 +1,11 @@
 package deco2800.skyfall.entities.worlditems;
 
+import java.util.Random;
+import java.util.function.Function;
+
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
-import java.util.Random;
-
-import java.util.function.Function;
 
 /**
  * Manages spawn tabling (randomly placing items into the world) Uses
@@ -14,7 +14,7 @@ import java.util.function.Function;
  */
 public final class EntitySpawnTable {
 
-    static private Random randDirection = new Random();
+    private static Random randDirection = new Random();
 
     // Private constructor to prevent construction.
     private EntitySpawnTable() {
