@@ -23,6 +23,7 @@ import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
 
 import org.junit.*;
+import org.lwjgl.Sys;
 import org.mockito.Mock;
 
 import org.junit.runner.RunWith;

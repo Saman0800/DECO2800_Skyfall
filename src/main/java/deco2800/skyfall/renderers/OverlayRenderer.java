@@ -108,8 +108,8 @@ public class OverlayRenderer implements Renderer {
         debugLine(batch, camera, line++, String.format("Mouse: X:%d Y:%d", Gdx.input.getX(), Gdx.input.getY()));
         debugLine(batch, camera, line++, String.format("World: X:%.0f Y:%.0f", mouse[0], mouse[1]));
 
-        float[] ColRow = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
-        debugLine(batch, camera, line++, String.format("World: X:%.0f Y:%.0f", ColRow[0], ColRow[1]));
+        float[] colRow = WorldUtil.worldCoordinatesToColRow(mouse[0], mouse[1]);
+        debugLine(batch, camera, line++, String.format("World: X:%.0f Y:%.0f", colRow[0], colRow[1]));
 
         // Display current time in game
         debugLine(batch, camera, line++,

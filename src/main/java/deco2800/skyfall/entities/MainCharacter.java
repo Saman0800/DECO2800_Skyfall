@@ -291,11 +291,16 @@ public class MainCharacter extends Peon
         this.setTexture(ANIMATION_MAIN_CHARACTER_E_ANIM_0);
         this.setHeight(1);
         this.setObjectName("MainPiece");
+        this.setRecovering(false);
         GameManager.getManagerFromInstance(InputManager.class).addKeyDownListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addKeyUpListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
         this.petsManager = GameManager.getManagerFromInstance(PetsManager.class);
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
+        setUpCharacter();
+    }
+
+    private void setUpCharacter() {
         this.goldPouch = new HashMap<>();
 
         xInput = 0;
@@ -355,38 +360,7 @@ public class MainCharacter extends Peon
         this.level = 1;
 
         // create a new goldPouch object
-        this.goldPouch = new HashMap<>();
-
-        // Initialises the players velocity properties
-        xInput = 0;
-        yInput = 0;
-        setAcceleration(10.f);
-        setMaxSpeed(5.f);
-        vel = 0;
-        velHistoryX = new ArrayList<>();
-        velHistoryY = new ArrayList<>();
-
-        blueprintsLearned = new ArrayList<>();
-
-        this.equippedItem = new EmptyItem();
-        isMoving = false;
-
-        // Sets the filters so that MainCharacter doesn't collide with projectile.
-        for (Fixture fix : getBody().getFixtureList()) {
-            Filter filter = fix.getFilterData();
-            filter.categoryBits = (short) 0x2; // Set filter category to 2
-            filter.maskBits = (short) (0xFFFF ^ 0x4); // remove mask category 4 (projectiles)
-            fix.setFilterData(filter);
-        }
-
-        isSprinting = false;
-
-        canSwim = false;
-        this.scale = 0.4f;
-        setDirectionTextures();
-        configureAnimations();
-
-        spellCaster = new SpellCaster(this);
+        setUpCharacter();
     }
 
     /**
@@ -744,7 +718,7 @@ public class MainCharacter extends Peon
                 recoverTime = 0;
                 SoundManager.playSound(HURT_SOUND_NAME);
 
-                if (hurtTime > 400) {
+                if (hurtTime >= 400) {
                     setRecovering(true);
                 }
             }
@@ -761,6 +735,7 @@ public class MainCharacter extends Peon
             logger.info("Hurt ended");
             setHurt(false);
             setRecovering(true);
+            setTexChanging(true);
             hurtTime = 0;
         }
     }
@@ -807,6 +782,7 @@ public class MainCharacter extends Peon
         if (recoverTime > 1000) {
             logger.info("Recovered");
             setRecovering(false);
+            setTexChanging(false);
             changeCollideability(true);
             recoverTime = 0;
         }
@@ -993,7 +969,6 @@ public class MainCharacter extends Peon
         onTickNotPaused();
         this.movementSound();
         this.centreCameraAuto();
-        this.setRecovering(false);
 
         // Mana restoration.
         this.manaCD++;
@@ -1523,7 +1498,7 @@ public class MainCharacter extends Peon
      *
      * @return the player direction (units: degrees)
      */
-    private double getPlayerDirectionAngle() {
+    public double getPlayerDirectionAngle() {
         double val;
         if (xInput != 0 || yInput != 0) {
             val = Math.atan2(yInput, xInput);

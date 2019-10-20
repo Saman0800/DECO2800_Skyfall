@@ -151,7 +151,9 @@ public abstract class AbstractPacking {
      */
     public boolean addEntityWithOrder(World world, AbstractEntity entity, int renderOrder) {
         if (world != null && entity != null) {
-            entity.setRenderOrder(renderOrder);
+            if (renderOrder >= 0) {
+                entity.setRenderOrder(renderOrder);
+            }
             world.addEntity(entity);
             return true;
         }

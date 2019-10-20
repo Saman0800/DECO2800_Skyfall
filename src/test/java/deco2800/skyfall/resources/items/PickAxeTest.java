@@ -2,12 +2,15 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static org.powermock.api.mockito.PowerMockito.mock;
 
 public class PickAxeTest {
 
@@ -19,12 +22,14 @@ public class PickAxeTest {
 
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
+
         pickAxe = new PickAxe();
         MainCharacter.resetInstance();
         owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
         position = new HexVector(1f, 1f);
         testTile = new Tile(null, 1f, 1f);
         rockToFarm = new ForestRock(testTile, true);
+
     }
 
     @Test
@@ -62,6 +67,26 @@ public class PickAxeTest {
         pickAxe.farmRock(rockToFarm);
         assertEquals(90, rockToFarm.getHealth());
 
+    }
+
+    @Test
+    public void getRequiredWoodTest() {
+        assertEquals(20, pickAxe.getRequiredWood());
+    }
+
+    @Test
+    public void getRequiredStoneTest() {
+        assertEquals(10, pickAxe.getRequiredStone());
+    }
+
+    @Test
+    public void getRequiredMetalTest() {
+        assertEquals(4, pickAxe.getRequiredMetal());
+    }
+
+    @Test
+    public void getCostTest() {
+        assertEquals(20, pickAxe.getCost());
     }
 
 }

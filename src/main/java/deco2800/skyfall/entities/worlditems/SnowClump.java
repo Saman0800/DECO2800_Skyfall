@@ -31,10 +31,6 @@ public class SnowClump extends StaticEntity implements HasHealth {
         // Do nothing on tick
     }
 
-    @Override
-    public int getHealth() {
-        return health;
-    }
 
     @Override
     public void setHealth(int health) {
@@ -51,5 +47,11 @@ public class SnowClump extends StaticEntity implements HasHealth {
     public SnowClump newInstance(Tile tile) {
         return new SnowClump(tile, this.isObstructed());
     }
+
+    @Override
+    public int getHealth() {
+        return health;
+    }
+
 
 }
