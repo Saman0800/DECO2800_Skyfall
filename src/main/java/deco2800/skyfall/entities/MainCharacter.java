@@ -1425,6 +1425,11 @@ public class MainCharacter extends Peon
         this.position.set(bodyPos.x, bodyPos.y);
     }
 
+    /**
+     * Moves the player to a given enemy. This method is needed so the
+     * abductor can abduct
+     * @param enemy The enemy to move to
+     */
     public void moveToEnemy(Enemy enemy) {
 
         xDirection =
