@@ -591,14 +591,9 @@ public class WorldBuilder implements WorldBuilderInterface {
             });
         }
 
-        switch (type) {
-        case "single_player":
+        if ("single_player".equals(type)) {
             world = new World(worldParameters);
-            break;
-        case "tutorial":
-            world = new TutorialWorld(worldParameters);
-            break;
-        default:
+        } else {
             throw new IllegalArgumentException("The world type is not valid");
         }
 

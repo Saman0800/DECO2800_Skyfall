@@ -192,21 +192,21 @@ public class GameManager {
         this.showPath = !showPath;
     }
 
-    /**
-     * Returns true if this is a tutorial world.
-     * 
-     * @return The isTutorial boolean
-     */
-    public boolean getIsTutorial() {
-        return this.isTutorial;
-    }
-
-    /**
-     * Sets the is tutorial variable for this class.
-     */
-    public void setIsTutorial(boolean isTutorial) {
-        this.isTutorial = isTutorial;
-    }
+//    /**
+//     * Returns true if this is a tutorial world.
+//     *
+//     * @return The isTutorial boolean
+//     */
+//    public boolean getIsTutorial() {
+//        return this.isTutorial;
+//    }
+//
+//    /**
+//     * Sets the is tutorial variable for this class.
+//     */
+//    public void setIsTutorial(boolean isTutorial) {
+//        this.isTutorial = isTutorial;
+//    }
 
     /**
      * Returns true if this is a tutorial world.

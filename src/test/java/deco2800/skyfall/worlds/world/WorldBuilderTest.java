@@ -96,13 +96,4 @@ public class WorldBuilderTest {
         assertEquals(1, enemyEntities);
     }
 
-
-//    @Test
-//    public void TestTutorialWorld() {
-//        builder.setType("tutorial");
-//        World world = builder.getWorld();
-//        assertTrue(world instanceof TutorialWorld);
-//    }
-
-
 }
