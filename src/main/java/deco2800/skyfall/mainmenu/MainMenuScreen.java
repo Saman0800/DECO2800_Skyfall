@@ -16,6 +16,7 @@ import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TextureManager;
 import deco2800.skyfall.saving.Save;
+import deco2800.skyfall.tutorial.TutorialScreen;
 
 import java.util.List;
 import java.util.Random;
@@ -90,15 +91,13 @@ public class MainMenuScreen implements Screen {
         tutorialButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                GameManager.get().setIsTutorial(true);
-                game.setScreen(new GameScreen(game, 3, true));
+                game.setScreen(new TutorialScreen(game));
             }
         });
 
         newGameBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                GameManager.get().setIsTutorial(false);
                 showStartGameWindow();
             }
         });
@@ -106,7 +105,6 @@ public class MainMenuScreen implements Screen {
         connectToServerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                GameManager.get().setIsTutorial(false);
                 game.setScreen(new GameScreen(game, 3, false));
             }
         });

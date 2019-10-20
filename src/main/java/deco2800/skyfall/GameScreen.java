@@ -37,7 +37,6 @@ import java.util.ArrayList;
  */
 public class GameScreen implements Screen, KeyDownObserver {
     private final Logger logger = LoggerFactory.getLogger(GameScreen.class);
-
     @SuppressWarnings("unused")
     private final SkyfallGame game;
     /**
@@ -104,12 +103,9 @@ public class GameScreen implements Screen, KeyDownObserver {
             MainCharacter.getInstance().setSave(save);
             save.setMainCharacter(MainCharacter.getInstance());
         } else {
-            if (GameManager.get().getIsTutorial()) {
-                world = WorldDirector.constructTutorialWorld(new WorldBuilder(), seed).getWorld();
-            } else {
-                // Creating the world
-                world = WorldDirector.constructSingleBiomeWorld(new WorldBuilder(), seed, true, "forest").getWorld();
-            }
+            // Creating the world
+            world = WorldDirector.constructSingleBiomeWorld(new WorldBuilder(), seed, true, "forest").getWorld();
+
             save.getWorlds().add(world);
             save.setCurrentWorld(world);
             world.setSave(save);
@@ -190,6 +186,9 @@ public class GameScreen implements Screen, KeyDownObserver {
 
         /* Add Quest Manager to game manager */
         gameManager.addManager(new QuestManager());
+
+        /* Add new Feedback Manager if not already created */
+        gameManager.getManager(FeedbackManager.class);
 
         /*
          * NOTE: Now that the Environment Manager has been added start creating the
@@ -335,7 +334,7 @@ public class GameScreen implements Screen, KeyDownObserver {
     }
 
     /**
-     * Use the selected renderer to render objects onto the map
+     * Use the selected rendere./gr to render objects onto the map
      */
     private void rerenderMapObjects(SpriteBatch batch, OrthographicCamera camera) {
         // set ambient light
@@ -489,5 +488,6 @@ public class GameScreen implements Screen, KeyDownObserver {
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             camera.translate(0, goFastSpeed, 0);
         }
+
     }
 }

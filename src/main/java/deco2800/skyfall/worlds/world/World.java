@@ -631,9 +631,9 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                                     AbstractPortal portal, GameMenuManager gmm) {
         TeleportTable teleportTable = (TeleportTable) gmm.getPopUp("teleportTable");
         teleportTable.updateLocation(updateLocation);
-        teleportTable.updateTeleportTo(teleportTo);
         teleportTable.setSave(save);
         teleportTable.setPortal(portal);
+        teleportTable.updateTeleportTo(teleportTo);
         gmm.setPopUp("teleportTable");
 
     }
