@@ -64,8 +64,9 @@ public class MainCharacter extends Peon
     public static final String PICK_AXE = "Pick Axe";
     public static final String HATCHET = "Hatchet";
     private static MainCharacter mainCharacterInstance = null;
-    private static FeedbackManager fm;
     private boolean residualFromPopUp = false;
+
+    private FeedbackManager fm;
 
     /**
      * Removes the stored main character instance so that the next call to any of
@@ -360,39 +361,9 @@ public class MainCharacter extends Peon
 
         this.level = 1;
 
-        // create a new goldPouch object
-        this.goldPouch = new HashMap<>();
+        // Sets up the main character
+        setUpCharacter();
 
-        // Initialises the players velocity properties
-        xInput = 0;
-        yInput = 0;
-        setAcceleration(10.f);
-        setMaxSpeed(5.f);
-        vel = 0;
-        velHistoryX = new ArrayList<>();
-        velHistoryY = new ArrayList<>();
-
-        blueprintsLearned = new ArrayList<>();
-
-        this.equippedItem = new EmptyItem();
-        isMoving = false;
-
-        // Sets the filters so that MainCharacter doesn't collide with projectile.
-        for (Fixture fix : getBody().getFixtureList()) {
-            Filter filter = fix.getFilterData();
-            filter.categoryBits = (short) 0x2; // Set filter category to 2
-            filter.maskBits = (short) (0xFFFF ^ 0x4); // remove mask category 4 (projectiles)
-            fix.setFilterData(filter);
-        }
-
-        isSprinting = false;
-
-        canSwim = false;
-        this.scale = 0.4f;
-        setDirectionTextures();
-        configureAnimations();
-
-        spellCaster = new SpellCaster(this);
         fm  =  GameManager.get().getManager(FeedbackManager.class);
     }
 
