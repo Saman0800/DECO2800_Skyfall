@@ -1052,6 +1052,13 @@ public class MainCharacter extends Peon
         if (!this.isDead()) {
             revive += 1;
         }
+
+        // Revive health if character has revived for 100 ticks
+        if (revive == 100) {
+            changeHealth(1);
+            updateHealth();
+            revive = 0;
+        }
     }
 
     private void onTickNotPaused() {
