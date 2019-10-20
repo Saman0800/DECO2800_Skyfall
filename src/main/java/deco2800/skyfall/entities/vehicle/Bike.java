@@ -5,10 +5,11 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameManager;
 
 public class Bike extends AbstractVehicle {
+    MainCharacter mc;
+    private static final transient String BIOME = "forest";
     
     private static final String TEXTURENAME = "bike";
     private boolean isOnUse = false;
-    MainCharacter mc;
 
 
     public Bike(float col, float row, MainCharacter mc) {
@@ -28,6 +29,10 @@ public class Bike extends AbstractVehicle {
         return this.isOnUse;
     }
 
+    public String getBiome() {
+        return BIOME;
+    }
+
     @Override
     public String getName() {
         return Bike.TEXTURENAME;
@@ -35,7 +40,7 @@ public class Bike extends AbstractVehicle {
 
     @Override
     public String getDescription() {
-        return "bike";
+        return "vehicle bike";
     }
 
     public void removeBike() {

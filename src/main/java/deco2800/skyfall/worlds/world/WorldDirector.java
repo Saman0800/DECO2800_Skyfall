@@ -18,6 +18,7 @@ import deco2800.skyfall.entities.worlditems.HotSpring;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
+
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
@@ -26,6 +27,7 @@ import deco2800.skyfall.worlds.biomes.MountainBiome;
 import deco2800.skyfall.worlds.biomes.SnowyMountainsBiome;
 import deco2800.skyfall.worlds.biomes.SwampBiome;
 import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
+
 
 /**
  * Class that helps with creating worlds using WorldBuilders
@@ -129,8 +131,6 @@ public class WorldDirector {
         MainCharacter mainCharacter = setupBeachAndStats(builder, renderUI);
         builder.addEntity(new LizardHome(0, 2, mainCharacter));
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
-        builder.addEntity(new Bike(-10f, -2f, mainCharacter));
-        builder.addEntity(new SandCar(-20f, -2f, mainCharacter));
         builder.addEntity(new Scout(0, 2, 0.4f, WorldDirector.FOREST_STRING));
         builder.addEntity(new Medium(1, 2, 0.4f, WorldDirector.FOREST_STRING));
         builder.addEntity(new Heavy(7, 9, 0.2f, WorldDirector.FOREST_STRING));
@@ -162,6 +162,8 @@ public class WorldDirector {
             gmm.drawAllElements();
         }
 
+        builder.addEntity(new Bike(-10f, -2f, mainCharacter));
+        builder.addEntity(new SandCar(-20f, -2f, mainCharacter));
         builder.addEntity(mainCharacter);
 
         return mainCharacter;
