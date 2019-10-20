@@ -13,7 +13,10 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
-    /** The length of a side of the chunk (i.e. the chunk will contain this squared tiles). */
+    /**
+     * The length of a side of the chunk (i.e. the chunk will contain this squared
+     * tiles).
+     */
     public static final int CHUNK_SIDE_LENGTH = 10;
 
     // The world which contains this chunk.
@@ -24,12 +27,12 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
     private int y;
 
     // Contents of the chunk.
-    private ArrayList<Tile> tiles;
-    private ArrayList<AbstractEntity> entities;
+    private List<Tile> tiles;
+    private List<AbstractEntity> entities;
 
     /**
-     * Loads the chunk at the specified coordinates and adds it to the world. If the chunk has not been generated yet,
-     * this also generates it.
+     * Loads the chunk at the specified coordinates and adds it to the world. If the
+     * chunk has not been generated yet, this also generates it.
      *
      * @param world the world to which the chunk is added
      * @param x     the x coordinate of the chunk (in chunk coordinates)
@@ -73,6 +76,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
 
     /**
      * Gets the world of the chunk
+     * 
      * @return The world that the chunk is in
      */
     public World getWorld() {
@@ -80,8 +84,9 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
     }
 
     /**
-     * Constructs a new chunk in the specified world at the specified coordinates and backed by the specified {@link
-     * ArrayList}s (i.e. they are used internally).
+     * Constructs a new chunk in the specified world at the specified coordinates
+     * and backed by the specified {@link ArrayList}s (i.e. they are used
+     * internally).
      *
      * @param world    the world to which the chunk is added
      * @param x        the x coordinate of the chunk
@@ -89,7 +94,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
      * @param tiles    the list used internally to store the tiles
      * @param entities the list used internally to store the entities
      */
-    public Chunk(World world, int x, int y, ArrayList<Tile> tiles, ArrayList<AbstractEntity> entities) {
+    public Chunk(World world, int x, int y, List<Tile> tiles, List<AbstractEntity> entities) {
         this.world = world;
         this.x = x;
         this.y = y;
@@ -123,12 +128,47 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
                 Tile tile = new Tile(world, col, row + oddCol);
                 tiles.add(tile);
                 tile.assignNode(world.getWorldGenNodes(), world.getWorldParameters().getNodeSpacing());
-                tile.assignEdge(world.getRiverEdges(), world.getBeachEdges(), world.getWorldParameters().getNodeSpacing(),
-                                world.getWorldParameters().getRiverWidth(), world.getWorldParameters().getBeachWidth());
+                tile.assignEdge(world.getRiverEdges(), world.getBeachEdges(),
+                        world.getWorldParameters().getNodeSpacing(), world.getWorldParameters().getRiverWidth(),
+                        world.getWorldParameters().getBeachWidth());
             }
         }
 
         generateNeighbours();
+    }
+
+    private  void reduceCognitive(Map<Integer, Map<Integer, Tile>> tileMap,Tile tile, int col, int row){
+        // West
+        if (tileMap.containsKey(col - 2)&&tileMap.get(col - 2).containsKey(row + 1)){
+            tile.addNeighbour(Tile.NORTH_WEST, tileMap.get(col - 2).get(row + 1));
+            tileMap.get(col - 2).get(row + 1).addNeighbour(Tile.SOUTH_EAST, tile);
+        }
+        if (tileMap.containsKey(col - 2)&&tileMap.get(col - 2).containsKey(row - 1)){
+            tile.addNeighbour(Tile.SOUTH_WEST, tileMap.get(col - 2).get(row - 1));
+            tileMap.get(col - 2).get(row - 1).addNeighbour(Tile.NORTH_EAST, tile);
+        }
+
+        // Central.North
+        if (tileMap.containsKey(col)&&tileMap.get(col).containsKey(row + 2)) {
+            tile.addNeighbour(Tile.NORTH, tileMap.get(col).get(row + 2));
+            tileMap.get(col).get(row + 2).addNeighbour(Tile.SOUTH, tile);
+        }
+        // Central.South
+        if (tileMap.containsKey(col)&&tileMap.get(col).containsKey(row - 2)) {
+            tile.addNeighbour(Tile.SOUTH, tileMap.get(col).get(row - 2));
+            tileMap.get(col).get(row - 2).addNeighbour(Tile.NORTH, tile);
+        }
+
+        // North East
+        if (tileMap.containsKey(col + 2)&&tileMap.get(col + 2).containsKey(row + 1)) {
+            tile.addNeighbour(Tile.NORTH_EAST, tileMap.get(col + 2).get(row + 1));
+            tileMap.get(col + 2).get(row + 1).addNeighbour(Tile.SOUTH_WEST, tile);
+        }
+        // South East
+        if (tileMap.containsKey(col + 2)&&tileMap.get(col + 2).containsKey(row - 1)) {
+            tile.addNeighbour(Tile.SOUTH_EAST, tileMap.get(col + 2).get(row - 1));
+            tileMap.get(col + 2).get(row - 1).addNeighbour(Tile.NORTH_WEST, tile);
+        }
     }
 
     /**
@@ -168,50 +208,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
             int col = (int) (tile.getCol() * 2);
             int row = (int) (tile.getRow() * 2);
 
-            // West
-            if (tileMap.containsKey(col - 2)) {
-                // North West
-                if (tileMap.get(col - 2).containsKey(row + 1)) {
-                    tile.addNeighbour(Tile.NORTH_WEST, tileMap.get(col - 2).get(row + 1));
-                    tileMap.get(col - 2).get(row + 1).addNeighbour(Tile.SOUTH_EAST, tile);
-                }
-
-                // South West
-                if (tileMap.get(col - 2).containsKey(row - 1)) {
-                    tile.addNeighbour(Tile.SOUTH_WEST, tileMap.get(col - 2).get(row - 1));
-                    tileMap.get(col - 2).get(row - 1).addNeighbour(Tile.NORTH_EAST, tile);
-                }
-            }
-
-            // Central
-            if (tileMap.containsKey(col)) {
-                // North
-                if (tileMap.get(col).containsKey(row + 2)) {
-                    tile.addNeighbour(Tile.NORTH, tileMap.get(col).get(row + 2));
-                    tileMap.get(col).get(row + 2).addNeighbour(Tile.SOUTH, tile);
-                }
-
-                // South
-                if (tileMap.get(col).containsKey(row - 2)) {
-                    tile.addNeighbour(Tile.SOUTH, tileMap.get(col).get(row - 2));
-                    tileMap.get(col).get(row - 2).addNeighbour(Tile.NORTH, tile);
-                }
-            }
-
-            // East
-            if (tileMap.containsKey(col + 2)) {
-                // North East
-                if (tileMap.get(col + 2).containsKey(row + 1)) {
-                    tile.addNeighbour(Tile.NORTH_EAST, tileMap.get(col + 2).get(row + 1));
-                    tileMap.get(col + 2).get(row + 1).addNeighbour(Tile.SOUTH_WEST, tile);
-                }
-
-                // South East
-                if (tileMap.get(col + 2).containsKey(row - 1)) {
-                    tile.addNeighbour(Tile.SOUTH_EAST, tileMap.get(col + 2).get(row - 1));
-                    tileMap.get(col + 2).get(row - 1).addNeighbour(Tile.NORTH_WEST, tile);
-                }
-            }
+            reduceCognitive(tileMap,tile,col,row);
         }
     }
 
@@ -239,9 +236,10 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
     }
 
     /**
-     * Gets the tiles in this chunk. This is the list used internally, so modifing it will modify the chunk. <em>Do NOT
-     * modify this list without fully understanding how the chunks work.</em> If you want to modify this list but do not
-     * want to modify the chunk, make a copy first.
+     * Gets the tiles in this chunk. This is the list used internally, so modifing
+     * it will modify the chunk. <em>Do NOT modify this list without fully
+     * understanding how the chunks work.</em> If you want to modify this list but
+     * do not want to modify the chunk, make a copy first.
      *
      * @return the list of tiles
      */
@@ -250,9 +248,10 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
     }
 
     /**
-     * Gets the entities in this chunk. This is the list used internally, so modifing it will modify the chunk. <em>Do
-     * NOT modify this list without fully understanding how the chunks work.</em> If you want to modify this list but do
-     * not want to modify the chunk, make a copy first.
+     * Gets the entities in this chunk. This is the list used internally, so
+     * modifing it will modify the chunk. <em>Do NOT modify this list without fully
+     * understanding how the chunks work.</em> If you want to modify this list but
+     * do not want to modify the chunk, make a copy first.
      *
      * @return the list of entities
      */
@@ -261,13 +260,16 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
     }
 
     /**
-     * Adds an entity to this chunk. <em>Ensure that the entity belongs in this chunk before adding it.</em>
+     * Adds an entity to this chunk. <em>Ensure that the entity belongs in this
+     * chunk before adding it.</em>
      *
      * @param entity the entity to add to this chunk
      */
     public void addEntity(AbstractEntity entity) {
-        // Binary searching for the correct index and inserting is O(n), compared to O(nlog(n)) for inserting at the end
-        // then sorting the list (or possibly O(n²), depending on the implementation of the sort, considering that the
+        // Binary searching for the correct index and inserting is O(n), compared to
+        // O(nlog(n)) for inserting at the end
+        // then sorting the list (or possibly O(n²), depending on the implementation of
+        // the sort, considering that the
         // worst case performance of quicksort is for the already-sorted list).
 
         int startRange = 0;
@@ -313,9 +315,11 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
     }
 
     /**
-     * Constructs a memento containing the information required to reproduce this chunk.
+     * Constructs a memento containing the information required to reproduce this
+     * chunk.
      *
-     * @return the memento containing the information require to reproduce this chunk
+     * @return the memento containing the information require to reproduce this
+     *         chunk
      */
     @Override
     public ChunkMemento save() {
@@ -336,12 +340,13 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
     /**
      * The memento storing the information required to reproduce a chunk.
      */
-    public static class ChunkMemento extends AbstractMemento implements Serializable {
+    public static class ChunkMemento implements Serializable, AbstractMemento {
         private int x;
         private int y;
 
         /**
-         * Constructs a memento with the information required to reproduce the given chunk.
+         * Constructs a memento with the information required to reproduce the given
+         * chunk.
          *
          * @param chunk the chunk to be saved
          */

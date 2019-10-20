@@ -174,73 +174,11 @@ public class EntitySpawnTableTest {
 
     }
 
-    // simple method to count number of static entities on world
-    private int countWorldEntities() {
-        int count = 0;
-        for (Tile tile : testWorld.getTileMap()) {
-            if (tile.hasParent()) {
-                count++;
-            }
-        }
-        return count;
-    }
-
     @Test
     @Ignore
     public void testDirectPlace() {
         // Generate a chunk.
         testWorld.getChunk(0, 0);
 
-        // check if construction was valid
-        assertEquals(worldSize, testWorld.getTileMap().size());
-
-        // count before spawning
-        assertEquals(0, countWorldEntities());
-
-        // check basic spawnEntities
-        final double chance = 0.95;
-        for (Tile tile : testWorld.getTileMap()) {
-            // EntitySpawnTable.spawnEntity(tileToPlace -> new ForestRock(tileToPlace,
-            // true),
-            // chance, testWorld, tile);
-        }
-
-        // count after spawning
-        assertTrue(countWorldEntities() > 0);
     }
-
-    // @Test
-    // @Ignore // This is no longer a valid test, since the minimum and maximum
-    // values are no longer guaranteed.
-    // public void maxMinPlacementTest() {
-    // WorldBuilder worldBuilder = new WorldBuilder();
-    // WorldDirector.constructTestWorld(worldBuilder);
-    // World newWorld = worldBuilder.getWorld();
-    //
-    // // create tile map, add tiles and push to testWorld
-    // CopyOnWriteArrayList<Tile> newTileMap = new CopyOnWriteArrayList<>();
-    //
-    // for (int i = 0; i < worldSize; i++) {
-    // Tile tile = new Tile(null, 1.0f * i, 0.0f);
-    // newTileMap.add(tile);
-    // biome.addTile(tile);
-    // }
-    //
-    // newWorld.setTileMap(newTileMap);
-    //
-    // EntitySpawnRule newRule = new EntitySpawnRule(2, 4, null, true);
-    // newRule.setChance(1.0);
-    //
-    // ForestRock rock = new ForestRock();
-    // EntitySpawnTable.spawnEntity(rock, newRule, newWorld);
-    //
-    // int count = 0;
-    // for (Tile tile : newWorld.getTileMap()) {
-    // if (tile.hasParent()) {
-    // count++;
-    // }
-    // }
-    //
-    // assertTrue("Count was " + count, count <= 4);
-    // }
 }

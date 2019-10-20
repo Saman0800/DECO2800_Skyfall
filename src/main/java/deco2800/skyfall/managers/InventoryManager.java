@@ -1,5 +1,15 @@
 package deco2800.skyfall.managers;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
@@ -11,17 +21,11 @@ import deco2800.skyfall.resources.items.Stone;
 import deco2800.skyfall.resources.items.Wood;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
-import java.util.*;
 
 public class InventoryManager extends TickableManager implements Serializable {
 
     // Logger for class to display messages
-    private final transient Logger logger =
-            LoggerFactory.getLogger(InventoryManager.class);
+    private final transient Logger logger = LoggerFactory.getLogger(InventoryManager.class);
 
     // Map that stores the inventory contents
     private Map<String, List<Item>> inventory;
@@ -35,7 +39,7 @@ public class InventoryManager extends TickableManager implements Serializable {
     // Constant String
     private static final String WORLD = "_world";
 
-    public boolean hasQuickAccess = true;
+    protected boolean hasQuickAccess = true;
 
     public static final int COLS = 4;
     public static final int ROWS = 3;
@@ -48,8 +52,8 @@ public class InventoryManager extends TickableManager implements Serializable {
     }
 
     /**
-     * Creates Inventory Manager and adds default items to the inventory (2x
-     * Stone, 2x Wood), as well as initialises an empty quick access inventory.
+     * Creates Inventory Manager and adds default items to the inventory (2x Stone,
+     * 2x Wood), as well as initialises an empty quick access inventory.
      */
     public InventoryManager() {
         initInventory(new HashMap<>());
@@ -92,19 +96,17 @@ public class InventoryManager extends TickableManager implements Serializable {
     }
 
     /**
-     * Create an Inventory Manager and adds a custom map of items to the
-     * inventory.
+     * Create an Inventory Manager and adds a custom map of items to the inventory.
      * Creates a quick access inventory and adds items to it.
      *
      * @param inventoryContents   a Map<String, List<Item>> where String is the
-     *                            item's name and List<Item> is a list of
-     *                            objects that implement the Item interface.
-     * @param quickAccessContents a List<String> where String is the name of
-     *                            item in quick access inventory
+     *                            item's name and List<Item> is a list of objects
+     *                            that implement the Item interface.
+     * @param quickAccessContents a List<String> where String is the name of item in
+     *                            quick access inventory
      */
 
-    public InventoryManager(Map<String, List<Item>> inventoryContents,
-                            List<String> quickAccessContents) {
+    public InventoryManager(Map<String, List<Item>> inventoryContents, List<String> quickAccessContents) {
         initInventory(inventoryContents);
 
         for (String quickAccessContent : quickAccessContents) {
@@ -121,16 +123,34 @@ public class InventoryManager extends TickableManager implements Serializable {
         return Collections.unmodifiableMap(this.inventory);
     }
 
-
+    /**
+     * Sets the contents of this manager.
+     * 
+     * @param inventory The new inventory to be set to.
+     */
     public void setContents(Map<String, List<Item>> inventory) {
         this.inventory = inventory;
     }
 
     /**
+     * @return Gets the hasQuickAccess parameter
+     */
+    public boolean getHasQuickAccess() {
+        return this.hasQuickAccess;
+    }
+
+    /**
+     * Sets the hasQuickAccess parameter.
+     */
+    public void setHasQuickAccess(boolean hasQuickAccess) {
+        this.hasQuickAccess = hasQuickAccess;
+    }
+
+    /**
      * Get the amount of each item in the inventory
      *
-     * @return a map of item name to the integer amount in the inventory for
-     * all inventory items.
+     * @return a map of item name to the integer amount in the inventory for all
+     *         inventory items.
      */
     public Map<String, Integer> getAmounts() {
         Map<String, Integer> inventoryAmounts = new HashMap<>();
@@ -151,8 +171,7 @@ public class InventoryManager extends TickableManager implements Serializable {
     public int getTotalAmount() {
         int total = 0;
 
-        List<Integer> inventoryAmount =
-                new ArrayList<>(this.getAmounts().values());
+        List<Integer> inventoryAmount = new ArrayList<>(this.getAmounts().values());
 
         for (Integer count : inventoryAmount) {
             total += count;
@@ -164,8 +183,8 @@ public class InventoryManager extends TickableManager implements Serializable {
     /**
      * Get the items in the quick access inventory.
      *
-     * @return a map of the items in the quick access inventory, and the
-     * number of each item
+     * @return a map of the items in the quick access inventory, and the number of
+     *         each item
      */
     public Map<String, Integer> getQuickAccess() {
         Map<String, Integer> qai = new HashMap<>();
@@ -180,15 +199,13 @@ public class InventoryManager extends TickableManager implements Serializable {
     /**
      * Add an item type from the full inventory to the quick access inventory.
      * Ensures that the item being added to quick access inventory is in full
-     * inventory and that quick access inventory doesn't contain more than 6
-     * item type.
+     * inventory and that quick access inventory doesn't contain more than 6 item
+     * type.
      *
-     * @param item the String name of the item to add to the quick access
-     *             inventory.
+     * @param item the String name of the item to add to the quick access inventory.
      */
     public void quickAccessAdd(String item) {
-        if ((this.getAmount(item) > 0)
-                && (this.quickAccess.size() < QA_MAX_SIZE)) {
+        if ((this.getAmount(item) > 0) && (this.quickAccess.size() < QA_MAX_SIZE)) {
             this.quickAccess.add(item);
         } else {
             logger.warn("Sorry I can't add that!");
@@ -268,7 +285,6 @@ public class InventoryManager extends TickableManager implements Serializable {
             }
         }
 
-
     }
 
     private boolean processPosition(String name, List<Item> itemsList, List<Tuple> pos) {
@@ -301,9 +317,9 @@ public class InventoryManager extends TickableManager implements Serializable {
     }
 
     /**
-     * Removes an item from the inventory and returns it. If the item is the
-     * last of a specific type present in the inventory (and quick access
-     * inventory) it is also removed from these stores.
+     * Removes an item from the inventory and returns it. If the item is the last of
+     * a specific type present in the inventory (and quick access inventory) it is
+     * also removed from these stores.
      *
      * @param itemName the String name of the item to drop from the inventory.
      * @return the Item dropped from the inventory
@@ -330,10 +346,9 @@ public class InventoryManager extends TickableManager implements Serializable {
         return null;
     }
 
-
     /**
-     * Removes all of a specific item type from the inventory, and quick access inventory.
-     * Returns as a list of items.
+     * Removes all of a specific item type from the inventory, and quick access
+     * inventory. Returns as a list of items.
      *
      * @param itemName the String name of the item type to drop from the inventory.
      * @return List of instances of item type dropped from inventory
@@ -395,9 +410,8 @@ public class InventoryManager extends TickableManager implements Serializable {
     }
 
     /**
-     * Drop multiple items of the same type from the inventory, and return as
-     * a list.
-     * If these items are the last of a specific type present in the inventory
+     * Drop multiple items of the same type from the inventory, and return as a
+     * list. If these items are the last of a specific type present in the inventory
      * (and quick access inventory) the type is also removed from these stores.
      *
      * @param itemName the string name of the item to drop from the inventory
@@ -422,8 +436,7 @@ public class InventoryManager extends TickableManager implements Serializable {
                 itemsDropped.addAll(itemsList);
                 remove(itemName);
             } else {
-                logger.warn("You don't have that many " + itemName +
-                        "s!");
+                logger.warn("You don't have that many " + itemName + "s!");
                 itemsDropped = null;
             }
         } else {
@@ -465,7 +478,6 @@ public class InventoryManager extends TickableManager implements Serializable {
 
         return null;
     }
-
 
     /**
      * Returns an instance of a particular item type

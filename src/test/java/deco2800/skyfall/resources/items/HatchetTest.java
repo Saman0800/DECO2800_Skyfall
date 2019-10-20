@@ -4,10 +4,9 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.worlditems.*;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import org.junit.After;
+import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
 import org.junit.Test;
-
 import static org.junit.Assert.*;
 
 public class HatchetTest {
@@ -17,19 +16,21 @@ public class HatchetTest {
     private HexVector position;
     private ForestTree treeToFarm;
     private Tile testTile;
+    private World w = null;
+
 
     @Before
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        MainCharacter.resetInstance();
-        position = new HexVector(1f, 1f);
-        owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
-        hatchet = new Hatchet(owner, position);
-        testTile = new Tile(null, 1f, 1f);
-        treeToFarm = new ForestTree(testTile, true);
-    }
 
-    @After
-    public void tearDown() {
+    public void setUp() throws NoSuchFieldException, IllegalAccessException {
+
+        MainCharacter.resetInstance();
+        hatchet = new Hatchet();
+        MainCharacter.resetInstance();
+        position = new HexVector(1.1f, 1.1f);
+        owner = MainCharacter.getInstance(1f, 1f, 0.05f, "player", 10);
+        testTile = new Tile(null, 1.1f, 1.1f);
+        treeToFarm = new ForestTree(testTile, true);
+        treeToFarm.setPosition(1,1);
     }
 
     @Test
@@ -42,12 +43,6 @@ public class HatchetTest {
         assertEquals("Manufactured Resource", hatchet.getSubtype());
     }
 
-    @Test
-    public void getCoords() {
-        assertEquals(1f, position.getCol(), 0);
-        assertEquals(1f, position.getRow(), 0);
-
-    }
 
     @Test
     public void toStringtest() {
@@ -65,4 +60,34 @@ public class HatchetTest {
         assertEquals(14, treeToFarm.getWoodAmount());
 
     }
+
+    @Test
+    public void getRequiredWoodTest() {
+        assertEquals(25, hatchet.getRequiredWood());
+    }
+
+    @Test
+    public void getRequiredStoneTest() {
+        assertEquals(10, hatchet.getRequiredStone());
+    }
+
+    @Test
+    public void getRequiredMetalTest() {
+        assertEquals(0, hatchet.getRequiredMetal());
+    }
+
+    @Test
+    public void getCostTest() {
+        assertEquals(20, hatchet.getCost());
+    }
+
+
+
+
+
+
+
+
+
+
 }

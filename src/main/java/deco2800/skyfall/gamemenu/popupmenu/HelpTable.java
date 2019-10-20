@@ -15,11 +15,9 @@ import deco2800.skyfall.managers.TextureManager;
  */
 public class HelpTable extends AbstractPopUpElement{
     private Skin skin;
-    private Image pages[] = {new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page1")),
-            new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page2")),
-            new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page3"))};
-
-    private Table baseTable;
+   // private Image pages[] = {new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page1")),
+    //       new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page2")),
+    //     new Image(gameMenuManager.generateTextureRegionDrawableObject("help_page3"))
 
     /**
      * Constructs a help baseTable.
@@ -37,24 +35,6 @@ public class HelpTable extends AbstractPopUpElement{
         super(stage, exit, textureNames,tm , gameMenuManager);
         this.skin = skin;
         this.draw();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        baseTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        baseTable.setVisible(true);
     }
 
 

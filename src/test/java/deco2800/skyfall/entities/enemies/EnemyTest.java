@@ -32,11 +32,12 @@ public class EnemyTest {
         testCharacter = MainCharacter.getInstance();
 
         // Set up enemy, need the longer constructor to test toString(), equals() and hashcode()
-        testEnemy = new Enemy(30f, 30f, "enemyHitBox" , Enemy.EnemyType.HEAVY,
+        testEnemy = new Enemy(30f, 30f, Enemy.EnemyType.HEAVY,
             0.06f, biomeName, "enemyTexture");
         testEnemy.setHealth(10);
+        testEnemy.setMainCharacter(testCharacter);
 
-        testDummyEnemy = new Enemy(0f, 0f, "dummyHitBox" , Enemy.EnemyType.SCOUT,
+        testDummyEnemy = new Enemy(0f, 0f, Enemy.EnemyType.SCOUT,
                 0.06f, biomeName, "dummyTexture");
     }
 
@@ -98,7 +99,58 @@ public class EnemyTest {
 
     @Test
     public void enemyAttackTest() {
-        // will write that later
+
+        testEnemy.getMainCharacter().setHurt(false);
+        testEnemy.getMainCharacter().setRecovering(false);
+        testEnemy.getMainCharacter().setDead(false);
+        testCharacter = new MainCharacter(30f, 30f, 0.05f, "Main Piece", 50);
+        testEnemy.setMainCharacter(testCharacter);
+        testEnemy.setStrength(3);
+        testEnemy.setChasingSpeed(3f);
+        testEnemy.setAttackRange(100);
+        testEnemy.attackAction();
+        Assert.assertEquals(AnimationRole.ATTACK, testEnemy.getCurrentState());
+        Assert.assertTrue(testEnemy.getMainCharacter().isHurt());
+        Assert.assertEquals(47, testEnemy.getMainCharacter().getHealth());
+        Assert.assertEquals(3f, testEnemy.getChasingSpeed(), 0);
+        // reset hurt status
+        testEnemy.setHurtTime(400);
+        testEnemy.checkIfHurtEnded();
+        // reset enemy keeps moving
+        testEnemy.randomMoveAction();
+
+        // if player is recovering, enemy cannot attack
+        testEnemy.getMainCharacter().setHurt(false);
+        testEnemy.getMainCharacter().setRecovering(true);
+        testEnemy.getMainCharacter().setDead(false);
+        testEnemy.attackAction();
+        Assert.assertEquals(AnimationRole.MOVE, testEnemy.getCurrentState());
+        Assert.assertFalse(testEnemy.getMainCharacter().isHurt());
+
+        testEnemy.getMainCharacter().setHurt(true);
+        testEnemy.getMainCharacter().setRecovering(false);
+        testEnemy.getMainCharacter().setDead(false);
+        testEnemy.attackAction();
+        Assert.assertEquals(AnimationRole.MOVE, testEnemy.getCurrentState());
+        Assert.assertTrue(testEnemy.getMainCharacter().isHurt());
+        testEnemy.setHurtTime(400);
+        testEnemy.checkIfHurtEnded();
+
+        testEnemy.getMainCharacter().setHurt(false);
+        testEnemy.getMainCharacter().setRecovering(false);
+        testEnemy.getMainCharacter().setDead(true);
+        testEnemy.attackAction();
+        Assert.assertEquals(AnimationRole.ATTACK, testEnemy.getCurrentState());
+        Assert.assertTrue(testEnemy.getMainCharacter().isHurt());
+        testCharacter = new MainCharacter(0f, 0f, 0.05f, "Main Piece", 50);
+        testEnemy.setMainCharacter(testCharacter);
+        testEnemy.randomMoveAction();
+
+        testEnemy.getMainCharacter().setHurt(false);
+        testEnemy.getMainCharacter().setRecovering(false);
+        testEnemy.getMainCharacter().setDead(false);
+        testEnemy.attackAction();
+        Assert.assertEquals(AnimationRole.MOVE, testEnemy.getCurrentState());
     }
 
     @Test
@@ -156,7 +208,7 @@ public class EnemyTest {
         Assert.assertFalse(testEnemy.equals(testCharacter));
 
         // Equals due to same instance and same hashcode
-        testDummyEnemy =  new Enemy(30f, 30f, "enemyHitBox" , Enemy.EnemyType.HEAVY,
+        testDummyEnemy =  new Enemy(30f, 30f, Enemy.EnemyType.HEAVY,
                 0.06f, biomeName, "enemyTexture");
         Assert.assertTrue(testEnemy.equals(testDummyEnemy));
     }
