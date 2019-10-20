@@ -33,9 +33,9 @@ public class EndGameTableTest {
     @Before
     public void setUp() {
         stage = mock(Stage.class);
-        gameMenuManager = mock(GameMenuManager.class);
-        tm = mock(TextureManager.class);
         exitButton = mock(ImageButton.class);
+        tm = mock(TextureManager.class);
+        gameMenuManager = mock(GameMenuManager.class);
 
         MainCharacter mc = mock(MainCharacter.class);
         Mockito.when(gameMenuManager.getMainCharacter()).thenReturn(mc);
@@ -44,7 +44,9 @@ public class EndGameTableTest {
 
         doReturn(camera).when(stage).getCamera();
 
+
         endGameTable = new EndGameTable(stage, exitButton, null, tm, gameMenuManager);
+
     }
 
     @Test
@@ -78,5 +80,4 @@ public class EndGameTableTest {
         tm = null;
         gameMenuManager = null;
     }
-
 }
