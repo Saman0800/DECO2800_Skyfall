@@ -29,8 +29,6 @@ public class EnemySpawnTable implements TimeObserver {
     // Logger for tracking enemy information
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static Random rand = new Random();
-
     /**
      * The radius in the which the enemies may spawn in
      */
@@ -210,7 +208,7 @@ public class EnemySpawnTable implements TimeObserver {
      * 
      * @return The number of enemies placed into the world.
      */
-    private int place_enemy_into_world(Iterator<Tile> tileIter) {
+    private int placeEnemyIntoWorld(Iterator<Tile> tileIter) {
 
         Tile nextTile = tileIter.next();
         Random rand = new Random();
@@ -246,14 +244,17 @@ public class EnemySpawnTable implements TimeObserver {
         Function<HexVector, ? extends Enemy> randEnemyType = possibleConstructors
                 .get(rand.nextInt(possibleConstructors.size()));
 
-        try {
-            Enemy newEnemy = randEnemyType.apply(new HexVector(nextTile.getRow(), nextTile.getCol()));
-            world.addEntity(newEnemy);
-            return 1;
-        } catch (Exception e) {
-            logger.error("Could not create new AbstractEnemy: " + e.toString());
-        }
+        if (rand.nextFloat() <= spawnChance) {
 
+            try {
+                Enemy newEnemy = randEnemyType.apply(new HexVector(nextTile.getRow(), nextTile.getCol()));
+                world.addEntity(newEnemy);
+                return 1;
+            } catch (Exception e) {
+                logger.error("Could not create new AbstractEnemy: " + e.toString());
+            }
+
+        }
         return 0;
     }
 
@@ -289,7 +290,7 @@ public class EnemySpawnTable implements TimeObserver {
             int enemiesPlaced = 0;
 
             while (tileIter.hasNext() && (enemiesPlaced <= numberToSpawn)) {
-                enemiesPlaced += place_enemy_into_world(tileIter);
+                enemiesPlaced += placeEnemyIntoWorld(tileIter);
             }
         }
     }
