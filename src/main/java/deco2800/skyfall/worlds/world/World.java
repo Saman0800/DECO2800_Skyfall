@@ -5,6 +5,8 @@ import deco2800.skyfall.buildings.*;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
+import deco2800.skyfall.gamemenu.GoldStatusBar;
+import deco2800.skyfall.gamemenu.HeadsUpDisplay;
 import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
 import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
 import deco2800.skyfall.gamemenu.popupmenu.TeleportTable;
@@ -49,7 +51,8 @@ import java.util.stream.Collectors;
  * items.
  */
 public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
-    public static final int LOADED_RADIUS = 50;
+    public static final int LOADED_RADIUS = 25;
+
     protected long id;
 
     protected int width;
@@ -93,7 +96,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
     // Import coin sound effect
     public static final String GOLD_SOUND_EFFECT = "coins";
-
     // Item pick-up sound effect
     private static final String PICK_UP_SOUND = "pick_up";
 
@@ -559,7 +561,9 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         } else if (entity instanceof GoldPiece) {
             MainCharacter mc = gmm.getMainCharacter();
             if (tile.getCoordinates().distance(mc.getPosition()) <= 3) {
+                ((GoldStatusBar) ((HeadsUpDisplay) gmm.getUIElement("HUD")).gethudElement("goldPill")).setAddingToPouch(true);
                 mc.addGold((GoldPiece) entity, 1);
+                ((GoldStatusBar) ((HeadsUpDisplay) gmm.getUIElement("HUD")).gethudElement("goldPill")).setAddingToPouch(false);
                 SoundManager.playSound(GOLD_SOUND_EFFECT);
                 // remove the gold piece instance from the world
                 entityToBeDeleted = entity;
@@ -623,9 +627,9 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                                     AbstractPortal portal, GameMenuManager gmm) {
         TeleportTable teleportTable = (TeleportTable) gmm.getPopUp("teleportTable");
         teleportTable.updateLocation(updateLocation);
-        teleportTable.updateTeleportTo(teleportTo);
         teleportTable.setSave(save);
         teleportTable.setPortal(portal);
+        teleportTable.updateTeleportTo(teleportTo);
         gmm.setPopUp("teleportTable");
 
     }

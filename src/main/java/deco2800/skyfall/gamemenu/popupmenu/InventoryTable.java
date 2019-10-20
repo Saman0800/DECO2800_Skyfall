@@ -176,13 +176,12 @@ public class InventoryTable extends AbstractPopUpElement {
      * Sets the buttons in the inventory pop up to active or inactive forms
      * @param active boolean whether buttons are active
      */
-    private void setButtonsActive(boolean active){
+    protected void setButtonsActive(boolean active){
         if(active){
             inactiveAddqaButton.setVisible(false);
             inactiveDropButton.setVisible(false);
             addqaButton.setVisible(true);
             dropButton.setVisible(true);
-
 
             if(inventory.getItemInstance(inventorySelected).isEquippable()){
                 equipButton.setVisible(true);
