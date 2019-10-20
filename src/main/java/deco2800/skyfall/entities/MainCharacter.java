@@ -2043,7 +2043,7 @@ public class MainCharacter extends Peon
         this.goldPouch = memento.goldPouch;
     }
 
-    public static class MainCharacterMemento extends AbstractMemento implements Serializable {
+    public static class MainCharacterMemento implements AbstractMemento , Serializable {
         private long mainCharacterID;
         private int level;
         private int foodLevel;

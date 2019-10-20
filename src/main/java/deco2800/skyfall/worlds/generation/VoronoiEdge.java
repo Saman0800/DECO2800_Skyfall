@@ -138,7 +138,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
                 // If none of the adjacent edges are valid to add, or valid to
                 // terminate the path
                 if (tempEdges.isEmpty()) {
-                    throw new DeadEndGenerationException();
+                    throw new DeadEndGenerationException("Unable to generate more nodes ");
                 }
                 // Get a random neighbour from tempEdges
                 VoronoiEdge neighbour = tempEdges.get(random.nextInt(tempEdges.size()));
@@ -419,7 +419,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
         this.edgeID = memento.edgeID;
     }
 
-    public static class VoronoiEdgeMemento extends AbstractMemento implements Serializable {
+    public static class VoronoiEdgeMemento implements AbstractMemento , Serializable {
         private long edgeID;
 
         // The coordinates of the two vertices of this edge
