@@ -488,10 +488,17 @@ public class QuestManager extends TickableManager {
         getPlayer().getInventoryManager().dropMultiple(METAL, currentMetal);
         getPlayer().getInventoryManager().dropMultiple(STONE, currentStone);
         getPlayer().getInventoryManager().dropMultiple("Wood", currentWood);
-        getPlayer().getInventoryManager().dropAll(SWORD);
-        getPlayer().getInventoryManager().dropAll(SPEAR);
-        getPlayer().getInventoryManager().dropAll("axe");
-        getPlayer().getInventoryManager().dropAll("bow");
+
+        if(getPlayer().getInventoryManager().getAmount(SWORD) > 0){
+            getPlayer().getInventoryManager().remove(SWORD);
+        }else if(getPlayer().getInventoryManager().getAmount(SPEAR) > 0){
+            getPlayer().getInventoryManager().remove(SPEAR);
+        }else if(getPlayer().getInventoryManager().getAmount("axe") > 0){
+            getPlayer().getInventoryManager().remove("axe");
+        }else if(getPlayer().getInventoryManager().getAmount("bow") > 0) {
+            getPlayer().getInventoryManager().remove("bow");
+        }
+
         getPlayer().getInventoryManager().add(new PickAxe());
         getPlayer().getInventoryManager().add(new Hatchet());
     }
