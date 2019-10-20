@@ -4,10 +4,12 @@ import com.badlogic.gdx.Input;
 import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.weapons.Bow;
 import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.entities.weapons.Spear;
 import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
@@ -46,6 +48,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class MainCharacterTest {
 
     private MainCharacter testCharacter;
+
     private Tile testTile;
     private GoldPiece testGoldPiece;
     private InventoryManager inventoryManager;
@@ -574,22 +577,70 @@ public class MainCharacterTest {
     }
 
     @Test
-    public void createItemTest() {
-        // int i;
-        // testCharacter.getBlueprintsLearned().add("Hatchet");
-        //
-        // for (i = 0; i < 25; i++) {
-        // testCharacter.getInventoryManager().inventoryAdd(new Wood());
-        // testCharacter.getInventoryManager().inventoryAdd(new Stone());
-        // testCharacter.getInventoryManager().inventoryAdd(new Metal());
-        // }
-        //
-        // int currentHatchetAmount =
-        // testCharacter.getInventoryManager().getAmount("Hatchet");
-        // testCharacter.createItem(new Hatchet());
-        // Assert.assertEquals(currentHatchetAmount+1,
-        // testCharacter.getInventoryManager().getAmount("Hatchet"));
+    public void checkRequiredResourcesTest() {
+        mockGM.setWorld(w);
+        w.addEntity(testCharacter);
+        testCharacter.setCol(1f);
+        testCharacter.setRow(1f);
+
+        int i;
+
+        Assert.assertFalse(testCharacter.checkRequiredResources(new Bow()));
+
+        for (i = 0; i < 140; i++) {
+            testCharacter.getInventoryManager().add(new Wood());
+            testCharacter.getInventoryManager().add(new Stone());
+            testCharacter.getInventoryManager().add(new Metal());
+        }
+
+        Assert.assertTrue(testCharacter.checkRequiredResources(new Bow()));
     }
+
+    @Test
+    public void createItemTest() {
+
+        mockGM.setWorld(w);
+        w.addEntity(testCharacter);
+        testCharacter.setCol(1f);
+        testCharacter.setRow(1f);
+
+        int m;
+
+        for (m = 0; m < 140; m++) {
+        testCharacter.getInventoryManager().add(new Wood());
+        testCharacter.getInventoryManager().add(new Stone());
+        testCharacter.getInventoryManager().add(new Metal());
+        }
+
+        System.out.println(testCharacter.getInventoryManager().toString());
+        testCharacter.createItem(new Hatchet());
+        testCharacter.createItem(new PickAxe());
+        testCharacter.createItem(new Sword());
+        testCharacter.createItem(new Spear());
+        testCharacter.createItem(new Bow());
+
+        System.out.println(testCharacter.getInventoryManager().toString());
+
+        Assert.assertEquals(2,
+        testCharacter.getInventoryManager().getAmount("Hatchet"));
+
+        Assert.assertEquals(2,
+                testCharacter.getInventoryManager().getAmount("Pick Axe"));
+
+        Assert.assertEquals(1,
+                testCharacter.getInventoryManager().getAmount("sword"));
+
+        Assert.assertEquals(1,
+                testCharacter.getInventoryManager().getAmount("spear"));
+
+        Assert.assertEquals(1,
+                testCharacter.getInventoryManager().getAmount("bow"));
+
+
+        System.out.println(testCharacter.getInventoryManager().toString());
+
+    }
+
 
     @Test
     public void manaTest() {
@@ -798,5 +849,6 @@ public class MainCharacterTest {
     @After
     public void cleanup() {
         testCharacter = null;
+
     }
 }
