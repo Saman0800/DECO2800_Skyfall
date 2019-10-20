@@ -8,6 +8,7 @@ import deco2800.skyfall.entities.Horse;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.enemies.Abductor;
 import deco2800.skyfall.entities.enemies.Heavy;
+import deco2800.skyfall.entities.enemies.Medium;
 import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.entities.pets.IceWhitebear;
 import deco2800.skyfall.entities.pets.LizardHome;
@@ -31,9 +32,9 @@ import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
  */
 public class WorldDirector {
 
-    private final static String SINGLE_PLAYER_STRING = "single_player";
-    private final static String MAIN_PIECE_STRING = "Main Piece";
-    private final static String FOREST_STRING = "Forest";
+    private static final String SINGLE_PLAYER_STRING = "single_player";
+    private static final String MAIN_PIECE_STRING = "Main Piece";
+    private static final String FOREST_STRING = "Forest";
 
     private WorldDirector() {
     }
@@ -131,6 +132,7 @@ public class WorldDirector {
         builder.addEntity(new Bike(-10f, -2f, mainCharacter));
         builder.addEntity(new SandCar(-20f, -2f, mainCharacter));
         builder.addEntity(new Scout(0, 2, 0.4f, WorldDirector.FOREST_STRING));
+        builder.addEntity(new Medium(1, 2, 0.4f, WorldDirector.FOREST_STRING));
         builder.addEntity(new Heavy(7, 9, 0.2f, WorldDirector.FOREST_STRING));
         builder.addEntity(new Abductor(4, 9, 0.8f, WorldDirector.FOREST_STRING));
 

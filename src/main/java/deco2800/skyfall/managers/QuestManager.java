@@ -63,6 +63,8 @@ public class QuestManager extends TickableManager {
     // List of buildings to be placed
     private List<BuildingType> buildingsPlaced = new ArrayList<>();
 
+
+
     /**
      * Constructor, sets up beginning of game goals
      */
@@ -71,6 +73,8 @@ public class QuestManager extends TickableManager {
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
         levelOneBuildings.add(BuildingType.CASTLE);
+        levelTwoBuildings.add(BuildingType.CASTLE);
+        levelTwoBuildings.add(BuildingType.CABIN);
         player = MainCharacter.getInstance();
         setMilestones();
     }
@@ -88,7 +92,7 @@ public class QuestManager extends TickableManager {
                 setStoneTotal(10);
                 setMetalTotal(10);
                 setBuildingsTotal(levelOneBuildings);
-                setWeaponTotal(SWORD, 10);
+                setWeaponTotal(SWORD, 2);
                 setWeaponTotal("bow", 0);
                 setWeaponTotal(SPEAR, 0);
                 setWeaponTotal("axe", 0);
@@ -434,6 +438,12 @@ public class QuestManager extends TickableManager {
         return amt;
     }
 
+    public void nextQuest() {
+        resetQuest();
+        questLevel += 1;
+        setMilestones();
+    }
+
     /**
      * Resets the current quest of the player
      */
@@ -465,6 +475,7 @@ public class QuestManager extends TickableManager {
         getPlayer().getInventoryManager().dropAll("bow");
     }
 
+
     /**
      * See if a blueprint is learned
      * @return true or false
@@ -486,13 +497,3 @@ public class QuestManager extends TickableManager {
         return ((axeTotal > 0) ? 1 : 0) + ((swordTotal > 0) ? 1 : 0) + ((spearTotal > 0) ? 1 : 0) + ((bowTotal > 0) ? 1 : 0);
     }
 }
-
-    /*
-    Stuff to be done:
-    - track player inventory
-    - track buildings placed in the world
-    - confirm milestones have been met
-    - reset inventory/health upon starting new level?
-    - how to set quest level upon levelling up?
-    - figure out how portal activation fits in with all this
-     */

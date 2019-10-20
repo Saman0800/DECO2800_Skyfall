@@ -71,6 +71,11 @@ public class SandCarTest {
         Assert.assertEquals(sandCar.getSubtype(), "vehicle");
     }
 
+    @Test
+    public void testIsOnUse() {
+        Assert.assertEquals(sandCar.isOnUse(), false);
+    }
+
     /**
      * To test distance between bike and main character
      */

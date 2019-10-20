@@ -304,14 +304,6 @@ public class MainMenuScreen implements Screen {
     }
 
     /**
-     * Resumes the screen
-     */
-    @Override
-    public void resume() {
-        // do nothing
-    }
-
-    /**
      * Hides the screen
      */
     @Override
@@ -350,4 +342,13 @@ public class MainMenuScreen implements Screen {
     public void dispose() {
         stage.dispose();
     }
+
+    /**
+     * Resumes the screen
+     */
+    @Override
+    public void resume() {
+        // do nothing
+    }
+
 }

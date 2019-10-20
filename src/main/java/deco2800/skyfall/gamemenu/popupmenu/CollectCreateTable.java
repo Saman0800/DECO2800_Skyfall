@@ -21,7 +21,6 @@ public class CollectCreateTable extends AbstractPopUpElement {
     private final String type;
     private final QuestManager qm;
     private Skin skin;
-    private Table baseTable;
     private TextButton complete;
     private Table labelTable;
 
@@ -30,6 +29,7 @@ public class CollectCreateTable extends AbstractPopUpElement {
     private static final String AXE = "axe";
     private static final String SPEAR = "spear";
     private static final String BOW = "bow";
+    private static final String WHITE_TEXT = "white-text";
 
     private Label labelGold;
     private Label labelMetal;
@@ -55,25 +55,6 @@ public class CollectCreateTable extends AbstractPopUpElement {
 
         labelTable = new Table();
         this.draw();
-        stage.addActor(baseTable);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        baseTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        baseTable.setVisible(true);
     }
 
     /**
@@ -106,7 +87,7 @@ public class CollectCreateTable extends AbstractPopUpElement {
 
             for (BuildingType entry :  buildingsTotal) {
                 String currentText  = String.format("1 x %s", entry.toString());
-                labelTable.add(new Label(currentText, skin, "white-text")).left();
+                labelTable.add(new Label(currentText, skin, WHITE_TEXT)).left();
                 labelTable.row();
             }
         }
@@ -154,10 +135,12 @@ public class CollectCreateTable extends AbstractPopUpElement {
         baseTable.row();
         baseTable.add(complete).bottom().width(200).expand();
         baseTable.setVisible(false);
+        stage.addActor(baseTable);
+
     }
 
     private void populateItems() {
-        String whiteText = "white-text";
+        String whiteText = WHITE_TEXT;
         String format = "%d x %s";
 
         String currentText  = String.format(format, qm.getGoldTotal(), "Gold");
@@ -218,7 +201,7 @@ public class CollectCreateTable extends AbstractPopUpElement {
 
         String currentText;
         Color color;
-        String whiteText = "white-text";
+        String whiteText = WHITE_TEXT;
         String format = "%d x %s";
 
         if ((qm.checkWeapons(SWORD) && qm.checkWeapons(SPEAR) &&

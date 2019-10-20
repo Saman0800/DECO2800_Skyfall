@@ -17,6 +17,12 @@ import static deco2800.skyfall.util.MathUtil.clamp;
  * adding lighting specification
  */
 public class ShaderWrapper {
+    //location of shaders
+    private static final String SHADER_LOCATION = "resources/shaders/";
+
+    //maximum number of point lights, must be same as shader
+    private static final int MAX_POINT_LIGHTS = 20;
+
     // default shader used if not active
     private boolean active = false;
     // links to shaderProgram, or ill-formed program on failure
@@ -32,6 +38,13 @@ public class ShaderWrapper {
     private int finalPointLightCount = 0;
 
     /**
+     * Accessor for shaderProgram, mostly used for testing
+     */
+    public ShaderProgram getShaderProgram() {
+        return shaderProgram;
+    }
+
+    /**
      * Loads and compiles a shader program
      * 
      * @param shaderName name of shader to use, resource will be <shaderName>.vert
@@ -41,13 +54,13 @@ public class ShaderWrapper {
         // load shaders
         Logger logger = LoggerFactory.getLogger(ShaderWrapper.class);
         try {
-            String vertexShader = Gdx.files.internal("resources/shaders/" + shaderName + ".vert").readString();
-            String fragmentShader = Gdx.files.internal("resources/shaders/" + shaderName + ".frag").readString();
+            String vertexShader = Gdx.files.internal( SHADER_LOCATION + shaderName + ".vert").readString();
+            String fragmentShader = Gdx.files.internal(SHADER_LOCATION + shaderName + ".frag").readString();
             shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
         } catch (GdxRuntimeException e) {
             logger.warn("\nShader source not found, check:");
-            logger.warn(String.format("resources/shaders/%s.vert", shaderName));
-            logger.warn(String.format("resources/shaders/%s.frag", shaderName));
+            logger.warn(String.format("%s%s.vert", SHADER_LOCATION, shaderName));
+            logger.warn(String.format("%s%s.frag", SHADER_LOCATION, shaderName));
             logger.warn("Extended shader disabled");
             return;
         }
@@ -58,8 +71,8 @@ public class ShaderWrapper {
 
         // A small log explaining how the shader compilation went
         logger.warn("\nShader program log:");
-        logger.warn(shaderProgram.getLog());
-        if (shaderProgram.isCompiled()) {
+        logger.warn(getShaderProgram().getLog());
+        if (getShaderProgram().isCompiled()) {
             logger.warn("Shader program compiled\n");
 
             SettingsFile gfxSettings = new SettingsFile("settings\\gfx.ini");
@@ -74,8 +87,8 @@ public class ShaderWrapper {
      * Begins shader program, order is important No error checking for proper order
      */
     public void begin() {
-        if (active) {
-            shaderProgram.begin();
+        if (getActive()) {
+            getShaderProgram().begin();
         }
     }
 
@@ -83,8 +96,8 @@ public class ShaderWrapper {
      * ends shader program, order is important No error checking for proper order
      */
     public void end() {
-        if (active) {
-            shaderProgram.end();
+        if (getActive()) {
+            getShaderProgram().end();
         }
     }
 
@@ -97,11 +110,11 @@ public class ShaderWrapper {
      *              the render call
      */
     public void finaliseAndAttachShader(SpriteBatch batch) {
-        if (active) {
-            shaderProgram.setUniformi("numberOfPointLights", pointLightCount);
+        if (getActive()) {
+            getShaderProgram().setUniformi("numberOfPointLights", pointLightCount);
             finalPointLightCount = pointLightCount;
             pointLightCount = 0;
-            batch.setShader(shaderProgram);
+            batch.setShader(getShaderProgram());
         }
     }
 
@@ -128,9 +141,9 @@ public class ShaderWrapper {
     public void setAmbientComponent(Vec3 color, float intensity) {
         ambientColour = color.getClampedComponents(0.0f, 1.0f);
         ambientIntensity = clamp(intensity, 0.0f, 1.0f);
-        if (active) {
-            shaderProgram.setUniformf("sunStrength", ambientIntensity);
-            shaderProgram.setUniformf("sunColour", ambientColour.getX(), ambientColour.getY(), ambientColour.getZ());
+        if (getActive()) {
+            getShaderProgram().setUniformf("sunStrength", ambientIntensity);
+            getShaderProgram().setUniformf("sunColour", ambientColour.getX(), ambientColour.getY(), ambientColour.getZ());
         }
     }
 
@@ -160,7 +173,11 @@ public class ShaderWrapper {
      *                   point light
      */
     public void addPointLight(PointLight pointLight) {
-        if (active) {
+        if (getActive()) {
+            if (pointLightCount >= MAX_POINT_LIGHTS) {
+                return;
+            }
+
             // creates the string for the target point light
             String target = "pointLights[" + pointLightCount + "]";
 
@@ -168,10 +185,10 @@ public class ShaderWrapper {
             Vec2 position = pointLight.getPosition();
 
             // set the values of the uniform point lights in the shader
-            shaderProgram.setUniformf(target + ".colour", colour.getX(), colour.getY(), colour.getZ());
-            shaderProgram.setUniformf(target + ".position", position.getX(), position.getY());
-            shaderProgram.setUniformf(target + ".k", pointLight.getK());
-            shaderProgram.setUniformf(target + ".a", pointLight.getA());
+            getShaderProgram().setUniformf(target + ".colour", colour.getX(), colour.getY(), colour.getZ());
+            getShaderProgram().setUniformf(target + ".position", position.getX(), position.getY());
+            getShaderProgram().setUniformf(target + ".k", pointLight.getK());
+            getShaderProgram().setUniformf(target + ".a", pointLight.getA());
 
             pointLightCount++;
         }

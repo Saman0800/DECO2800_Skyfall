@@ -1,6 +1,5 @@
 package deco2800.skyfall.resources.items;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,10 +17,6 @@ public class SandTest {
     @Before
     public void setUp() {
         sand = new Sand();
-    }
-
-    @After
-    public void tearDown() {
     }
 
     /**

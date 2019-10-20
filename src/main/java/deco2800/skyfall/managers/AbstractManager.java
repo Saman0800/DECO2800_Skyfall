@@ -4,5 +4,22 @@ package deco2800.skyfall.managers;
  * :tumbleweed:
  */
 public abstract class AbstractManager {
-	// I expect we will need some stuff in here at some point.
+    private AbstractManager am;
+
+    public AbstractManager() {
+
+    }
+
+    public AbstractManager(AbstractManager abstractManager) {
+        this.am = abstractManager;
+    }
+
+    public int add(int x, int y) {
+        return x + y;
+    }
+
+    public int useAmToAdd(){
+        return am.add(1, 1);
+    }
+
 }

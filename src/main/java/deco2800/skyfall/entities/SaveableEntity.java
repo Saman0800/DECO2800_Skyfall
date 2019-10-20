@@ -24,6 +24,11 @@ public abstract class SaveableEntity extends AbstractEntity
         super(col, row, renderOrder, fixtureDef);
     }
 
+    public SaveableEntity(float col, float row, int height, float colRenderLength, float rowRenderLength) {
+        super(col, row, height, colRenderLength, rowRenderLength);
+    }
+
+
     @Override
     public SaveableEntityMemento save() {
         return new SaveableEntityMemento(this);
@@ -59,7 +64,7 @@ public abstract class SaveableEntity extends AbstractEntity
         this.setPosition(memento.col, memento.row);
     }
 
-    public static class SaveableEntityMemento extends AbstractMemento implements Serializable {
+    public static class SaveableEntityMemento implements AbstractMemento , Serializable {
         private String entityType;
         private int height;
         private float row;

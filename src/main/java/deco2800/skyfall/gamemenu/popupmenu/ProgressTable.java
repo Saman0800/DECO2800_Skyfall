@@ -16,7 +16,6 @@ import deco2800.skyfall.managers.TextureManager;
 public class ProgressTable extends AbstractPopUpElement {
     private final QuestManager qm;
     private Skin skin;
-    private Table baseTable;
     private Label biomeLabel;
     private Label collectLabel;
     private Label createLabel;
@@ -30,26 +29,8 @@ public class ProgressTable extends AbstractPopUpElement {
         this.skin = skin;
         this.qm = qm;
         this.draw();
-        stage.addActor(baseTable);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void hide() {
-        super.hide();
-        baseTable.setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void show() {
-        super.show();
-        baseTable.setVisible(true);
-    }
 
     @Override
     public void update() {
@@ -112,6 +93,8 @@ public class ProgressTable extends AbstractPopUpElement {
         baseTable.add(blueprintLabel).expand().left();
         baseTable.row();
         baseTable.setVisible(false);
+        stage.addActor(baseTable);
+
     }
 
     public Label getBiomeLabel() {

@@ -12,7 +12,7 @@ public class HotSpring extends AbstractEntity {
     // Entity ID of hot spring
     private static final String ENTITY_ID_STRING = "hot_spring";
     // Amount of recovering
-    private static final int RecoverHealingPower = 3;
+    private static final int RECOVERHEALINGPOWER = 3;
     // Biome
     private static final transient String BIOME = "forest";
     // MainCharacter player
@@ -49,7 +49,6 @@ public class HotSpring extends AbstractEntity {
                 this.setObjectName("in_hot_spring");
                 player.setRecovering(true);
                 player.changeHealth(this.amountOfRecovering());
-
             } else {
                 this.setTexture(ENTITY_ID_STRING);
                 this.setObjectName(ENTITY_ID_STRING);
@@ -67,7 +66,6 @@ public class HotSpring extends AbstractEntity {
         float rowDistance = player.getRow() - this.getRow();
         if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
             player.changeHealth(this.amountOfRecovering());
-
         }
 
     }
@@ -76,7 +74,7 @@ public class HotSpring extends AbstractEntity {
      * The amount of recovering
      */
     public int amountOfRecovering() {
-        return RecoverHealingPower;
+        return RECOVERHEALINGPOWER;
     }
 
     /**

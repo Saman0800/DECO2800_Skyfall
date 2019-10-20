@@ -24,7 +24,6 @@ import java.util.Map;
 public class ChestTable extends AbstractPopUpElement{
     private final Skin skin;
     private final StatisticsManager sm;
-    private Table baseTable;
     private Table resourcePanel;
     private World world;
     private Chest chestEntity;
