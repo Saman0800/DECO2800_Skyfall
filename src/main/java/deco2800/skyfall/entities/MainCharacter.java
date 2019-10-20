@@ -1301,7 +1301,10 @@ public class MainCharacter extends Peon
     public void addGold(GoldPiece gold, Integer count) {
         // store the gold's value (5G, 10G etc) as a variable
         Integer goldValue = gold.getValue();
+        addGold(goldValue, count);
+    }
 
+    public void addGold(Integer goldValue, Integer count ) {
         // if this gold value already exists in the pouch
         if (goldPouch.containsKey(goldValue)) {
             // add this piece to the already existing list of pieces
@@ -1310,6 +1313,7 @@ public class MainCharacter extends Peon
             goldPouch.put(goldValue, count);
         }
     }
+
 
     /**
      * Removes one instance of a gold piece in the pouch with a specific value.

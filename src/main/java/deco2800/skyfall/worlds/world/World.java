@@ -5,8 +5,6 @@ import deco2800.skyfall.buildings.*;
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
-import deco2800.skyfall.gamemenu.GoldStatusBar;
-import deco2800.skyfall.gamemenu.HeadsUpDisplay;
 import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
 import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
 import deco2800.skyfall.gamemenu.popupmenu.TeleportTable;
@@ -561,9 +559,9 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         } else if (entity instanceof GoldPiece) {
             MainCharacter mc = gmm.getMainCharacter();
             if (tile.getCoordinates().distance(mc.getPosition()) <= 3) {
-                ((GoldStatusBar) ((HeadsUpDisplay) gmm.getUIElement("HUD")).gethudElement("goldPill")).setAddingToPouch(true);
-                mc.addGold((GoldPiece) entity, 1);
-                ((GoldStatusBar) ((HeadsUpDisplay) gmm.getUIElement("HUD")).gethudElement("goldPill")).setAddingToPouch(false);
+                String amt = entity.getTexture().replace("goldPiece", "");
+                int numericalAmt = Integer.parseInt(amt);
+                mc.addGold(numericalAmt, 1);
                 SoundManager.playSound(GOLD_SOUND_EFFECT);
                 // remove the gold piece instance from the world
                 entityToBeDeleted = entity;
