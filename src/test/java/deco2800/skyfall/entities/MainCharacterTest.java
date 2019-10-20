@@ -106,7 +106,7 @@ public class MainCharacterTest {
 
     @After
     /**
-     * Sets up all variables to be null after esting
+     * Sets up all variables to be null after testing
      */
     public void tearDown() {
         // testCharacter = null;

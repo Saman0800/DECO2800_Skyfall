@@ -16,7 +16,7 @@ public class GenericCircle extends AbstractUIElement {
     protected ImageButton biggerCircle;
 
     // Inner/changing circle
-    protected   ImageButton smallerCircle;
+    protected  ImageButton smallerCircle;
 
     // Position X
     protected float positionX;

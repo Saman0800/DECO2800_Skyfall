@@ -68,4 +68,11 @@ public class PauseTableTest extends BaseGDXTest {
         verify(exit).setVisible(true);
     }
 
+    @Test
+    public void retryTest() {
+        table.retryQuest();
+        table.hide();
+        assertFalse(table.isVisible());
+    }
+
 }

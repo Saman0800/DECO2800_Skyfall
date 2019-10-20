@@ -1,9 +1,6 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,38 +8,34 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import deco2800.skyfall.GameLauncher;
-import deco2800.skyfall.GameScreen;
-import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
-import deco2800.skyfall.mainmenu.MainMenuScreen;
 import deco2800.skyfall.managers.*;
 
 
 /**
  * A class for pause baseTable pop up.
  */
-public class PauseTable extends AbstractPopUpElement{
+public class PauseTable extends AbstractPopUpElement {
     private Skin skin;
 
     /**
      * Constructs a pause baseTable.
      *
-     * @param stage Current stage.
-     * @param exit Exit button if it has one.
-     * @param textureNames Names of the textures.
-     * @param tm Current texture manager.
+     * @param stage           Current stage.
+     * @param exit            Exit button if it has one.
+     * @param textureNames    Names of the textures.
+     * @param tm              Current texture manager.
      * @param gameMenuManager Current game menu manager.
-     * @param skin Current skin.
+     * @param skin            Current skin.
      */
     public PauseTable(Stage stage, ImageButton exit,
-                     String[] textureNames, TextureManager tm,
-                     GameMenuManager gameMenuManager, Skin skin) {
-        super(stage, exit, textureNames,tm , gameMenuManager);
+                      String[] textureNames, TextureManager tm,
+                      GameMenuManager gameMenuManager, Skin skin) {
+        super(stage, exit, textureNames, tm, gameMenuManager);
         this.skin = skin;
         this.draw();
     }
-    
+
 
     /**
      * {@inheritDoc}
@@ -104,17 +97,6 @@ public class PauseTable extends AbstractPopUpElement{
 
         baseTable.add(musicBar).height(50).width(300).colspan(2).row();
 
-        ImageButton toHome = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("toHome"));
-        toHome.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                returnHome();
-            }
-        });
-
-        Label homeText = new Label("HOME", skin, textStyle);
-        homeText.setFontScale(0.7f);
-
         ImageButton resume = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("resume"));
         resume.addListener(new ClickListener() {
             @Override
@@ -133,31 +115,27 @@ public class PauseTable extends AbstractPopUpElement{
         reset.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // Do nothing
+                retryQuest();
+                hide();
             }
         });
 
         baseTable.row();
-        baseTable.add(homeText).expandY().right().bottom().padRight(17.1f);//.padRight(25)
-        baseTable.add(resumeText).expandY().bottom().padBottom(12.5f);
-        baseTable.add(resetText).expandY().left().bottom().padLeft(11.85f);//.padLeft(25)
+        baseTable.add(resumeText).expandY().padBottom(12f);
+        baseTable.add(resetText).expandY().padBottom(12f);
         baseTable.row();
-        baseTable.add(toHome).width(100).height(100 * 263 / 264f).right().padBottom(70);
         baseTable.add(resume).width(125).height(125 * 409 / 410f).padBottom(70);
-        baseTable.add(reset).width(100).height(100 * 263 / 264f).left().padBottom(70);
+        baseTable.add(reset).width(125).height(125 * 409 / 410f).padBottom(70);
 
         baseTable.setVisible(false);
         stage.addActor(baseTable);
     }
 
     /**
-     * Returns to the main screen
+     * Resets the quest once play dies and chooses retry.
      */
-    public void returnHome() {
-        SkyfallGame game = gameMenuManager.getGame();
-        game.create();
-        game.setScreen(new MainMenuScreen(game));
+    public void retryQuest() {
+        // Reset quest
+        GameManager.getManagerFromInstance(QuestManager.class).resetQuest();
     }
-
 }
-

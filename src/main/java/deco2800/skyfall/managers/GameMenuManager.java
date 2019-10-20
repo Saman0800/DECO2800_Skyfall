@@ -315,9 +315,6 @@ public class GameMenuManager extends TickableManager {
                 null, null, textureManager, this));
 
 
-        popUps.put("constructionTable", new ConstructionTable(stage,
-                new ImageButton(generateTextureRegionDrawableObject("exitButton")),
-                null, textureManager, this, sm));
         popUps.put("collectTable", new CollectCreateTable(stage,
                 new ImageButton(generateTextureRegionDrawableObject(exitText)),
                 null, textureManager, this, skin, "collect"));
@@ -371,8 +368,11 @@ public class GameMenuManager extends TickableManager {
                 null, textureManager, this,
                 skin));
 
-        drawn = true;
+        popUps.put("constructionTable",new ConstructionTable(stage,
+                new ImageButton(generateTextureRegionDrawableObject(exitText)),
+                null, textureManager, this, sm, skin));
 
+        drawn = true;
     }
 
     /**
