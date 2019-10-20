@@ -3,6 +3,7 @@ package deco2800.skyfall.entities.enemies;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.util.HexVector;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,11 @@ public class EnemyTest {
     // Enemies
     private Enemy testEnemy;
     private Enemy testDummyEnemy;
+
+    // Enemy Types
+    private Abductor testAbductor;
+    private Scout testScout;
+    private Heavy testHeavy;
 
     // Strings
     private String biomeName = "Forest";
@@ -38,6 +44,31 @@ public class EnemyTest {
 
         testDummyEnemy = new Enemy(0f, 0f, "dummyHitBox" , Enemy.EnemyType.SCOUT,
                 0.06f, biomeName, "dummyTexture");
+    }
+
+    @Test
+    public void enemyTypeTests() {
+        HexVector position = new HexVector(30f,30f);
+        testAbductor = new Abductor(30f, 30f, 1, biomeName);
+        Assert.assertEquals(testAbductor.getPosition(), position);
+        Assert.assertEquals(testAbductor.getBiome(), "Forest");
+
+        testAbductor = new Abductor(30f, 30f, 1);
+        Assert.assertEquals(testAbductor.getPosition(), position);
+
+        testScout = new Scout(30f, 30f, 1, biomeName);
+        Assert.assertEquals(testScout.getPosition(), position);
+        Assert.assertEquals(testScout.getBiome(), "Forest");
+
+        testScout = new Scout(30f, 30f, 1);
+        Assert.assertEquals(testScout.getPosition(), position);
+
+        testHeavy = new Heavy(30f, 30f, 1, biomeName);
+        Assert.assertEquals(testHeavy.getPosition(), position);
+        Assert.assertEquals(testHeavy.getBiome(), "Forest");
+
+        testHeavy = new Heavy(30f, 30f, 1);
+        Assert.assertEquals(testHeavy.getPosition(), position);
     }
 
     @Test

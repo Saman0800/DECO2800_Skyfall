@@ -11,6 +11,7 @@ public class Abductor extends Enemy implements Spawnable {
         super(col, row, "Abductor", EnemyType.ABDUCTOR, 0.06f, biome, "enemyAbductor");
 
         this.setType(EnemyType.ABDUCTOR);
+        this.setBiome(biome);
 
         // Assign values, includes default values
         this.setValues(scaling, 100, 1, 1, 4f, 6f);
@@ -25,6 +26,8 @@ public class Abductor extends Enemy implements Spawnable {
      */
     public Abductor(float col, float row, float scaling) {
         super(col, row);
+
+        this.setType(EnemyType.ABDUCTOR);
 
         this.setValues(scaling, 100, 0, 0, 0.14f, 0.14f);
     }

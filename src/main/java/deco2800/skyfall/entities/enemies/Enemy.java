@@ -354,6 +354,15 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
         return health;
     }
 
+    /**
+     * Sets all the stats for an enemy.
+     * @param scaling This number indicates how scaled up the stats are
+     * @param health This is the health of the enemy
+     * @param damage This is the damage the enemy does
+     * @param attackRange This is the attack range for the enemy
+     * @param walkingSpeed This is the idle walking speed for the enemy
+     * @param chasingSpeed This is the speed for the enemy when chasing
+     */
     void setValues(float scaling, int health, int damage, float attackRange, float walkingSpeed, float chasingSpeed) {
         this.setMaxHealth((int) (health * scaling));
         this.setHealth((int) (health * scaling));

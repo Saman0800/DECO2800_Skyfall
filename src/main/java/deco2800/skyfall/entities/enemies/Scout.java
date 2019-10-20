@@ -19,6 +19,7 @@ public class Scout extends Enemy implements Spawnable {
         super(col, row, "Scout", EnemyType.SCOUT, 0.06f, biome, "enemyScout");
 
         this.setType(EnemyType.SCOUT);
+        this.setBiome(biome);
 
         // Assign values, includes default values
         this.setValues(scaling, 100, 10, 3, 5f, 7f);
@@ -33,6 +34,8 @@ public class Scout extends Enemy implements Spawnable {
      */
     public Scout(float col, float row, float scaling) {
         super(col, row);
+
+        this.setType(EnemyType.SCOUT);
 
         this.setValues(scaling, 100, 1, 1, 0.06f, 0.04f);
     }

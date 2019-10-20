@@ -11,6 +11,7 @@ public class Heavy extends Enemy implements Spawnable {
         super(col, row, "Heavy", EnemyType.HEAVY, 0.06f, biome, "enemyHeavy");
 
         this.setType(EnemyType.HEAVY);
+        this.setBiome(biome);
 
         // Assign values, includes default values
         this.setValues(scaling, 100, 5, 2, 3f, 4f);
@@ -25,6 +26,8 @@ public class Heavy extends Enemy implements Spawnable {
      */
     public Heavy(float col, float row, float scaling) {
         super(col, row);
+
+        this.setType(EnemyType.HEAVY);
 
         this.setValues(scaling, 100, 15, 1, 0.08f, 0.1f);
     }
