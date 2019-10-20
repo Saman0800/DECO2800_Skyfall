@@ -39,18 +39,4 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
         return allRequirements;
     }
 
-    @Override
-    public int getRequiredWood() {
-        return 100;
-    }
-
-    @Override
-    public int getRequiredStone() {
-        return 40;
-    }
-
-    @Override
-    public int getRequiredMetal() {
-        return 30;
-    }
 }
