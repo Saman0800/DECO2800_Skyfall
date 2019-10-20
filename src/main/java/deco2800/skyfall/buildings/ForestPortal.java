@@ -1,10 +1,5 @@
 package deco2800.skyfall.buildings;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import deco2800.skyfall.resources.Blueprint;
-
 public class ForestPortal extends AbstractPortal {
 
     /**
