@@ -45,7 +45,8 @@ public class IceWhitebearTest {
         mockTile = Mockito.mock(Tile.class);
         iceWhitebear.setHealth(1);
         iceWhitebear.destoryice();
-        List<AbstractEntity> drops = iceWhitebear.harvest(mockTile);
-        assertTrue(drops.get(0) instanceof Whitebear);
+        assertTrue(iceWhitebear.harvest(mockTile).get(0) instanceof Whitebear);
+        Whitebear bear = (Whitebear)iceWhitebear.harvest(mockTile).get(0);
+        assertFalse(bear.getDomesticated());
     }
 }
