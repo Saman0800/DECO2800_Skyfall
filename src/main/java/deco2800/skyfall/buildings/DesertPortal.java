@@ -23,34 +23,5 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
         this.blueprintLearned = false;
     }
 
-    /**
-     * Returns a map of the name of the required resource and the required number of
-     * each resource to create the item.
-     *
-     * @return a hashamp of the required resources and their number.
-     */
-    public Map<String, Integer> getAllRequirements() {
-        Map<String, Integer> allRequirements = new HashMap<>();
-        allRequirements.put("Wood", 50);
-        allRequirements.put("Stone", 20);
-        allRequirements.put("Metal", 10);
 
-        return allRequirements;
-    }
-
-
-    @Override
-    public int getRequiredWood() {
-        return 50;
-    }
-
-    @Override
-    public int getRequiredStone() {
-        return 20;
-    }
-
-    @Override
-    public int getRequiredMetal() {
-        return 10;
-    }
 }

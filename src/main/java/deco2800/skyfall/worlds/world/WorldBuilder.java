@@ -177,7 +177,7 @@ public class WorldBuilder implements WorldBuilderInterface {
      */
     private void spawnGold(Random random, List<EntitySpawnRule> biomeSpawnRules) {
         // Spawn gold pieces
-        EntitySpawnRule goldRule = new EntitySpawnRule(tile -> new GoldPiece(tile, true), random.nextInt(), 0.002);
+        EntitySpawnRule goldRule = new EntitySpawnRule(tile -> new GoldPiece(tile, true), random.nextInt(), 0.004);
         biomeSpawnRules.add(goldRule);
 
     }
@@ -238,22 +238,8 @@ public class WorldBuilder implements WorldBuilderInterface {
     private void generateForestEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
 
         long worldSeed = world.getSeed();
+        weaponsRule(biomeSpawnRules, random);
 
-        // Spawn some swords
-        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.001);
-        biomeSpawnRules.add(swordRule);
-
-        // Spawn some axes
-        EntitySpawnRule axeRule = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.001);
-        biomeSpawnRules.add(axeRule);
-
-        // Spawn some spears
-        EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.001);
-        biomeSpawnRules.add(spearRule);
-
-        // Spawn some bows
-        EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.003);
-        biomeSpawnRules.add(bowRule);
 
         // Create a new perlin noise map
         SpawnControl treeControl = x -> (x * x) / 3d + 0.01;
@@ -287,10 +273,27 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(mushroomRule);
     }
 
-    private void generateMountainEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+    private void weaponsRule(List<EntitySpawnRule> biomeSpawnRules, Random random) {
+        // Spawn some swords
+        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.001);
+        biomeSpawnRules.add(swordRule);
+
+        // Spawn some axes
+        EntitySpawnRule axeRule = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.001);
+        biomeSpawnRules.add(axeRule);
+
         // Spawn some spears
-        EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.03);
+        EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.001);
         biomeSpawnRules.add(spearRule);
+
+        // Spawn some bows
+        EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.003);
+        biomeSpawnRules.add(bowRule);
+    }
+
+    private void generateMountainEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+        weaponsRule(biomeSpawnRules, random);
+
 
         // Create a new perlin noise map
         SpawnControl cubic = x -> (x * x * x) / 6.0 + 0.01;
@@ -318,13 +321,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateDesertEntities(List<EntitySpawnRule> biomeSpawnRules, Random random) {
-        // Spawn some swords
-        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.02);
-        biomeSpawnRules.add(swordRule);
-
-        // Spawn some axes
-        EntitySpawnRule axeRule2 = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.03);
-        biomeSpawnRules.add(axeRule2);
+        weaponsRule(biomeSpawnRules, random);
 
         // Create a new perlin noise map
         SpawnControl cactiControl = x -> (x * x * x) / 8.0;
@@ -482,10 +479,12 @@ public class WorldBuilder implements WorldBuilderInterface {
      * @param enemyScaling : scaling factor to enemy states
      */
     private void spawnAnElectricEnemyOnTile(Random random, Tile tile, World world, float enemyScaling) {
-        // factor or ratio between Abductor, Heavy, Scout enemies
+        // factor or ratio between Abductor, Heavy, Scout, Medium enemies
         int abductorFactor = 3;
         int heavyFactor = 3;
         int scoutFactor = 4;
+        int mediumFactor = 2;
+        int total = abductorFactor + heavyFactor + scoutFactor + mediumFactor;
 
         // check the tile whether is empty or not
         for (AbstractEntity entity : world.getEntities()) {
@@ -496,27 +495,30 @@ public class WorldBuilder implements WorldBuilderInterface {
 
         // spawn an random electric enemy on a empty tile only
         int start = 0;
-        int factor = random.nextInt(abductorFactor + heavyFactor + scoutFactor);
+        int factor = random.nextInt(total);
         // chance to choose abductor enemy
         if ((start <= factor) && (factor <= (start + abductorFactor))) {
             world.addEntity(new Abductor(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
             return;
-        } else {
-            start += abductorFactor;
         }
+        start += abductorFactor;
+
         // chance to choose heavy enemy
         if ((start <= factor) && (factor <= (start + heavyFactor))) {
             world.addEntity(new Heavy(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
             return;
-        } else {
-            start += heavyFactor;
         }
+        start += heavyFactor;
+
         // chance to choose scout enemy
         if ((start <= factor) && (factor <= (start + scoutFactor))) {
             world.addEntity(new Scout(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
+            return;
         }
+        start += scoutFactor;
+
         // chance to choose medium enemy
-        if ((start <= factor) && (factor <= (start + scoutFactor))) {
+        if ((start <= factor) && (factor <= (start + mediumFactor))) {
             world.addEntity(new Medium(tile.getCol(), tile.getRow(), enemyScaling, tile.getBiome().getBiomeName()));
         }
     }
@@ -531,16 +533,25 @@ public class WorldBuilder implements WorldBuilderInterface {
      * @param enemyScaling : scaling factor to enemy states
      */
     private void spawnEnemies(Random random, float chance, AbstractBiome biome, World world, float enemyScaling) {
-        // NOTE: biome.getTiles() and world.getWorldGenNodes() return a list of loaded
-        // tiles only
+        // NOTE: biome.getTiles() and world.getWorldGenNodes() return a list of loaded tiles only
+        // NOTE: world.getLoadedChunks().size() has only 1 loaded chunk
+        // calculate manually
         int worldSize = world.getWorldParameters().getWorldSize();
+        int chunkSize = Chunk.CHUNK_SIDE_LENGTH;
+        int chunkCoordSize = ((worldSize / 2) / chunkSize) - 1;
         int spawnGap = 3;
-        for (float col = worldSize * -1f; col <= worldSize; col += spawnGap) {
-            float offset = (col % 2) * 0.5f;
-            for (float row = (worldSize * -1f) + offset; row <= worldSize; row += spawnGap) {
-                if (random.nextFloat() <= chance) {
-                    Tile tile = world.getTile(col, row);
-                    if ((tile != null) && (tile.getBiome().getBiomeName().equals(biome.getBiomeName()))) {
+
+        for (int col = chunkCoordSize * -1; col <= chunkCoordSize; col += 2) {
+            for (int row = chunkCoordSize * -1; row <= chunkCoordSize; row += 2) {
+                // get tiles from each chunk
+                for (Tile tile : world.getChunk(col, row).getTiles()) {
+                    if (random.nextFloat() > chance) {
+                        continue;
+                    }
+                    // get an available tile except the tile of initial start point
+                    float offset = Math.abs(tile.getCol()) + Math.abs(tile.getRow()) + (tile.getCol() % 2) * 0.5f;
+                    if ((offset > 1) && (offset % spawnGap == 0)
+                            && tile.getBiome().getBiomeName().equals(biome.getBiomeName())) {
                         spawnAnElectricEnemyOnTile(random, tile, world, enemyScaling);
                     }
                 }
@@ -557,10 +568,10 @@ public class WorldBuilder implements WorldBuilderInterface {
                 spawnEnemies(random, 0.02f, biome, world, enemyScaling);
                 break;
             case "mountain":
-                spawnEnemies(random, 0.015f, biome, world, enemyScaling);
+                spawnEnemies(random, 0.04f, biome, world, enemyScaling);
                 break;
             case "desert":
-                spawnEnemies(random, 0.01f, biome, world, enemyScaling);
+                spawnEnemies(random, 0.03f, biome, world, enemyScaling);
                 break;
             case "snowy_mountains":
                 spawnEnemies(random, 0.025f, biome, world, enemyScaling);

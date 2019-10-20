@@ -17,7 +17,6 @@ public class ForestPortal extends AbstractPortal {
         this.currentBiome = "forest";
         this.name = "forestPortal";
         this.blueprintLearned = false;
-
     }
 
 }
