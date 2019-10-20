@@ -70,6 +70,11 @@ public class QuestManager extends TickableManager {
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
         levelOneBuildings.add(BuildingType.CASTLE);
+        levelTwoBuildings.add(BuildingType.CASTLE);
+        levelTwoBuildings.add(BuildingType.CABIN);
+        levelThreeBuildings.add(BuildingType.CASTLE);
+        levelThreeBuildings.add(BuildingType.CABIN);
+        levelThreeBuildings.add(BuildingType.WATCHTOWER);
 
         try {
             questLevel = player.getSave().getGameStage();
@@ -475,6 +480,7 @@ public class QuestManager extends TickableManager {
 
         // Reset the inventory
         buildingsNum = 0;
+        buildingsPlaced.clear();
         questSuccess = false;
         getPlayer().removeAllGold();
         getPlayer().getInventoryManager().dropMultiple(METAL, currentMetal);
