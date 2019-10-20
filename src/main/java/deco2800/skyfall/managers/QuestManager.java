@@ -67,10 +67,16 @@ public class QuestManager extends TickableManager {
      * Constructor, sets up beginning of game goals
      */
     public QuestManager() {
-        this.questLevel = 0;
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
-        //levelOneBuildings.add(BuildingType.CASTLE);
+        levelOneBuildings.add(BuildingType.CASTLE);
+
+        try {
+            questLevel = player.getSave().getGameStage();
+        } catch (NullPointerException npe) {
+            questLevel = 0;
+        }
+
         player = MainCharacter.getInstance();
         setMilestones();
     }
