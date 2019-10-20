@@ -1301,6 +1301,7 @@ public class MainCharacter extends Peon
      */
     public void addGold(GoldPiece gold, Integer count) {
         // store the gold's value (5G, 10G etc) as a variable
+        System.out.println("ADDED");
         Integer goldValue = gold.getValue();
 
         // if this gold value already exists in the pouch

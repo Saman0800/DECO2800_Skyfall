@@ -64,15 +64,6 @@ public class GoldStatusBar extends AbstractUIElement {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update() {
-        super.update();
-        updateLabel();
-    }
-
     public void updateLabel() {
         int total = gmm.getMainCharacter().getGoldPouchTotalValue();
         goldLabel.setText(" " + total + " G   ");

@@ -73,12 +73,12 @@ public class QuestManager extends TickableManager {
     public QuestManager() {
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
-//        levelOneBuildings.add(BuildingType.CASTLE);
-//        levelTwoBuildings.add(BuildingType.CASTLE);
-//        levelTwoBuildings.add(BuildingType.CABIN);
-//        levelThreeBuildings.add(BuildingType.CASTLE);
-//        levelThreeBuildings.add(BuildingType.CABIN);
-//        levelThreeBuildings.add(BuildingType.WATCHTOWER);
+        levelOneBuildings.add(BuildingType.CASTLE);
+        levelTwoBuildings.add(BuildingType.CASTLE);
+        levelTwoBuildings.add(BuildingType.CABIN);
+        levelThreeBuildings.add(BuildingType.CASTLE);
+        levelThreeBuildings.add(BuildingType.CABIN);
+        levelThreeBuildings.add(BuildingType.WATCHTOWER);
 
         try {
             questLevel = player.getSave().getGameStage();
@@ -98,10 +98,10 @@ public class QuestManager extends TickableManager {
         //reduced for ease of testing in game
         switch (questLevel) {
             case 0 :
-                setGoldTotal(0);
-                setWoodTotal(0);
-                setStoneTotal(0);
-                setMetalTotal(0);
+                setGoldTotal(100);
+                setWoodTotal(25);
+                setStoneTotal(25);
+                setMetalTotal(10);
                 setBuildingsTotal(levelOneBuildings);
                 setWeaponTotal(SWORD, 0);
                 setWeaponTotal("bow", 0);
