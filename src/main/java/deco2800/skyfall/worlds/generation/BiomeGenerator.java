@@ -359,20 +359,16 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             }
             // Try to find a valid node to start a lake
             WorldGenNode chosenNode = nodes.get(random.nextInt(nodes.size()));
-            if (!validLakeNode(chosenNode, tempLakeNodes)) {
-                continue;
+            if (validLakeNode(chosenNode, tempLakeNodes)) {
+                // Add the initial node
+                nodesFound.clear();
+                nodesFound.add(chosenNode);
+                expandLakeNodes(size, tempLakeNodes, nodesFound);
+
+                if (nodesFound.size() >= size) {
+                    return nodesFound;
+                }
             }
-
-            // Add the initial node
-            nodesFound.clear();
-            nodesFound.add(chosenNode);
-            expandLakeNodes(size, tempLakeNodes, nodesFound);
-
-            if (nodesFound.size() < size) {
-                continue;
-            }
-
-            return nodesFound;
         }
     }
 
@@ -486,21 +482,18 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
 
                 // Only allow the node if it is on the edge of the lake, and
                 // has a protruding edge
-                if (!hasNeighbourOfDifferentBiome(node, chosenLake)) {
-                    continue;
+                if (hasNeighbourOfDifferentBiome(node, chosenLake)) {
+                    startingEdge = edgeProtrudingFromBiome(edges, node, chosenLake);
+                    if (startingEdge != null) {
+                        // Find which vertex the edge starts with
+                        if (node.getVertices().contains(startingEdge.getA())) {
+                            startingVertex = startingEdge.getA();
+                        } else {
+                            startingVertex = startingEdge.getB();
+                        }
+                        break;
+                    }
                 }
-                startingEdge = edgeProtrudingFromBiome(edges, node, chosenLake);
-                if (startingEdge == null) {
-                    continue;
-                }
-
-                // Find which vertex the edge starts with
-                if (node.getVertices().contains(startingEdge.getA())) {
-                    startingVertex = startingEdge.getA();
-                } else {
-                    startingVertex = startingEdge.getB();
-                }
-                break;
             }
 
             // Generate the path for the river
