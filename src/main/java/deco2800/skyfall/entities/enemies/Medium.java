@@ -5,7 +5,7 @@ import deco2800.skyfall.util.HexVector;
 /**
  * An instance of a Scout (easy level) enemy.
  */
-public class Medium extends Enemy implements Spawnable {
+public class Medium extends Enemy {
 
     /**
      * Constructor to create new Scout enemy.
@@ -35,15 +35,5 @@ public class Medium extends Enemy implements Spawnable {
         super(col, row);
 
         this.setValues(scaling, 100, 1, 1, 0.06f, 0.04f);
-    }
-
-    @Override
-    public Medium newInstance(float row, float col) {
-        return new Medium(col, row, this.getScale(), this.getBiome());
-    }
-
-    @Override
-    public Enemy newInstance(HexVector spawnPos) {
-        return newInstance(spawnPos.getRow(), spawnPos.getCol());
     }
 }
