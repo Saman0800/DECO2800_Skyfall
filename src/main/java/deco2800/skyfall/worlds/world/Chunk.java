@@ -340,7 +340,7 @@ public class Chunk implements Saveable<Chunk.ChunkMemento>, Serializable {
     /**
      * The memento storing the information required to reproduce a chunk.
      */
-    public static class ChunkMemento extends AbstractMemento implements Serializable {
+    public static class ChunkMemento implements Serializable, AbstractMemento {
         private int x;
         private int y;
 
