@@ -8,6 +8,8 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 public class GrassTuftTest {
@@ -18,6 +20,21 @@ public class GrassTuftTest {
     public void setup() throws Exception {
         World mockWorld = mock(World.class);
         grassTuft = new GrassTuft(mockWorld,1f,1f);
+    }
+
+    @Test
+    public void constructorTest() {
+        assertEquals(grassTuft.getTexture(), "grass_tuft");
+    }
+
+    @Test
+    public void onTickTest() {
+        try {
+            grassTuft.onTick(0);
+            grassTuft.onTick(1);
+        } catch(Exception e) {
+            fail("Exception Thrown");
+        }
     }
 
 }
