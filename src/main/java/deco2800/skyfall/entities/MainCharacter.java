@@ -1054,7 +1054,7 @@ public class MainCharacter extends Peon
         }
 
         // Revive health if character has revived for 100 ticks
-        if (revive == 100) {
+        if (revive == 500) {
             changeHealth(1);
             updateHealth();
             revive = 0;
