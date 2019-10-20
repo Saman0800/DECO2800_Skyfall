@@ -561,8 +561,9 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         } else if (entity instanceof GoldPiece) {
             MainCharacter mc = gmm.getMainCharacter();
             if (tile.getCoordinates().distance(mc.getPosition()) <= 3) {
+                ((GoldStatusBar) ((HeadsUpDisplay) gmm.getUIElement("HUD")).gethudElement("goldPill")).setAddingToPouch(true);
                 mc.addGold((GoldPiece) entity, 1);
-                ((GoldStatusBar) ((HeadsUpDisplay) gmm.getUIElement("HUD")).gethudElement("goldPill")).updateLabel();
+                ((GoldStatusBar) ((HeadsUpDisplay) gmm.getUIElement("HUD")).gethudElement("goldPill")).setAddingToPouch(false);
                 SoundManager.playSound(GOLD_SOUND_EFFECT);
                 // remove the gold piece instance from the world
                 entityToBeDeleted = entity;

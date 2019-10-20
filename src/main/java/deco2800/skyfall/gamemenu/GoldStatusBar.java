@@ -19,6 +19,7 @@ public class GoldStatusBar extends AbstractUIElement {
     private final GameMenuManager gmm;
     private Label goldLabel;
     private ImageButton goldPouchButton;
+    private boolean addingToPouch = false;
 
     public GoldStatusBar(Stage stage, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm) {
         super(stage, textureNames, tm);
@@ -62,6 +63,18 @@ public class GoldStatusBar extends AbstractUIElement {
         stage.addActor(goldLabel);
         stage.addActor(goldPouchButton);
 
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        if (!addingToPouch) {
+            updateLabel();
+        }
+    }
+
+    public void setAddingToPouch(boolean addingToPouch) {
+        this.addingToPouch = addingToPouch;
     }
 
     public void updateLabel() {
