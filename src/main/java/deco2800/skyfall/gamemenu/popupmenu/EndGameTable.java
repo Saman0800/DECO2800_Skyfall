@@ -36,36 +36,31 @@ public class EndGameTable extends AbstractPopUpElement{
     @Override
     public void draw() {
         super.draw();
+
+        // Create background
         baseTable = new Table();
-        baseTable.bottom();
-        baseTable.setSize(800, 500);
+        baseTable.setSize(800, 556);
         baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2f - baseTable.getHeight() / 2);
         baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("endGame"));
         baseTable.setDebug(false);
 
-        ImageButton continueButton =
-                new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("continueGame"));
-        baseTable.add(continueButton).padBottom(65).width(450).height(450*302/2313f);
-        baseTable.row();
 
-        continueButton.addListener(new ClickListener() {
+        // Continue button
+        ImageButton continueGame = new ImageButton(gameMenuManager.generateTextureRegionDrawableObject("continueGame"));
+        continueGame.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hide();
             }
         });
 
+        // Set positioning and visibility
+        baseTable.row();
+        baseTable.add(continueGame).width(300).height(64).bottom().padLeft(210).padTop(250);
+
         baseTable.setVisible(false);
         stage.addActor(baseTable);
-    }
-
-
-    /**
-     * Restarts the entire game
-     */
-    public void restartGame() {
-        // Return home here to start a new game
     }
 }
 

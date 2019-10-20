@@ -66,7 +66,6 @@ public class GameOverTableTest extends BaseGDXTest {
     }
 
     @Test
-    @Ignore
     public void retryQuestTest() {
         gameOverTable.retryQuest();
 

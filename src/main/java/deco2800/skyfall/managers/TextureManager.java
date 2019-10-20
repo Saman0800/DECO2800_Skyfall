@@ -270,8 +270,7 @@ public class TextureManager extends AbstractManager {
 
             // End Game Textures
             textureMap.put("continueGame", new Texture("resources/new_ui/endGameTable/continue.png"));
-            textureMap.put("endGame", new Texture("resources/new_ui/endGameTable/game_complete.png"));
-
+            textureMap.put("endGame", new Texture("resources/new_ui/endGameTable/endGame.png"));
 
             files = new File("resources/world_details").listFiles();
             if (files == null) {
