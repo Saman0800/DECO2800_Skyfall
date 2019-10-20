@@ -24,19 +24,4 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
         blueprintLearned = false;
     }
 
-    /**
-     * Returns a map of the name of the required resource and the required number of
-     * each resource to create the item.
-     *
-     * @return a hashamp of the required resources and their number.
-     */
-    public Map<String, Integer> getAllRequirements() {
-        Map<String, Integer> allRequirements = new HashMap<>();
-        allRequirements.put("Wood", 100);
-        allRequirements.put("Stone", 40);
-        allRequirements.put("Metal", 30);
-
-        return allRequirements;
-    }
-
 }
