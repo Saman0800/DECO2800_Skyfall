@@ -85,21 +85,18 @@ public class TextureManager extends AbstractManager {
                         }
                     }
                 }
-
             }
 
             textureMap.put("gold", new Texture("resources/gold.png"));
 
             // Are these Pet Textures? If so, can I remove?
-//            textureMap.put("whitebear", new Texture("resources/whitebear.png"));
-//            textureMap.put("icewhitebear", new Texture("resources/icewhitebear.png"));
-//            textureMap.put("lizardHome", new Texture("resources/lizard/home.png"));
-//            textureMap.put("lizard", new Texture("resources/lizard/lizard.png"));
-//            textureMap.put("lizardE", new Texture("resources/lizard/lizardE.png"));
-//            textureMap.put("lizardN", new Texture("resources/lizard/lizardN.png"));
-//            textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
+            textureMap.put("lizardHome", new Texture("resources/lizard/home.png"));
+            textureMap.put("lizard", new Texture("resources/lizard/lizard.png"));
+            textureMap.put("lizardE", new Texture("resources/lizard/lizardE.png"));
+            textureMap.put("lizardN", new Texture("resources/lizard/lizardN.png"));
+            textureMap.put("lizardS", new Texture("resources/lizard/lizardS.png"));
 
-            // Cosmetic Environment Textures(?)
+            // Cosmetic Environment Textures
             textureMap.put("hot_spring", new Texture("resources/Environment/HotSprings.png"));
             textureMap.put("in_hot_spring", new Texture("resources/Environment/HotSprings1.png"));
             textureMap.put("ruinedCity", new Texture("resources/Environment/ruinedCity.png"));
@@ -176,8 +173,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));
 
-//            textureMap.put("petTiger", new Texture("resources/tiger_front1.png")); // Pet Texture
-
             textureMap.put("grass_tuff", new Texture("resources/world_details/grass1.png"));
 
             textureMap.put("woodcube", new Texture("resources/woodcube.png"));
@@ -190,6 +185,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("buildingA", new Texture("resources/buildingA.png"));
             textureMap.put("tree", new Texture("resources/tree.png"));
 
+            // Fence textures (being used?)
             textureMap.put("fenceN-S", new Texture("resources/fence N-S.png"));
 
             textureMap.put("fenceNE-SW", new Texture("resources/fence NE-SW.png"));
@@ -213,8 +209,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("tutorial_3", new Texture("resources/tutorial/tutorial_3.png"));
             textureMap.put("tutorial_4", new Texture("resources/tutorial/tutorial_4.png"));
             textureMap.put("tutorial_5", new Texture("resources/tutorial/tutorial_5.png"));
-            textureMap.put("tutorial_6", new Texture("resources/tutorial/tutorial_6.png"));
-            textureMap.put("home_button", new Texture("resources/tutorial/done.png"));
+            textureMap.put("home_button", new Texture("resources/tutorial/home_button.png"));
 
 
             files = new File("resources/world_details").listFiles();
@@ -228,8 +223,6 @@ public class TextureManager extends AbstractManager {
                     textureMap.put(file.getName().substring(0, file.getName().length() - 4), new Texture(path));
                 }
             }
-
-
 
             //environment things
             textureMap.put("shipwrecks", new Texture("resources/world_details/shipwrecks.png"));
@@ -263,7 +256,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("pause", new Texture("resources/pause_icon.png"));
             textureMap.put("settings", new Texture("resources/settings.png"));
             textureMap.put("info", new Texture("resources/information.png"));
-            textureMap.put("select-character", new Texture("resources/character_selection.png"));
 
             textureMap.put("build", new Texture("resources/build_icon.png"));
 
@@ -320,19 +312,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("help_page1", new Texture("resources/new_ui/helpTable/help_page1.png"));
             textureMap.put("help_page2", new Texture("resources/new_ui/helpTable/help_page2.png"));
 
-            // Clock/Season graphics
-//            textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
-//            textureMap.put("dusk", new Texture("resources/clock/dusk_clock.png"));
-//            textureMap.put("day", new Texture("resources/clock/day_clock.png"));
-//            textureMap.put("night", new Texture("resources/clock/night_clock.png"));
-//            textureMap.put("summer", new Texture("resources/clock/summer.png"));
-//            textureMap.put("winter", new Texture("resources/clock/winter.png"));
-//            textureMap.put("spring", new Texture("resources/clock/spring.png"));
-//            textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
-
-            // Mana Bar Textures
-//            textureMap.put("mana_bar", new Texture("resources/mana_bar.png"));
-//            textureMap.put("mana_bar_inner", new Texture("resources/mana_bar_inner.png"));
 
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
             textureMap.put("chest_banner", new Texture("resources/chest_banner.png"));
@@ -368,7 +347,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("unchecked", new Texture("resources/unchecked.png"));
             textureMap.put("take all", new Texture("resources/inventory/take_all.png"));
             textureMap.put("inventory_panel", new Texture("resources/inventory/inventory_panel.png"));
-
 
 
             textureMap.put("Stone_inv", new Texture("resources/items_icons/stone.png"));

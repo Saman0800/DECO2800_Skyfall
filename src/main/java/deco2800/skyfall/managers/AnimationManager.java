@@ -47,16 +47,6 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("bikeW","resources/Bike_Left_Animation/left.atlas",0.05f);
         this.generateAnimationObject("bikeE","resources/Bike_Right_Animation/right.atlas",0.05f);
 
-        this.generateAnimationObject("whitebearNE","resources/whitebearright/whitebearright.atlas",0.05f);
-        this.generateAnimationObject("whitebearN","resources/whitebearback/whitebearback.atlas",0.05f);
-        this.generateAnimationObject("whitebearNW","resources/whitebearleft/whitebearleft.atlas",0.05f);
-        this.generateAnimationObject("whitebearS","resources/whitebearfront/whitebearfront.atlas",0.05f);
-        this.generateAnimationObject("whitebearSW","resources/whitebearleft/whitebearleft.atlas",0.05f);
-        this.generateAnimationObject("whitebearSE","resources/whitebearright/whitebearright.atlas",0.05f);
-
-        // Pets
-        this.generateAnimationObject("tigerFront","resources/petTigerMovement/tigerMovementFront/tigerMovementFront.atlas",0.2f);
-
         // Main Character
         // New Enemies
         this.generateAnimationObject("SCOUTMoveN", "enemyScout_Move_N", 208, 279, 0.2f);

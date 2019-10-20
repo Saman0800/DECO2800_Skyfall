@@ -2,8 +2,6 @@ package deco2800.skyfall.worlds.world;
 
 import deco2800.skyfall.entities.*;
 import deco2800.skyfall.entities.enemies.*;
-import deco2800.skyfall.entities.pets.IceWhitebear;
-import deco2800.skyfall.entities.pets.LizardHome;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
 import deco2800.skyfall.managers.GameManager;
@@ -94,8 +92,6 @@ public class WorldDirector {
         }
 
         builder.addEntity(mainCharacter);
-        builder.addEntity(new LizardHome(0, 2, mainCharacter));
-        builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
         builder.addEntity(new Bike(-10f,-2f,mainCharacter));
         builder.addEntity(new SandCar(-20f,-2f, mainCharacter));
         builder.addEntity(new Scout(0, 2, 0.4f, "Forest"));
@@ -106,45 +102,6 @@ public class WorldDirector {
         builder.addEntity(new Horse(-8,-6, mainCharacter));
 
         builder.addEntity(new hotSpring(2,10, mainCharacter));
-
-        return builder;
-    }
-
-    /**
-     * Constructs a tutorial world
-     *
-     * @param builder The builder used to construct the world
-     */
-    public static WorldBuilder constructTutorialWorld(WorldBuilder builder, long seed, boolean renderUI) {
-        Random random = new Random(seed);
-
-        MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
-        mainCharacter.setCol(0);
-        mainCharacter.setRow(0);
-
-        builder.addEntity(mainCharacter);
-
-        builder.addLake(5);
-        builder.addRiver();
-        builder.setRiverSize(5);
-        builder.setBeachSize(12);
-
-        builder.setNodeSpacing(15);
-        builder.setWorldSize(80);
-        builder.setType("tutorial");
-        builder.setSeed(2);
-        builder.setStaticEntities(true);
-        builder.addBiome(new ForestBiome(random), 20);
-        builder.addBiome(new DesertBiome(random), 20);
-        builder.addBiome(new MountainBiome(random), 20);
-
-        if (renderUI) {
-            StatisticsManager sm = new StatisticsManager(mainCharacter);
-            GameManager.addManagerToInstance(sm);
-            GameMenuManager gmm = GameManager.getManagerFromInstance(GameMenuManager.class);
-            gmm.addStatsManager(sm);
-            gmm.drawAllElements();
-        }
 
         return builder;
     }

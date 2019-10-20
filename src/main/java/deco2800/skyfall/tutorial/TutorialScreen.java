@@ -31,7 +31,7 @@ public class TutorialScreen implements Screen {
     private Skin skin;
     private TextureManager textureManager;
     private List<Image> screens;
-    private static final int  NUMBER_OF_SCREENS = 8;
+    private static final int  NUMBER_OF_SCREENS = 7;
     private SkyfallGame game;
 
     public TutorialScreen(SkyfallGame game) {
@@ -41,7 +41,7 @@ public class TutorialScreen implements Screen {
         skin = GameManager.get().getSkin();
         screens = new ArrayList<>();
         String[] screenNames = {"story", "your_mission", "tutorial_1", "tutorial_2", "tutorial_3", "tutorial_4",
-                "tutorial_5", "tutorial_6"};
+                "tutorial_5"};
         for (String screenName : screenNames) {
             screens.add(new Image(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture(screenName))))));
         }
@@ -102,12 +102,12 @@ public class TutorialScreen implements Screen {
         }
 
         if (screen == NUMBER_OF_SCREENS) {
-            ImageButton done = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("home_button")))));
-            done.setSize(250, 65);
-            done.setPosition(MIN_WIDTH - 280f, 12);
-            stage.addActor(done);
+            ImageButton home = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("home_button")))));
+            home.setSize(250, 65);
+            home.setPosition(MIN_WIDTH - 280f, 12);
+            stage.addActor(home);
 
-            done.addListener(new ClickListener() {
+            home.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     currentScreen.addAction(Actions.removeActor());

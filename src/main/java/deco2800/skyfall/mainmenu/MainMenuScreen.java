@@ -91,7 +91,6 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 GameManager.get().isTutorial = true;
-//                game.setScreen(new GameScreen(game, 3, true));
                 game.setScreen(new TutorialScreen(game));
             }
         });

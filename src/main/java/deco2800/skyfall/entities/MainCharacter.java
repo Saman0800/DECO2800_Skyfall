@@ -119,7 +119,6 @@ public class MainCharacter extends Peon
     //List of blueprints that the player has learned.
 
     private List<Blueprint> blueprintsLearned;
-//    private PetsManager petsManager;
     private BuildingFactory tempFactory;
 
     // List of the Biomes locked
@@ -273,7 +272,6 @@ public class MainCharacter extends Peon
         GameManager.getManagerFromInstance(InputManager.class).addKeyDownListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addKeyUpListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
-//        this.petsManager = GameManager.getManagerFromInstance(PetsManager.class);
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
         this.goldPouch = new HashMap<>();
 
@@ -347,8 +345,6 @@ public class MainCharacter extends Peon
         inputManager.addKeyDownListener(this);
         inputManager.addKeyUpListener(this);
         inputManager.addTouchDownListener(this);
-
-//        this.petsManager = GameManager.getManagerFromInstance(PetsManager.class);
 
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
 
@@ -520,15 +516,6 @@ public class MainCharacter extends Peon
     public Item getEquippedItem() {
         return equippedItem;
     }
-
-    /**
-     * Gets pestManager
-     *
-     * @return
-     */
-//    public PetsManager getPetsManager() {
-//        return this.petsManager;
-//    }
 
     /**
      * Returns string of players equipped item, or "No item equipped" if equippedItem == null
@@ -1071,8 +1058,6 @@ public class MainCharacter extends Peon
         yInput = 0;
     }
 
-//    boolean petout = false;
-
     /**
      * Sets the appropriate movement flags to true on keyDown
      *
@@ -1099,9 +1084,6 @@ public class MainCharacter extends Peon
             case Input.Keys.D:
                 xInput += 1;
                 break;
-//            case Input.Keys.V:
-//                petsManager.replacePet(this);
-//                break;
             case Input.Keys.F:
                 vehicleToUse();
                 break;
