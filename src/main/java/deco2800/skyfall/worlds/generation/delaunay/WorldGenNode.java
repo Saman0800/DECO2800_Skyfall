@@ -774,7 +774,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         this.y = memento.y;
     }
 
-    public static class WorldGenNodeMemento extends AbstractMemento implements Serializable {
+    public static class WorldGenNodeMemento implements AbstractMemento , Serializable {
 
         // The ID of this node
         private long nodeID;

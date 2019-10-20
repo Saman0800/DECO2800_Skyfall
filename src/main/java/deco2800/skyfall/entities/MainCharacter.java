@@ -291,6 +291,7 @@ public class MainCharacter extends Peon
         this.setTexture(ANIMATION_MAIN_CHARACTER_E_ANIM_0);
         this.setHeight(1);
         this.setObjectName("MainPiece");
+        this.setRecovering(false);
         GameManager.getManagerFromInstance(InputManager.class).addKeyDownListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addKeyUpListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
@@ -713,7 +714,7 @@ public class MainCharacter extends Peon
                 recoverTime = 0;
                 SoundManager.playSound(HURT_SOUND_NAME);
 
-                if (hurtTime > 400) {
+                if (hurtTime >= 400) {
                     setRecovering(true);
                 }
             }
@@ -730,6 +731,7 @@ public class MainCharacter extends Peon
             logger.info("Hurt ended");
             setHurt(false);
             setRecovering(true);
+            setTexChanging(true);
             hurtTime = 0;
         }
     }
@@ -776,6 +778,7 @@ public class MainCharacter extends Peon
         if (recoverTime > 1000) {
             logger.info("Recovered");
             setRecovering(false);
+            setTexChanging(false);
             changeCollideability(true);
             recoverTime = 0;
         }
@@ -962,7 +965,6 @@ public class MainCharacter extends Peon
         onTickNotPaused();
         this.movementSound();
         this.centreCameraAuto();
-        this.setRecovering(false);
 
         // Mana restoration.
         this.manaCD++;
@@ -2043,7 +2045,7 @@ public class MainCharacter extends Peon
         this.goldPouch = memento.goldPouch;
     }
 
-    public static class MainCharacterMemento extends AbstractMemento implements Serializable {
+    public static class MainCharacterMemento implements AbstractMemento , Serializable {
         private long mainCharacterID;
         private int level;
         private int foodLevel;
