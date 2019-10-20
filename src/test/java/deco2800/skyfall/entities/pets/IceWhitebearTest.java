@@ -34,20 +34,14 @@ public class IceWhitebearTest {
     public void setDirectionTextures() {
     }
 
+    /**
+     * Tempt to destory ice
+     */
     @Test
     public void destoryice() {
         iceWhitebear.setHealth(3);
         iceWhitebear.destoryice();
         assertEquals(2,iceWhitebear.getHealth());
     }
-
-    @Test
-    @Ignore
-    public void harvest() {
-        mockTile = Mockito.mock(Tile.class);
-        iceWhitebear.setHealth(1);
-        iceWhitebear.destoryice();
-        List<AbstractEntity> drops = iceWhitebear.harvest(mockTile);
-        assertTrue(drops.get(0) instanceof Whitebear);
-    }
+    
 }

@@ -319,11 +319,11 @@ public enum BuildingType implements Blueprint {
             return 150;
         case BluePrintNames.TOWN_CENTRE_STRING:
             return 200;
-        case "Wall":
+        case BluePrintNames.WALL_STRING:
             return 250;
-        case "Castle":
+        case BluePrintNames.CASTLE_STRING:
             return 50;
-        case "WatchTower":
+        case BluePrintNames.WATCH_TOWER_STRING:
             return 75;
         default:
             return 0;

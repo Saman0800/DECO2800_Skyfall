@@ -31,9 +31,9 @@ public class ForestPortalTest {
     @Test
     public void getAllRequirements() {
         Map<String, Integer> a = forestPortal.getAllRequirements();
-        assertTrue( a.get("Wood") >= 0);
-        assertTrue( a.get("Stone") >= 0);
-        assertTrue( a.get("Metal") >= 0);
+        assertTrue(a.get("Wood") >= 0);
+        assertTrue(a.get("Stone") >= 0);
+        assertTrue(a.get("Metal") >= 0);
     }
 
 
