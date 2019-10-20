@@ -97,6 +97,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
     // Item pick-up sound effect
     private static final String PICK_UP_SOUND = "pick_up";
 
+    private boolean dummyBoolean = false;
+
     /**
      * The constructor used to create a simple dummey world, used for displaying
      * world information on the home screen
@@ -241,6 +243,11 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         BiomeGenerator biomeGenerator = new BiomeGenerator(this, localWorldGenNodes, localVoronoiEdges, random,
                 worldParameters);
         biomeGenerator.generateBiomes();
+
+        if(dummyBoolean) {
+            throw new DeadEndGenerationException();
+        }
+
     }
 
     private void generateTileIndices() {
@@ -339,21 +346,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         // elements.
     }
 
-    /**
-     * Returns a list of all of the tiles in the world. This list is <em>not</em>
-     * the list used internally (due to chunking) so modifying this list will not
-     * modify the list of tiles.
-     *
-     * @return a list of all of the tiles in the world
-     * @deprecated since this is no longer a trivial operation. Getting the chunk
-     *             map and iterating through the tiles of the individual chunks
-     *             should be preferred since it does not perform an unnecesary copy.
-     */
-    @Deprecated
-    public List<Tile> getTileMap() {
-        return loadedChunks.values().stream().flatMap(chunk -> chunk.getTiles().stream()).collect(Collectors.toList());
-    }
-
     public Tile getTile(float col, float row) {
         return getTile(new HexVector(col, row));
     }
@@ -381,24 +373,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         return chunk;
     }
 
-    /**
-     * Sets all the tiles in the loaded chunks.
-     *
-     * @param tileMap the new tiles to use
-     * @deprecated since this only affects the loaded chunks and is no longer a
-     *             trivial replacement of lists
-     */
-    @Deprecated
-    public void setTileMap(List<Tile> tileMap) {
-        for (Chunk chunk : loadedChunks.values()) {
-            chunk.getEntities().clear();
-        }
-        for (Tile tile : tileMap) {
-            addTile(tile);
-        }
-    }
-
-    protected void addTile(Tile tile) {
+    public void addTile(Tile tile) {
         Pair<Integer, Integer> chunkCoords = Chunk.getChunkForCoordinates(tile.getCol(), tile.getRow());
         Chunk chunk = getChunk(chunkCoords.getValue0(), chunkCoords.getValue1());
         chunk.getTiles().add(tile);
@@ -806,10 +781,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         private long seed;
         private int worldSize;
 
-        private long getThisSaveID() {
-            return saveID;
-        }
-
         public WorldMemento(World world) {
             this.saveID = world.save.getSaveID();
             this.worldID = world.id;
@@ -820,6 +791,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
             this.tileOffsetNoiseGeneratorY = world.tileOffsetNoiseGeneratorY;
             this.seed = world.getWorldParameters().getSeed();
             this.worldSize = world.getWorldParameters().getWorldSize();
+
         }
     }
 }

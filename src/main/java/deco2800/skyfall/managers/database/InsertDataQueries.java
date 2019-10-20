@@ -197,12 +197,14 @@ public class InsertDataQueries {
         long entityId) throws SQLException, IOException {
         try (PreparedStatement preparedStatement = connection.prepareStatement(
             "insert into ENTITIES (type, x, y, chunk_x, chunk_y, world_id, data, entity_id) values (?, ?, ?, ?, ?, ?, ?, ?)")) {
-            preparedStatement.setString(1, type);
-            preparedStatement.setDouble(2, x);
-            preparedStatement.setDouble(3, y);
+
             preparedStatement.setInt(4, chunkX);
             preparedStatement.setInt(5, chunkY);
             preparedStatement.setLong(6, worldId);
+
+            preparedStatement.setString(1, type);
+            preparedStatement.setDouble(2, x);
+            preparedStatement.setDouble(3, y);
             writeObjectToDatabase(preparedStatement, 7, data);
             preparedStatement.setLong(8, entityId);
             preparedStatement.executeUpdate();

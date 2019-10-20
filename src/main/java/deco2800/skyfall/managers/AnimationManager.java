@@ -92,6 +92,22 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("ABDUCTORMoveSE", "enemyAbductor_Move_SE", 150, 305, 0.2f);
         this.generateAnimationObject("ABDUCTORMoveSW", "enemyAbductor_Move_SW", 149, 306, 0.2f);
         this.generateAnimationObject("ABDUCTORMoveNW", "enemyAbductor_Move_NW", 149, 306, 0.2f);
+        this.generateAnimationObject("ABDUCTORAttackN",  "enemyAbductor_Attack_N", 151, 308, 0.2f);
+        this.generateAnimationObject("ABDUCTORAttackS",  "enemyAbductor_Attack_S", 149, 318, 0.2f);
+        this.generateAnimationObject("ABDUCTORAttackE",  "enemyAbductor_Attack_E", 150, 319, 0.2f);
+        this.generateAnimationObject("ABDUCTORAttackW",  "enemyAbductor_Attack_W", 150, 319, 0.2f);
+        this.generateAnimationObject("ABDUCTORAttackNE", "enemyAbductor_Attack_NE", 148, 318, 0.2f);
+        this.generateAnimationObject("ABDUCTORAttackSE", "enemyAbductor_Attack_SE", 150, 319, 0.2f);
+        this.generateAnimationObject("ABDUCTORAttackSW", "enemyAbductor_Attack_SW", 149, 318, 0.2f);
+        this.generateAnimationObject("ABDUCTORAttackNW", "enemyAbductor_Attack_NW", 149, 318, 0.2f);
+        this.generateAnimationObject("ABDUCTORDamageN",  "enemyAbductor_Damage_N", 153, 305, 0.2f);
+        this.generateAnimationObject("ABDUCTORDamageS",  "enemyAbductor_Damage_S", 152, 306, 0.2f);
+        this.generateAnimationObject("ABDUCTORDamageE",  "enemyAbductor_Damage_E", 157, 306, 0.2f);
+        this.generateAnimationObject("ABDUCTORDamageW",  "enemyAbductor_Damage_W", 161, 305, 0.2f);
+        this.generateAnimationObject("ABDUCTORDamageNE", "enemyAbductor_Damage_NE", 161, 306, 0.2f);
+        this.generateAnimationObject("ABDUCTORDamageSE", "enemyAbductor_Damage_SE", 159, 306, 0.2f);
+        this.generateAnimationObject("ABDUCTORDamageSW", "enemyAbductor_Damage_SW", 152, 306, 0.2f);
+        this.generateAnimationObject("ABDUCTORDamageNW", "enemyAbductor_Damage_NW", 151, 306, 0.2f);
         // Heavy
         this.generateAnimationObject("HEAVYMoveN", "enemyHeavy_Move_N", 224, 348, 0.13f);
         this.generateAnimationObject("HEAVYMoveS", "enemyHeavy_Move_S", 224, 349, 0.13f);
@@ -117,7 +133,7 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("HEAVYDamageSE", "enemyHeavy_Damage_SE", 224, 341, 0.2f);
         this.generateAnimationObject("HEAVYDamageSW", "enemyHeavy_Damage_SW", 227, 347, 0.2f);
         this.generateAnimationObject("HEAVYDamageNW", "enemyHeavy_Damage_NW", 224, 341, 0.2f);
-
+        // Medium
         this.generateAnimationObject("MEDIUMMoveN",    "enemyMedium_Move_N", 228, 276, 0.13f);
         this.generateAnimationObject("MEDIUMMoveS",    "enemyMedium_Move_S", 228, 276, 0.13f);
         this.generateAnimationObject("MEDIUMMoveE",    "enemyMedium_Move_E", 203, 276, 0.13f);
@@ -126,7 +142,6 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("MEDIUMMoveSE",   "enemyMedium_Move_SE", 210, 276, 0.13f);
         this.generateAnimationObject("MEDIUMMoveSW",   "enemyMedium_Move_SW", 210, 276, 0.13f);
         this.generateAnimationObject("MEDIUMMoveNW",   "enemyMedium_Move_NW", 210, 276, 0.13f);
-
         this.generateAnimationObject("MEDIUMAttackN",  "enemyMedium_Attack_N", 238, 276, 0.2f);
         this.generateAnimationObject("MEDIUMAttackS",  "enemyMedium_Attack_S", 238, 276, 0.2f);
         this.generateAnimationObject("MEDIUMAttackE",  "enemyMedium_Attack_E", 233, 277, 0.2f);
@@ -135,7 +150,6 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("MEDIUMAttackSE", "enemyMedium_Attack_SE", 234, 278, 0.2f);
         this.generateAnimationObject("MEDIUMAttackSW", "enemyMedium_Attack_SW", 233, 276, 0.2f);
         this.generateAnimationObject("MEDIUMAttackNW", "enemyMedium_Attack_NW", 233, 279, 0.2f);
-
         this.generateAnimationObject("MEDIUMDamageN",  "enemyMedium_Damage_N", 227, 282, 0.2f);
         this.generateAnimationObject("MEDIUMDamageS",  "enemyMedium_Damage_S", 226, 283, 0.2f);
         this.generateAnimationObject("MEDIUMDamageE",  "enemyMedium_Damage_E", 211, 276, 0.2f);
@@ -144,7 +158,7 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("MEDIUMDamageSE", "enemyMedium_Damage_SE", 215, 280, 0.2f);
         this.generateAnimationObject("MEDIUMDamageSW", "enemyMedium_Damage_SW", 215, 279, 0.2f);
         this.generateAnimationObject("MEDIUMDamageNW", "enemyMedium_Damage_NW", 212, 280, 0.2f);
-
+        // dead
         this.generateAnimationObject("enemyDie", "enemyDie", 369, 357, 0.4f);
 
         // Main Character

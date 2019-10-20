@@ -29,8 +29,8 @@ public class VoronoiEdgeTest {
     public void otherVertexTest() {
         VoronoiEdge edge = new VoronoiEdge(new double[] {2, 6}, new double[] {-3.6, 1.7}, null);
 
-        assertNull(edge.otherVertex(new double[] {0, 0}));
-        assertNull(edge.otherVertex(new double[] {-3.6, 6}));
+        assertArrayEquals(new double[0], edge.otherVertex(new double[] {0, 0}), 0);
+        assertArrayEquals(new double[0], edge.otherVertex(new double[] {-3.6, 6}), 0);
 
         assertEquals(-3.6, edge.otherVertex(new double[] {2, 6})[0], 0.00001);
         assertEquals(1.7, edge.otherVertex(new double[] {2, 6})[1], 0.00001);
@@ -68,8 +68,8 @@ public class VoronoiEdgeTest {
 
         VoronoiEdge.assignNeighbours(edges);
 
-        assertNull(edge1.getVertexSharingEdges(point3));
-        assertNull(edge1.getVertexSharingEdges(new double[] {1, 1}));
+        assertTrue(edge1.getVertexSharingEdges(point3).equals(new ArrayList<>()));
+        assertTrue(edge1.getVertexSharingEdges(new double[] {1, 1}).equals(new ArrayList<>()));
 
         assertEquals(2, edge2.getVertexSharingEdges(point3).size());
         assertEquals(2, edge3.getVertexSharingEdges(point3).size());

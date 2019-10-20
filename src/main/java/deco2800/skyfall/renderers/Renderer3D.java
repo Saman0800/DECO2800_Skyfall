@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A ~simple~ complex hex renderer for DECO2800 games
@@ -219,19 +220,9 @@ public class Renderer3D implements Renderer {
                 if (!(entity instanceof Animatable)) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, tex);
                 }
-
-                if(entity instanceof MainCharacter) {
-                    Color originalCol = batch.getColor();
-                    if (((MainCharacter) entity).isRecovering()){
-                        if(((MainCharacter) entity).isTexChanging()){
-                            originalCol.set(Color.LIGHT_GRAY);
-                        } else {
-                            originalCol.set(Color.WHITE);
-                        }
-                        entity.setModulatingColor(originalCol);
-                        ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
-                    }
-                }
+                // the original code is extracted to fix code smells
+                // (reduce cyclomatic complexity)
+                checkIfMainCharacterEntity(entity, batch);
 
                 runAnimation(batch, entity, entityWorldCoord);
             }
@@ -293,7 +284,8 @@ public class Renderer3D implements Renderer {
     private void debugRender(SpriteBatch batch, OrthographicCamera camera) {
 
         if (GameManager.get().getShowCoords()) {
-            List<Tile> tileMap = GameManager.get().getWorld().getTileMap();
+            List<Tile> tileMap = GameManager.get().getWorld().getLoadedChunks().values().stream().flatMap(chunk ->
+                    chunk.getTiles().stream()).collect(Collectors.toList());
             for (Tile tile : tileMap) {
                 float[] tileWorldCord = WorldUtil.colRowToWorldCords(tile.getCol(), tile.getRow());
 
@@ -397,4 +389,20 @@ public class Renderer3D implements Renderer {
         batch.draw(currentFrame, entityWorldCoord[0] + offset[0], entityWorldCoord[1] + offset[0], width, height);
         aniLink.incrTime(Gdx.graphics.getDeltaTime());
     }
+
+    public void checkIfMainCharacterEntity(AbstractEntity entity, SpriteBatch batch) {
+        if(entity instanceof MainCharacter) {
+            Color originalCol = batch.getColor();
+            if (((MainCharacter) entity).isRecovering()){
+                if(((MainCharacter) entity).isTexChanging()){
+                    originalCol.set(Color.LIGHT_GRAY);
+                } else {
+                    originalCol.set(Color.WHITE);
+                }
+                entity.setModulatingColor(originalCol);
+                ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
+            }
+        }
+    }
+
 }

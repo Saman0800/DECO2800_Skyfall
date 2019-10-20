@@ -14,7 +14,7 @@ import java.util.function.Function;
  */
 public final class EntitySpawnTable {
 
-    static private Random randDirection = new Random();
+    private static Random randDirection = new Random();
 
     // Private constructor to prevent construction.
     private EntitySpawnTable() {

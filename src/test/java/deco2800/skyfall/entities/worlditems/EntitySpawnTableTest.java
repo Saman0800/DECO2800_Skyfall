@@ -174,38 +174,11 @@ public class EntitySpawnTableTest {
 
     }
 
-    // simple method to count number of static entities on world
-    private int countWorldEntities() {
-        int count = 0;
-        for (Tile tile : testWorld.getTileMap()) {
-            if (tile.hasParent()) {
-                count++;
-            }
-        }
-        return count;
-    }
-
     @Test
     @Ignore
     public void testDirectPlace() {
         // Generate a chunk.
         testWorld.getChunk(0, 0);
 
-        // check if construction was valid
-        assertEquals(worldSize, testWorld.getTileMap().size());
-
-        // count before spawning
-        assertEquals(0, countWorldEntities());
-
-        // check basic spawnEntities
-        final double chance = 0.95;
-        for (Tile tile : testWorld.getTileMap()) {
-            // EntitySpawnTable.spawnEntity(tileToPlace -> new ForestRock(tileToPlace,
-            // true),
-            // chance, testWorld, tile);
-        }
-
-        // count after spawning
-        assertTrue(countWorldEntities() > 0);
     }
 }
