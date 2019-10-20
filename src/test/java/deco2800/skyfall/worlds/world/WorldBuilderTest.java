@@ -97,12 +97,12 @@ public class WorldBuilderTest {
     }
 
 
-    @Test
-    public void TestTutorialWorld() {
-        builder.setType("tutorial");
-        World world = builder.getWorld();
-        assertTrue(world instanceof TutorialWorld);
-    }
+//    @Test
+//    public void TestTutorialWorld() {
+//        builder.setType("tutorial");
+//        World world = builder.getWorld();
+//        assertTrue(world instanceof TutorialWorld);
+//    }
 
 
 }

@@ -1,11 +1,13 @@
 package deco2800.skyfall.resources;
 
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.items.Apple;
 import deco2800.skyfall.resources.items.AloeVera;
 import deco2800.skyfall.resources.items.Berry;
 import deco2800.skyfall.resources.items.PoisonousMushroom;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
 
 import static org.junit.Assert.*;
 
@@ -24,7 +26,6 @@ public class HealthResourcesTest {
         aloe_vera = new AloeVera();
         berry = new Berry();
         poisonousmushroom = new PoisonousMushroom();
-
     }
 
 
@@ -109,7 +110,9 @@ public class HealthResourcesTest {
      */
     @Test
     public void getCoords2() {
-        //assertEquals(Tile.getCoordinates(),healthResources.getCoords());
+        MainCharacter main = mock(MainCharacter.class);
+        main.setEquippedItem(apple);
+        assertEquals(apple.getCoords(), main.getPosition());
     }
 
     /**
@@ -144,11 +147,29 @@ public class HealthResourcesTest {
         assertEquals("Health Resource:Aloe_Vera", aloe_vera.toString());
         assertEquals("Health Resource:Berry", berry.toString());
         assertEquals("Health Resource:PoisonousMushroom", poisonousmushroom.toString());
-
     }
 
+    @Test
+    public void useTest() {
+        MainCharacter main = mock(MainCharacter.class);
+        apple.use(main.getPosition());
+        when(main.getHealth()).thenReturn(10);
+        assertEquals(10, main.getHealth());
+    }
 
+    @Test
+    public void getDescriptionTest() {
+        assertEquals("This item can be used to heal\n the Main Character.", apple.getDescription());
+        assertEquals("This item can be used to heal\n the Main Character.", aloe_vera.getDescription());
+        assertEquals("This item can be used to heal\n the Main Character.", berry.getDescription());
+        assertEquals("This item hurts the Main Character.", poisonousmushroom.getDescription());
+    }
 
-
-
+    @Test
+    public void isEquippableTest() {
+        assertTrue(apple.isEquippable());
+        assertTrue(aloe_vera.isEquippable());
+        assertTrue(berry.isEquippable());
+        assertTrue(poisonousmushroom.isEquippable());
+    }
 }
