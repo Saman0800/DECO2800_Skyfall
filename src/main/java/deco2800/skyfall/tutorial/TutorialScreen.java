@@ -101,12 +101,12 @@ public class TutorialScreen implements Screen {
         }
 
         if (screen == NUMBER_OF_SCREENS) {
-            ImageButton done = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("home_button")))));
-            done.setSize(250, 65);
-            done.setPosition(MIN_WIDTH - 280f, 12);
-            stage.addActor(done);
+            ImageButton home = new ImageButton(new TextureRegionDrawable((new TextureRegion(textureManager.getTexture("home_button")))));
+            home.setSize(250, 65);
+            home.setPosition(MIN_WIDTH - 280f, 12);
+            stage.addActor(home);
 
-            done.addListener(new ClickListener() {
+            home.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     currentScreen.addAction(Actions.removeActor());

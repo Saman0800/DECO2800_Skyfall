@@ -265,8 +265,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("tutorial_3", new Texture("resources/tutorial/tutorial_3.png"));
             textureMap.put("tutorial_4", new Texture("resources/tutorial/tutorial_4.png"));
             textureMap.put("tutorial_5", new Texture("resources/tutorial/tutorial_5.png"));
-            textureMap.put("next_back_button", new Texture("resources/tutorial/next_back_button.png"));
-            textureMap.put("home_button", new Texture("resources/tutorial/done.png"));
+            textureMap.put("home_button", new Texture("resources/tutorial/home_button.png"));
 
             // End Game Textures
             textureMap.put("continueGame", new Texture("resources/new_ui/endGameTable/continue.png"));
