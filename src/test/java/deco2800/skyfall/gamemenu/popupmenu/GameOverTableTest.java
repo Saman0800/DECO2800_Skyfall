@@ -36,7 +36,6 @@ public class GameOverTableTest extends BaseGDXTest {
         stage = mock(Stage.class);
         gmm = mock(GameMenuManager.class);
         tm = spy(TextureManager.class);
-        gmm = mock(GameMenuManager.class);
         qm = mock(QuestManager.class);
 
         MainCharacter mc = mock(MainCharacter.class);

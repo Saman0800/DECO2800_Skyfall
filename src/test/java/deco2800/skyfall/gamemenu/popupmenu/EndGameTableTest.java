@@ -1,14 +1,8 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import deco2800.skyfall.BaseGDXTest;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.QuestManager;
@@ -22,31 +16,22 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 
-public class EndGameTableTest {
-    private EndGameTable endGameTable;
+public class EndGameTableTest extends BaseGDXTest {
     private Stage stage;
-    private ImageButton exitButton;
+    private GameMenuManager gmm;
+    private EndGameTable endGameTable;
     private TextureManager tm;
-    private GameMenuManager gameMenuManager;
-    private Camera camera;
 
     @Before
     public void setUp() {
         stage = mock(Stage.class);
-        exitButton = mock(ImageButton.class);
-        tm = mock(TextureManager.class);
-        gameMenuManager = mock(GameMenuManager.class);
+        gmm = mock(GameMenuManager.class);
+        tm = spy(TextureManager.class);
 
         MainCharacter mc = mock(MainCharacter.class);
-        Mockito.when(gameMenuManager.getMainCharacter()).thenReturn(mc);
+        Mockito.when(gmm.getMainCharacter()).thenReturn(mc);
 
-        camera = new OrthographicCamera();
-
-        doReturn(camera).when(stage).getCamera();
-
-
-        endGameTable = new EndGameTable(stage, exitButton, null, tm, gameMenuManager);
-
+        endGameTable = new EndGameTable(stage, null, null, tm, gmm);
     }
 
     @Test
@@ -58,14 +43,12 @@ public class EndGameTableTest {
     public void hideTest() {
         endGameTable.hide();
         assertFalse(endGameTable.isVisible());
-        assertFalse(exitButton.isVisible());
     }
 
     @Test
     public void showTest() {
         endGameTable.hide();
         assertFalse(endGameTable.isVisible());
-        assertFalse(exitButton.isVisible());
 
         endGameTable.show();
         assertTrue(endGameTable.isVisible());
@@ -73,11 +56,9 @@ public class EndGameTableTest {
 
     @After
     public void tearDown() {
-        endGameTable = null;
-        camera = null;
         stage = null;
-        exitButton = null;
+        gmm = null;
+        endGameTable = null;
         tm = null;
-        gameMenuManager = null;
     }
 }

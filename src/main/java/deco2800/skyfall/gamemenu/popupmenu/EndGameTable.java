@@ -25,7 +25,7 @@ public class EndGameTable extends AbstractPopUpElement{
      */
     public EndGameTable(Stage stage, ImageButton exitButton, String[] textureNames,
                         TextureManager tm, GameMenuManager gameMenuManager) {
-        super(stage, exitButton, textureNames,tm , gameMenuManager);
+        super(stage, exitButton, textureNames, tm , gameMenuManager);
         this.draw();
     }
 
