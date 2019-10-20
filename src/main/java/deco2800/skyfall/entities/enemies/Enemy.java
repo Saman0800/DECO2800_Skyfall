@@ -1,5 +1,8 @@
 package deco2800.skyfall.entities.enemies;
 
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import deco2800.skyfall.Tickable;
@@ -13,6 +16,7 @@ import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.AnimationLinker;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -60,6 +64,17 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
     // Main character instance in the game.
     private MainCharacter mainCharacter;
+
+    // Friend for the abductor
+    private Heavy friend;
+    private boolean hasFriend = false;
+
+    // A routine for destination
+    private HexVector destination = null;
+
+    // world coordinate of this enemy
+    private float[] originalPosition = WorldUtil.colRowToWorldCords(this.getCol(),
+            this.getRow());
 
     public Enemy(float col, float row, String hitBoxPath, EnemyType enemyType, float speed, String biome,
             String textureName) {
@@ -113,32 +128,66 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
 
             float xDirection;
             float yDirection;
-
             double playerAngle = Math.toRadians(-mainCharacter.getPlayerDirectionAngle() + 90);
+            if(!hasFriend) {
+                if (distance(mainCharacter) < targetShift) {
+                    xDirection = mainCharacter.getPosition().getCol() - getBody().getPosition().x;
+                    yDirection = mainCharacter.getPosition().getRow() - getBody().getPosition().y;
+                } else {
+                    xDestination = mainCharacter.getPosition().getCol() + targetShift * Math.cos(playerAngle);
+                    yDestination = mainCharacter.getPosition().getRow() + targetShift * Math.sin(playerAngle);
 
-            if (distance(mainCharacter) < targetShift) {
-                xDirection = mainCharacter.getPosition().getCol() - getBody().getPosition().x;
-                yDirection = mainCharacter.getPosition().getRow() - getBody().getPosition().y;
+                    xDirection = (float) xDestination - getBody().getPosition().x;
+                    yDirection = (float) yDestination - getBody().getPosition().y;
+                }
+
+                getBody().setLinearVelocity(xDirection, yDirection);
+                getBody().setLinearVelocity(getBody().getLinearVelocity().limit(chasingSpeed));
+
+                this.position.set(getBody().getPosition().x, getBody().getPosition().y);
+
+                this.setCurrentState(AnimationRole.MOVE);
+
+                // if the player in attack range then attack player
+                if (distance(mainCharacter) < getAttackRange()) {
+                    setCurrentState(AnimationRole.ATTACK);
+                    dealDamage(mainCharacter);
+                    setAttacking(true);
+                    if (enemy == EnemyType.ABDUCTOR) {
+                        mainCharacter.isAbducted = true;
+                        assignFriend();
+                    }
+                }
             } else {
-                xDestination = mainCharacter.getPosition().getCol() + targetShift * Math.cos(playerAngle);
-                yDestination = mainCharacter.getPosition().getRow() + targetShift * Math.sin(playerAngle);
+                xDirection =
+                        friend.getPosition().getCol() - getBody().getPosition().x;
+                yDirection =
+                        friend.getPosition().getRow() - getBody().getPosition().y;
 
-                xDirection = (float) xDestination - getBody().getPosition().x;
-                yDirection = (float) yDestination - getBody().getPosition().y;
+                getBody().setLinearVelocity(xDirection, yDirection);
+                getBody().setLinearVelocity(getBody().getLinearVelocity().limit(chasingSpeed));
+
+                this.position.set(getBody().getPosition().x, getBody().getPosition().y);
+
+                this.setCurrentState(AnimationRole.MOVE);
+
+                mainCharacter.moveToEnemy(friend);
             }
+        }
+    }
 
-            getBody().setLinearVelocity(xDirection, yDirection);
-            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(chasingSpeed));
-
-            this.position.set(getBody().getPosition().x, getBody().getPosition().y);
-
-            this.setCurrentState(AnimationRole.MOVE);
-
-            // if the player in attack range then attack player
-            if (distance(mainCharacter) < getAttackRange()) {
-                setCurrentState(AnimationRole.ATTACK);
-                dealDamage(mainCharacter);
-                setAttacking(true);
+    /**
+     * Assigns the abductor a heavy friend for them to move to once they
+     * catch the player.
+     */
+    private void assignFriend(){
+        List<AbstractEntity> entities =
+                GameManager.get().getWorld().getEntities();
+        for (AbstractEntity e : entities) {
+            if (e instanceof Heavy){
+                friend = (Heavy) e;
+                hasFriend = true;
+                return;
             }
         }
     }
@@ -568,6 +617,10 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
             }
             if (getDeadSound() != null) {
                 SoundManager.playSound(getDeadSound());
+                if (enemy == EnemyType.ABDUCTOR) {
+                    mainCharacter.isAbducted = false;
+                }
+                this.destination = new HexVector(this.getCol(), this.getRow());
 
                 this.setDead(true);
                 logger.info("Enemy destroyed.");

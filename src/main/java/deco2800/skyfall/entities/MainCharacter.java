@@ -15,6 +15,7 @@ import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.buildings.DesertPortal;
 import deco2800.skyfall.buildings.ForestPortal;
 import deco2800.skyfall.buildings.MountainPortal;
+import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellCaster;
 import deco2800.skyfall.entities.spells.SpellFactory;
@@ -220,6 +221,10 @@ public class MainCharacter extends Peon
     // Is the camera locked onto the main character
     private boolean cameraLock = true;
 
+    // Directions used to make the player move to an enemy
+    float xDirection;
+    float yDirection;
+
     /*
      * Used for combat testing melee/range weapons. What number item slot the player
      * has pressed. e.g. 1 = test range weapon 2 = test melee weapon
@@ -247,6 +252,7 @@ public class MainCharacter extends Peon
     private boolean isHurt = false;
     private boolean isRecovering = false;
     private boolean isTexChanging = false;
+    public boolean isAbducted = false;
 
     /**
      * Item player is currently equipped with/holding.
@@ -1069,9 +1075,9 @@ public class MainCharacter extends Peon
         // Put specific collision logic here
     }
 
-    private Map<Direction, String> vehicleDirection = new EnumMap<>(Direction.class);
+    private Map<Direction, String> vehicleDirection = new HashMap<>();
 
-    private Map<Direction, String> vehicleDirection2 = new EnumMap<>(Direction.class);
+    private Map<Direction, String> vehicleDirection2 = new HashMap<>();
 
     private String vehicleType = null;
 
@@ -1380,6 +1386,9 @@ public class MainCharacter extends Peon
      * Moves the player based on current key inputs Called in onTick method
      */
     private void updatePosition() {
+        if (isAbducted) {
+            return;
+        }
         // Gets the players current position
         float xPos = position.getCol();
         float yPos = position.getRow();
@@ -1403,11 +1412,32 @@ public class MainCharacter extends Peon
         // If the player can move to the next tile process the movement
         if (checkTileMovement()) {
             this.processMovement();
+        } else {
+            recordVelHistory(0,0);
+            preventSliding(0,0);
+            getBody().applyForceToCenter(new Vector2(0, 0), true);
+            getBody().setLinearVelocity(getBody().getLinearVelocity().limit(maxSpeed));
+            updateVel();
         }
 
         // Updates the players position based on where their body is located
         Vector2 bodyPos = getBody().getPosition();
         this.position.set(bodyPos.x, bodyPos.y);
+    }
+
+    public void moveToEnemy(Enemy enemy) {
+
+        xDirection =
+                enemy.getPosition().getCol() - getBody().getPosition().x;
+        yDirection =
+                enemy.getPosition().getRow() - getBody().getPosition().y;
+
+        getBody().setLinearVelocity(xDirection, yDirection);
+        getBody().setLinearVelocity(getBody().getLinearVelocity().limit(maxSpeed));
+
+        this.position.set(getBody().getPosition().x, getBody().getPosition().y);
+
+        this.setCurrentState(AnimationRole.MOVE);
     }
 
     /**
