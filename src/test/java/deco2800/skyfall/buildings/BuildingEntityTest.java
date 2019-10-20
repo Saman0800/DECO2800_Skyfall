@@ -342,6 +342,8 @@ public class BuildingEntityTest {
 
     @Test
     public void getHealth() {
+        BuildingEntity building = new BuildingEntity(0, 0, 2, BuildingType.CABIN);
+        assertEquals(building.getHealth(), 0);
     }
 
     @Test

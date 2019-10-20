@@ -476,7 +476,7 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
 
     // @Override
     public String getName() {
-        return null;
+        return this.buildingType.getName();
     }
 
     /**
