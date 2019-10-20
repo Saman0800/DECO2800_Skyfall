@@ -170,6 +170,8 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
                 this.position.set(getBody().getPosition().x, getBody().getPosition().y);
 
                 this.setCurrentState(AnimationRole.MOVE);
+
+                mainCharacter.moveToEnemy(friend);
             }
         }
     }
