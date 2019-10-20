@@ -348,14 +348,22 @@ public class BuildingEntityTest {
 
     @Test
     public void setHealth() {
+        BuildingEntity building = new BuildingEntity(0, 0, 2, BuildingType.CABIN);
+        building.setHealth(5);
+        assertEquals(building.getHealth(), 5);
     }
 
     @Test
     public void setCollider() {
+        BuildingEntity building = new BuildingEntity(0, 0, 2, BuildingType.CABIN);
+        building.setCollider();
+        assertEquals(building.getCollider().getX(), 0.0, 0);
     }
 
     @Test
     public void getCollider() {
+        BuildingEntity building = new BuildingEntity(0, 0, 2, BuildingType.CABIN);
+        assertEquals(building.getCollider().getX(), 0.0, 0);
     }
 
     @Test
