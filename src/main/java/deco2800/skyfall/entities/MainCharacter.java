@@ -64,6 +64,7 @@ public class MainCharacter extends Peon
     public static final String PICK_AXE = "Pick Axe";
     public static final String HATCHET = "Hatchet";
     private static MainCharacter mainCharacterInstance = null;
+    private final FeedbackManager fm;
     private boolean residualFromPopUp = false;
 
     /**
@@ -327,6 +328,8 @@ public class MainCharacter extends Peon
         configureAnimations();
 
         spellCaster = new SpellCaster(this);
+        fm  =  GameManager.get().getManager(FeedbackManager.class);
+
     }
 
     /**
@@ -387,6 +390,7 @@ public class MainCharacter extends Peon
         configureAnimations();
 
         spellCaster = new SpellCaster(this);
+        fm  =  GameManager.get().getManager(FeedbackManager.class);
     }
 
     /**
@@ -457,8 +461,10 @@ public class MainCharacter extends Peon
     public boolean setEquippedItem(Item item) {
         if (item.isEquippable()) {
             this.equippedItem = item;
-            GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
-            GameManager.get().getManager(FeedbackManager.class).setFeedbackText(item.getName() + " equipped");
+            if (fm != null) {
+                fm.setFeedbackBarUpdate(true);
+                fm.setFeedbackText(item.getName() + " equipped");
+            }
             return true;
         } else {
             logger.warn("You can't equip {}.", item.getName());
