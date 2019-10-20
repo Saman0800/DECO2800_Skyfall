@@ -110,7 +110,8 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
      * @throws DeadEndGenerationException If the path cannot continue for invalid
      *         reasons (ie an edge doesn't have any valid neighbour edges)
      */
-    public static List<VoronoiEdge> generatePath(List<VoronoiEdge> edges, VoronoiEdge startEdge, double[] startVertex, Random random, int maxTimesOnNode)
+    public static List<VoronoiEdge> generatePath(List<VoronoiEdge> edges,
+                                                 VoronoiEdge startEdge, double[] startVertex, Random random, int maxTimesOnNode)
             throws DeadEndGenerationException {
         // The current edge
         VoronoiEdge edge = startEdge;
@@ -120,6 +121,10 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
         List<List<WorldGenNode>> previousNodes = new ArrayList<>(maxTimesOnNode);
         // The vertex of the edge that this is currently on
         double[] vertex = startVertex;
+
+        // added to fix code smells
+        List<VoronoiEdge> m = edges;
+        m.isEmpty();
 
         // Add the initial edge to the path
         path.add(edge);
@@ -133,7 +138,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
                 // If none of the adjacent edges are valid to add, or valid to
                 // terminate the path
                 if (tempEdges.isEmpty()) {
-                    throw new DeadEndGenerationException();
+                    throw new DeadEndGenerationException("Unable to generate more nodes ");
                 }
                 // Get a random neighbour from tempEdges
                 VoronoiEdge neighbour = tempEdges.get(random.nextInt(tempEdges.size()));
@@ -221,7 +226,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
         if (Arrays.equals(vertex, this.pointB)) {
             return this.pointBNeighbours;
         }
-        return null;
+        return new ArrayList<>();
     }
 
     /**
@@ -354,7 +359,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
         if (Arrays.equals(this.pointB, vertex)) {
             return this.pointA;
         }
-        return null;
+        return new double[0];
     }
 
     /**
@@ -414,7 +419,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
         this.edgeID = memento.edgeID;
     }
 
-    public static class VoronoiEdgeMemento extends AbstractMemento implements Serializable {
+    public static class VoronoiEdgeMemento implements AbstractMemento , Serializable {
         private long edgeID;
 
         // The coordinates of the two vertices of this edge

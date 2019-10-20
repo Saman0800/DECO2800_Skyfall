@@ -64,7 +64,7 @@ public class MainCharacter extends Peon
     public static final String PICK_AXE = "Pick Axe";
     public static final String HATCHET = "Hatchet";
     private static MainCharacter mainCharacterInstance = null;
-    private final FeedbackManager fm;
+    private static FeedbackManager fm;
     private boolean residualFromPopUp = false;
 
     /**
@@ -292,11 +292,16 @@ public class MainCharacter extends Peon
         this.setTexture(ANIMATION_MAIN_CHARACTER_E_ANIM_0);
         this.setHeight(1);
         this.setObjectName("MainPiece");
+        this.setRecovering(false);
         GameManager.getManagerFromInstance(InputManager.class).addKeyDownListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addKeyUpListener(this);
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
         this.petsManager = GameManager.getManagerFromInstance(PetsManager.class);
         this.inventories = GameManager.getManagerFromInstance(InventoryManager.class);
+        setUpCharacter();
+    }
+
+    private void setUpCharacter() {
         this.goldPouch = new HashMap<>();
 
         xInput = 0;
@@ -328,8 +333,6 @@ public class MainCharacter extends Peon
         configureAnimations();
 
         spellCaster = new SpellCaster(this);
-        fm  =  GameManager.get().getManager(FeedbackManager.class);
-
     }
 
     /**
@@ -460,6 +463,9 @@ public class MainCharacter extends Peon
      */
     public boolean setEquippedItem(Item item) {
         if (item.isEquippable()) {
+            if (!this.equippedItem.getName().equals(new EmptyItem().getName())) {
+                this.inventories.add(this.equippedItem);
+            }
             this.equippedItem = item;
             if (fm != null) {
                 fm.setFeedbackBarUpdate(true);
@@ -745,7 +751,7 @@ public class MainCharacter extends Peon
                 recoverTime = 0;
                 SoundManager.playSound(HURT_SOUND_NAME);
 
-                if (hurtTime > 400) {
+                if (hurtTime >= 400) {
                     setRecovering(true);
                 }
             }
@@ -762,6 +768,7 @@ public class MainCharacter extends Peon
             logger.info("Hurt ended");
             setHurt(false);
             setRecovering(true);
+            setTexChanging(true);
             hurtTime = 0;
         }
     }
@@ -918,7 +925,7 @@ public class MainCharacter extends Peon
                 QuestManager qm = GameManager.getManagerFromInstance(QuestManager.class);
 
                 ConstructionTable bs = (ConstructionTable) gmm.getPopUp(CONSTRUCTION_TABLE);
-                bs.build(GameManager.get().getWorld(), clickedPosition[0], clickedPosition[1]);
+                bs.build(GameManager.get().getWorld(), (int) clickedPosition[0], (int) clickedPosition[1]);
                 qm.addBuilding(bs.selectBuilding(bs.getBuildingID(), 0, 0).getBuildingType());
                 toBuild = false;
             }
@@ -1544,7 +1551,7 @@ public class MainCharacter extends Peon
      *
      * @return the player direction (units: degrees)
      */
-    private double getPlayerDirectionAngle() {
+    public double getPlayerDirectionAngle() {
         double val;
         if (xInput != 0 || yInput != 0) {
             val = Math.atan2(yInput, xInput);
@@ -1663,7 +1670,6 @@ public class MainCharacter extends Peon
         }
     }
 
-
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
 
@@ -1686,6 +1692,9 @@ public class MainCharacter extends Peon
         case 0:
             unlocked.add(new Hatchet());
             unlocked.add(new PickAxe());
+            unlocked.add(new Sword());
+            unlocked.add(new Bow());
+            unlocked.add(new Spear());
             unlocked.add(CASTLE);
             break;
         default:
@@ -2104,7 +2113,7 @@ public class MainCharacter extends Peon
         this.setHealth(memento.health);
     }
 
-    public static class MainCharacterMemento extends AbstractMemento implements Serializable {
+    public static class MainCharacterMemento implements AbstractMemento , Serializable {
         private long mainCharacterID;
         private int level;
         private int foodLevel;

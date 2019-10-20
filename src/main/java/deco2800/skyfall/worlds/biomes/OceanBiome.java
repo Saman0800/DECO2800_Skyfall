@@ -3,7 +3,6 @@ package deco2800.skyfall.worlds.biomes;
 import deco2800.skyfall.worlds.Tile;
 
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-import deco2800.skyfall.worlds.generation.perlinnoise.TileNoiseGenerator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,7 +47,7 @@ public class OceanBiome extends AbstractBiome {
         textures.add("ocean_3");
 
         // Perlin noise generation
-        new TileNoiseGenerator(getTiles(), random, 5, 160, 0.9, Tile::setPerlinValue);
+        // new TileNoiseGenerator(getTiles(), random, 5, 160, 0.9, Tile::setPerlinValue)
 
         // Remap the Perlin values to be a linear combination of the noise and the distance from the coast.
         ArrayList<Tile> borderTiles =

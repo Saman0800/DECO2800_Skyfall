@@ -1,10 +1,7 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.enemies.Abductor;
-import deco2800.skyfall.entities.enemies.Enemy;
-import deco2800.skyfall.entities.enemies.Heavy;
-import deco2800.skyfall.entities.enemies.Scout;
+import deco2800.skyfall.entities.enemies.*;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.observers.KeyTypedObserver;
 
@@ -40,7 +37,7 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 
 	/**
 	 * Spawns enemy on player location
-	 * @param unsetMessage the recieved message, must start /spawn_enemy
+	 * @param unsentMessage the recieved message, must start /spawn_enemy
 	 */
 	private String handleSpawnEnemy(String unsentMessage) {
 		String[] split = unsentMessage.split("@", 2);
@@ -50,15 +47,19 @@ public class OnScreenMessageManager extends AbstractManager implements KeyTypedO
 		Enemy enemyToSpawn = null;
 		float row = MainCharacter.getInstance().getRow();
 		float col = MainCharacter.getInstance().getCol();
+		String biome = "Forest";
 		switch (split[1]) {
 			case "abductor":
-				enemyToSpawn = new Abductor(col, row, 1.0f, "Forest");
+				enemyToSpawn = new Abductor(col, row, 1.0f, biome);
 				break;
 			case "heavy":
-				enemyToSpawn = new Heavy(col, row, 1.0f, "Forest");
+				enemyToSpawn = new Heavy(col, row, 1.0f, biome);
 				break;
 			case "scout":
-				enemyToSpawn = new Scout(col, row, 1.0f, "Forest");
+				enemyToSpawn = new Scout(col, row, 1.0f, biome);
+				break;
+			case "medium":
+				enemyToSpawn = new Medium(col, row, 1.0f, biome);
 				break;
 			default:
 				return "Invalid option for spawning";

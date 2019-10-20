@@ -1,13 +1,14 @@
 package deco2800.skyfall.entities.enemies;
 
+import deco2800.skyfall.util.HexVector;
+
 /*An interface required for spawning abstract entities
 with SpawningManager
  */
 public interface Spawnable<E extends Enemy> {
     /**
-     * Required for spawning
-     * returns a new instance, that is a deep copy
-     * should be at specified position
+     * Required for spawning returns a new instance, that is a deep copy should be
+     * at specified position
      *
      * @param row the row position of the new enemy
      * @param col the col position of the new enemy
@@ -15,5 +16,5 @@ public interface Spawnable<E extends Enemy> {
      */
     public E newInstance(float row, float col);
 
-
+    public E newInstance(HexVector spawnPos);
 }

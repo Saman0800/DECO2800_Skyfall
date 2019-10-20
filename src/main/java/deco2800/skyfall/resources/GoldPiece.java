@@ -66,9 +66,13 @@ public class GoldPiece extends StaticEntity {
 
 
         // update the gold piece value using the randomly generated index
-        GoldPiece.nextValue = goldValues.get(index);
+        GoldPiece.setNextValue(goldValues.get(index));
 
         this.entityType = "GoldPiece";
+    }
+
+    private static void setNextValue(int amt) {
+        GoldPiece.nextValue = amt;
     }
 
     /**
