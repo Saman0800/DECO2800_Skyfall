@@ -20,8 +20,6 @@ public class GameManager {
     private int tilesRendered;
     private int tilesCount;
 
-    private boolean isTutorial = false;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
 
     private static GameManager instance = null;
@@ -192,21 +190,6 @@ public class GameManager {
         this.showPath = !showPath;
     }
 
-//    /**
-//     * Returns true if this is a tutorial world.
-//     *
-//     * @return The isTutorial boolean
-//     */
-//    public boolean getIsTutorial() {
-//        return this.isTutorial;
-//    }
-//
-//    /**
-//     * Sets the is tutorial variable for this class.
-//     */
-//    public void setIsTutorial(boolean isTutorial) {
-//        this.isTutorial = isTutorial;
-//    }
 
     /**
      * Returns true if this is a tutorial world.
