@@ -1311,13 +1311,33 @@ public class MainCharacter extends Peon
      * @param goldValue The value of the gold piece to be removed from the pouch.
      */
     public void removeGold(Integer goldValue) {
-        // if this gold value does not exist in the pouch
-        if (goldPouch.containsKey(goldValue)) {
-            if (goldPouch.get(goldValue) > 1) {
-                goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
-            } else {
-                goldPouch.remove(goldValue);
-            }
+        int totalGold = getGoldPouchTotalValue();
+
+        if(getGoldPouchTotalValue() >= goldValue){
+            totalGold -= goldValue;
+
+            int goldCount = totalGold;
+
+            int req100 = goldCount / 100;
+            goldCount -= req100 * 100;
+
+            int req50 = goldCount / 50;
+            goldCount -= req50 * 50;
+
+            int req10 = goldCount / 10;
+            goldCount -= req10 * 10;
+
+            int req5 = goldCount / 5;
+
+            goldPouch.clear();
+            goldPouch.put(100, req100);
+            goldPouch.put(50, req50);
+            goldPouch.put(10, req10);
+            goldPouch.put(5, req5);
+
+
+        }else{
+            logger.warn("Not enough gold!");
         }
     }
 
