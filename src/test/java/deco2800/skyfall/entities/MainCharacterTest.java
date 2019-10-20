@@ -1,32 +1,31 @@
 package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Input;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.weapons.EmptyItem;
-import deco2800.skyfall.animation.AnimationLinker;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
+import deco2800.skyfall.resources.items.AloeVera;
+import deco2800.skyfall.resources.items.Apple;
+import deco2800.skyfall.resources.items.Berry;
 import deco2800.skyfall.resources.items.Stone;
-import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
-
 import org.junit.*;
-import org.lwjgl.Sys;
-import org.mockito.Mock;
-
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -35,11 +34,9 @@ import java.util.HashMap;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class,
@@ -352,21 +349,54 @@ public class MainCharacterTest {
     }
 
     /**
-     * Test key code
+     * Test the notifyKeyDown and notifyKeyUp methods for handling player movement
      */
     @Test
-    public void notifyKeyDownTest() {
+    public void movementKeyBoardTest() {
+        int currentXInput = 0;
+        int currentYInput = 0;
         GameManager.setPaused(false);
+
+        // Test press W
         testCharacter.notifyKeyDown(Input.Keys.W);
-        assertEquals(1, testCharacter.getYInput());
-        testCharacter.notifyKeyDown(Input.Keys.A);
-        assertEquals(-1, testCharacter.getXInput());
+        currentYInput += 1;
+        assertEquals(currentYInput, testCharacter.getYInput());
+
+        // Test release W
+        testCharacter.notifyKeyUp(Input.Keys.W);
+        currentYInput -= 1;
+        assertEquals(currentYInput, testCharacter.getYInput());
+
+        // Test press S
         testCharacter.notifyKeyDown(Input.Keys.S);
+        currentYInput -= 1;
+        assertEquals(currentYInput, testCharacter.getYInput());
+
+        // Test release S
+        testCharacter.notifyKeyUp(Input.Keys.S);
+        currentYInput += 1;
+        assertEquals(currentYInput, testCharacter.getYInput());
+
+        // Test press D
+        testCharacter.notifyKeyDown(Input.Keys.W);
+        currentXInput += 1;
+        assertEquals(currentXInput, testCharacter.getYInput());
+
+        // Test release D
+        testCharacter.notifyKeyUp(Input.Keys.W);
+        currentXInput -= 1;
+        assertEquals(currentXInput, testCharacter.getYInput());
+
+        // Test press A
         testCharacter.notifyKeyDown(Input.Keys.S);
-        assertEquals(-1, testCharacter.getYInput());
-        testCharacter.notifyKeyDown(Input.Keys.D);
-        testCharacter.notifyKeyDown(Input.Keys.D);
-        assertEquals(1, testCharacter.getXInput());
+        currentXInput -= 1;
+        assertEquals(currentXInput, testCharacter.getYInput());
+
+        // Test release A
+        testCharacter.notifyKeyUp(Input.Keys.S);
+        currentXInput += 1;
+        assertEquals(currentXInput, testCharacter.getYInput());
+
         testCharacter.notifyKeyDown(Input.Keys.SHIFT_LEFT);
         assertTrue(testCharacter.getIsSprinting());
     }
@@ -794,6 +824,22 @@ public class MainCharacterTest {
 
         assertEquals(testCharacter, gameMenuManager.getMainCharacter());
         assertEquals(gameMenuManager.getPopUp("gameOverTable"), gameMenuManager.getCurrentPopUp());
+    }
+
+    /**
+     * Test notifyKeyDown method
+     * Except the movement code as it is tested seperately
+     */
+    @Test
+    public void notifyKeyDownTest(){
+        testCharacter.notifyKeyDown(Input.Keys.Z);
+        assertEquals(SpellType.FLAME_WALL, testCharacter.spellSelected);
+
+        testCharacter.notifyKeyDown(Input.Keys.X);
+        assertEquals(SpellType.SHIELD, testCharacter.spellSelected);
+
+        testCharacter.notifyKeyDown(Input.Keys.C);
+        assertEquals(SpellType.TORNADO, testCharacter.spellSelected);
     }
 
     @After
