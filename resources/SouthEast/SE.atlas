@@ -1,0 +1,33 @@
+
+SE.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+sand_car_front_right_with_player1
+  rotate: false
+  xy: 0, 0
+  size: 723, 458
+  orig: 723, 458
+  offset: 0, 0
+  index: -1
+sand_car_front_right_with_player2
+  rotate: false
+  xy: 725, 0
+  size: 723, 458
+  orig: 723, 458
+  offset: 0, 0
+  index: -1
+sand_car_front_right_with_player3
+  rotate: false
+  xy: 1450, 0
+  size: 723, 458
+  orig: 723, 458
+  offset: 0, 0
+  index: -1
+sand_car_front_right_with_player
+  rotate: false
+  xy: 2175, 1
+  size: 722, 457
+  orig: 722, 457
+  offset: 0, 0
+  index: -1

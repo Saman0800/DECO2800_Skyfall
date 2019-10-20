@@ -213,17 +213,21 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bikeNORTH", new Texture("resources/Bike/back-side-player.png"));
             textureMap.put("bikeWEST", new Texture("resources/Bike/leftside-player.png"));
             textureMap.put("bikeEAST", new Texture("resources/Bike/rightside-player.png"));
+            textureMap.put("bikeNORTHEAST", new Texture("resources/Bike/bike RB1.png"));
+            textureMap.put("bikeNORTHWEST", new Texture("resources/Bike/bike LB1.png"));
+            textureMap.put("bikeSOUTHWEST", new Texture("resources/Bike/bike RF1.png"));
+            textureMap.put("bikeSOUTHEAST", new Texture("resources/Bike/bike LF1.png"));
 
             // Sand Car
             textureMap.put("sand_car", new Texture("resources/sand_car_image/sand_car_right.png"));
-            textureMap.put("sand_car_SOUTH", new Texture("resources/sand_car_image/sand_car_front_with_player.png"));
-            textureMap.put("sand_car_NORTH", new Texture("resources/sand_car_image/sand_car_back.png"));
-            textureMap.put("sand_car_WEST", new Texture("resources/sand_car_image/sand_car_left_with_player.png"));
-            textureMap.put("sand_car_EAST", new Texture("resources/sand_car_image/sand_car_right_with_player.png"));
-            textureMap.put("sand_car_SOUTHWEST", new Texture("resources/sand_car_image/sand_car_front_left_with_player.png"));
-            textureMap.put("sand_car_SOUTHEAST", new Texture("resources/sand_car_image/sand_car_front_right_with_player.png"));
-            textureMap.put("sand_car_NORTHEAST", new Texture("resources/sand_car_image/sand_car_back_right_with_player.png"));
-            textureMap.put("sand_car_NORTHWEST", new Texture("resources/sand_car_image/sand_car_back_left_with_player.png"));
+            textureMap.put("sand_car_SOUTH", new Texture("resources/resized_sand_car/sand_car_front_with_player.png"));
+            textureMap.put("sand_car_NORTH", new Texture("resources/resized_sand_car/sand_car_back.png"));
+            textureMap.put("sand_car_WEST", new Texture("resources/resized_sand_car/sand_car_left_with_player.png"));
+            textureMap.put("sand_car_EAST", new Texture("resources/resized_sand_car/sand_car_right_with_player.png"));
+            textureMap.put("sand_car_SOUTHWEST", new Texture("resources/resized_sand_car/sand_car_front_left_with_player.png"));
+            textureMap.put("sand_car_SOUTHEAST", new Texture("resources/resized_sand_car/sand_car_front_right_with_player.png"));
+            textureMap.put("sand_car_NORTHEAST", new Texture("resources/resized_sand_car/sand_car_back_right_with_player.png"));
+            textureMap.put("sand_car_NORTHWEST", new Texture("resources/resized_sand_car/sand_car_back_left_with_player.png"));
 
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));

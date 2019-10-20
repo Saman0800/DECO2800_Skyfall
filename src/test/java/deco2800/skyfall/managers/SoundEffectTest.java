@@ -102,4 +102,10 @@ public class SoundEffectTest {
             // exception caught
         }
     }
+
+    @Test
+    public void testSetVolume() {
+        SoundManager.setSoundVolume(10);
+        assertEquals(SoundManager.getSoundVolume(), 0.1, 0.0001);
+    }
 }

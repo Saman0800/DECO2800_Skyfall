@@ -13,18 +13,14 @@ public abstract class AbstractVehicle extends Peon
     private int health;
     private boolean isTaken;
     private String name;
+    private boolean isHurt = false;
 
-    public AbstractVehicle(float col, float row, String name) {
-        this.setRow(row);
-        this.setCol(col);
-        this.name = name;
+    public AbstractVehicle(float col, float row, String texturename) {
+        super(row, col, 0.2f, texturename, 10);
+        this.name = texturename;
         this.isTaken = false;
-    }
-
-    public AbstractVehicle(float row, float col, String texturename, int health) {
-        super(row, col, 0.2f, texturename, health);
+        this.setHealth(health);
         this.setTexture(texturename);
-        this.isTaken = false;
     }
 
     public String getName() {
@@ -82,7 +78,8 @@ public abstract class AbstractVehicle extends Peon
 
     @Override
     public HexVector getCoords() {
-        return new HexVector(this.getCol(),this.getRow());
+        return this.position;
+        //return new HexVector(this.getCol(),this.getRow());
     }
 
     @Override
@@ -113,7 +110,17 @@ public abstract class AbstractVehicle extends Peon
 
     @Override
     public void takeDamage(int damage) {
-        // no damage taken.
+        setGetHurt(true);
+        health -= damage;
+    }
+
+    public boolean getHurt() {
+        return isHurt;
+    }
+
+
+    public void setGetHurt(boolean isHurt) {
+        this.isHurt = isHurt;
     }
 
     @Override

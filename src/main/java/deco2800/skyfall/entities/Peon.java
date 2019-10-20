@@ -46,7 +46,7 @@ public abstract class Peon extends AgentEntity implements Tickable {
 	 * Peon constructor with parameters
      */
 	public Peon(float row, float col, float speed, String name, int health) {
-		super(row, col, 3, speed);
+		super(col, row, 3, speed);
 		this.setTexture(CHARACTER);
 
 		if (name == null || name.equals("")) {

@@ -1,0 +1,38 @@
+
+RF.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bike RF1
+  rotate: false
+  xy: 0, 0
+  size: 702, 1157
+  orig: 702, 1157
+  offset: 0, 0
+  index: -1
+bike RF2
+  rotate: false
+  xy: 704, 0
+  size: 702, 1157
+  orig: 702, 1157
+  offset: 0, 0
+  index: -1
+
+RF2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bike RF3
+  rotate: false
+  xy: 0, 0
+  size: 702, 1157
+  orig: 702, 1157
+  offset: 0, 0
+  index: -1
+bike RF4
+  rotate: false
+  xy: 704, 0
+  size: 702, 1157
+  orig: 702, 1157
+  offset: 0, 0
+  index: -1
