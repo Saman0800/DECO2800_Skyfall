@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.weapons.EmptyItem;
+import deco2800.skyfall.gamemenu.popupmenu.InventoryTable;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.TextureManager;
@@ -34,6 +36,8 @@ public class GameMenuBar2 extends AbstractUIElement {
     private ImageButton build;
     // Current item selected in inventory user interface
     private String quickAccessSelected = "";
+    //String Constant
+    private static final String QA_SELECTED = "-quSelected";
 
     private ImageButton equipInactive;
     private ImageButton equipActive;
@@ -44,6 +48,8 @@ public class GameMenuBar2 extends AbstractUIElement {
     private InventoryManager inventory;
     // Main character in the game
     private MainCharacter mainCharacter;
+
+    private boolean isInventoryTableOn;
 
     /**
      * Constructs the right side of the menu including equipped table which shows
@@ -72,7 +78,6 @@ public class GameMenuBar2 extends AbstractUIElement {
     public void updatePosition() {
         equippedTable.setPosition(gmm.getTopRightX() - 170, gmm.getTopLeftY() - 130);
         quickAccessPanel.setPosition(gmm.getTopRightX() - 170, gmm.getTopRightY() - 650);
-        // t.setHeight(stage.getCamera().viewportHeight / 2);
         sideBar.setPosition(gmm.getTopRightX() - 180, gmm.getTopRightY() - 520);
         build.setPosition(gmm.getBottomRightX() - 170, gmm.getBottomRightY());
     }
@@ -87,7 +92,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         setQuickAccessPanel();
 
         build = new ImageButton(gmm.generateTextureRegionDrawableObject("build"));
-        build.setSize(150, 295f / 316 * 150);
+        build.setSize(150, 150);
         build.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -107,7 +112,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         equippedTable.setBackground(gmm.generateTextureRegionDrawableObject("equipped_bar"));
         equippedTable.setSize(150, 100);
         // Equipped item text
-        equipped = new Label("Nothing", skin, "white-text");
+        equipped = new Label(new EmptyItem().getName(), skin, "white-text");
         equipped.setFontScale(0.7f);
         equippedTable.add(equipped).padBottom(10);
         stage.addActor(equippedTable);
@@ -127,7 +132,7 @@ public class GameMenuBar2 extends AbstractUIElement {
         this.equipActive.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!quickAccessSelected.isEmpty()) {
+                if (!quickAccessSelected.isEmpty() && !isInventoryTableOn) {
                     Item item = inventory.drop(quickAccessSelected);
                     if (mainCharacter.setEquippedItem(item)) {
                         setEquipped(quickAccessSelected);
@@ -156,9 +161,9 @@ public class GameMenuBar2 extends AbstractUIElement {
         this.removeActive.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!quickAccessSelected.isEmpty()) {
+                if (!quickAccessSelected.isEmpty() && !isInventoryTableOn) {
                     inventory.quickAccessRemove(quickAccessSelected);
-                    quickAccessSelected = "Nothing";
+                    quickAccessSelected = new EmptyItem().getName();
                     removeQuickAccessPanel();
                     setQuickAccessPanel();
                 }
@@ -183,6 +188,8 @@ public class GameMenuBar2 extends AbstractUIElement {
 
         stage.addActor(quickAccessPanel);
         stage.addActor(sideBar);
+        quickAccessPanel.setZIndex(1);
+        sideBar.setZIndex(2);
     }
 
     public void removeQuickAccessPanel() {
@@ -198,64 +205,25 @@ public class GameMenuBar2 extends AbstractUIElement {
 
         int size = 80;
 
-        String[] weapons = { "axe", "box", "spear", "sword" };
-
         float sideBarWidth = 35;
 
         // Places each item to quick access
         for (Map.Entry<String, Integer> entry : quickAccess.entrySet()) {
             Image selected = new Image(gmm.generateTextureRegionDrawableObject("selected"));
-            selected.setName(entry.getKey() + "-qaSelected");
+            selected.setName(entry.getKey() + QA_SELECTED);
             selected.setSize((float) size + 15, (float) size + 15);
             selected.setPosition((float) -7.5, (float) -7.5);
             selected.setVisible(false);
 
             String weaponName = entry.getKey();
-            for (String weapon : weapons) {
-                if (weapon.equals(entry.getKey())) {
-                    weaponName = entry.getKey() + "_tex";
-                }
-            }
+
             Table iconCell = new Table();
             iconCell.setName("iconCell");
-            ImageButton icon = new ImageButton(gmm.generateTextureRegionDrawableObject(weaponName + "_inv"));
+            ImageButton icon =
+                    new ImageButton(gmm.generateTextureRegionDrawableObject(weaponName + "_inv"));
             icon.setName(entry.getKey());
 
-            icon.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (!quickAccessSelected.equals(icon.getName())) {
-                        quickAccessSelected = icon.getName();
-                    } else {
-                        quickAccessSelected = "Nothing";
-                    }
-
-                    Actor selected = stage.getRoot().findActor(icon.getName() + "-qaSelected");
-
-                    if (selected.isVisible()) {
-                        selected.setVisible(false);
-                        setButtonsActive(false);
-
-                    } else {
-                        for (Actor actor : quickAccessPanel.getChildren()) {
-                            if (actor.getName() != null && actor.getName().equals("iconCell")
-                                    && actor instanceof Table) {
-                                Table iconCell = (Table) actor;
-
-                                for (Actor iconActor : iconCell.getChildren()) {
-                                    String name = iconActor.getName();
-                                    if (name != null && name.contains("-qaSelected")) {
-                                        iconActor.setVisible(false);
-                                    }
-                                }
-                            }
-                        }
-
-                        selected.setVisible(true);
-                        setButtonsActive(true);
-                    }
-                }
-            });
+            createListener(icon);
 
             icon.setSize(size, size);
             iconCell.addActor(selected);
@@ -276,9 +244,54 @@ public class GameMenuBar2 extends AbstractUIElement {
         }
     }
 
+    private void createListener(ImageButton icon) {
+        icon.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (isInventoryTableOn) {
+                    return;
+                }
+                if (!quickAccessSelected.equals(icon.getName())) {
+                    quickAccessSelected = icon.getName();
+                } else {
+                    quickAccessSelected = new EmptyItem().getName();
+                }
+
+                Actor selected = stage.getRoot().findActor(icon.getName() + QA_SELECTED);
+
+                if (selected.isVisible()) {
+                    selected.setVisible(false);
+                    setButtonsActive(false);
+
+                } else {
+                    formatActors();
+
+                    selected.setVisible(true);
+                    setButtonsActive(true);
+                }
+            }
+        });
+    }
+
+    private void formatActors() {
+        for (Actor actor : quickAccessPanel.getChildren()) {
+            if (actor.getName() != null && actor.getName().equals("iconCell")
+                    && actor instanceof Table) {
+                Table iconCell = (Table) actor;
+
+                for (Actor iconActor : iconCell.getChildren()) {
+                    String name = iconActor.getName();
+                    if (name != null && name.contains(QA_SELECTED)) {
+                        iconActor.setVisible(false);
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Sets the buttons in the inventory pop up to active or inactive forms
-     * 
+     *
      * @param active boolean whether buttons are active
      */
     private void setButtonsActive(boolean active) {
@@ -286,7 +299,7 @@ public class GameMenuBar2 extends AbstractUIElement {
             removeInactive.setVisible(false);
             removeActive.setVisible(true);
 
-            if (Boolean.TRUE.equals(inventory.getItemInstance(quickAccessSelected).isEquippable())) {
+            if (inventory.getItemInstance(quickAccessSelected).isEquippable()) {
                 equipActive.setVisible(true);
                 equipInactive.setVisible(false);
             }
@@ -319,6 +332,11 @@ public class GameMenuBar2 extends AbstractUIElement {
     @Override
     public void update() {
         super.update();
+        if (gmm.getCurrentPopUp() instanceof InventoryTable) {
+            isInventoryTableOn = true;
+        } else {
+            isInventoryTableOn = false;
+        }
         setEquipped(gmm.getMainCharacter().getEquippedItem().getName());
     }
 }

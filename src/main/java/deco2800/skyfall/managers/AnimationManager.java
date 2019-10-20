@@ -67,7 +67,6 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("SCOUTMoveSE", "enemyScout_Move_SE", 170, 276, 0.2f);
         this.generateAnimationObject("SCOUTMoveSW", "enemyScout_Move_SW", 169, 277, 0.2f);
         this.generateAnimationObject("SCOUTMoveNW", "enemyScout_Move_NW", 175, 278, 0.2f);
-
         this.generateAnimationObject("SCOUTAttackN", "enemyScout_Attack_N", 283, 299, 0.2f);
         this.generateAnimationObject("SCOUTAttackS", "enemyScout_Attack_S", 284, 300, 0.2f);
         this.generateAnimationObject("SCOUTAttackE", "enemyScout_Attack_E", 277, 300, 0.2f);
@@ -94,7 +93,6 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("HEAVYMoveSE", "enemyHeavy_Move_SE", 221, 349, 0.13f);
         this.generateAnimationObject("HEAVYMoveSW", "enemyHeavy_Move_SW", 221, 352, 0.13f);
         this.generateAnimationObject("HEAVYMoveNW", "enemyHeavy_Move_NW", 220, 353, 0.13f);
-
         this.generateAnimationObject("HEAVYAttackN", "enemyHeavy_Attack_N", 220, 341, 0.2f);
         this.generateAnimationObject("HEAVYAttackS", "enemyHeavy_Attack_S", 223, 341, 0.2f);
         this.generateAnimationObject("HEAVYAttackE", "enemyHeavy_Attack_E", 221, 342, 0.2f);
@@ -103,7 +101,6 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("HEAVYAttackSE", "enemyHeavy_Attack_SE", 220, 348, 0.2f);
         this.generateAnimationObject("HEAVYAttackSW", "enemyHeavy_Attack_SW", 217, 347, 0.2f);
         this.generateAnimationObject("HEAVYAttackNW", "enemyHeavy_Attack_NW", 215, 341, 0.2f);
-
         this.generateAnimationObject("HEAVYDamageN", "enemyHeavy_Damage_N", 225, 341, 0.2f);
         this.generateAnimationObject("HEAVYDamageS", "enemyHeavy_Damage_S", 225, 341, 0.2f);
         this.generateAnimationObject("HEAVYDamageE", "enemyHeavy_Damage_E", 224, 342, 0.2f);
@@ -112,6 +109,7 @@ public class AnimationManager extends AbstractManager {
         this.generateAnimationObject("HEAVYDamageSE", "enemyHeavy_Damage_SE", 224, 341, 0.2f);
         this.generateAnimationObject("HEAVYDamageSW", "enemyHeavy_Damage_SW", 227, 347, 0.2f);
         this.generateAnimationObject("HEAVYDamageNW", "enemyHeavy_Damage_NW", 224, 341, 0.2f);
+
         this.generateAnimationObject("enemyDie", "enemyDie", 369, 357, 0.4f);
 
         // Main Character

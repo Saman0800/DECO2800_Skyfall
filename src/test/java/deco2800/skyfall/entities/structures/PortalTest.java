@@ -58,68 +58,6 @@ public class PortalTest {
     }
 
     @Test
-    public void initialiselockedBiomes() {
-        MainCharacter character = new MainCharacter(1, 1, 1, "character", 10);
-        ArrayList<String> lockedBiomes = new ArrayList<>();
-
-        lockedBiomes.add("desert");
-        lockedBiomes.add("mountain");
-        lockedBiomes.add("volcanic_mountains");
-
-        assertEquals(lockedBiomes, character.getlockedBiomes());
-    }
-
-    @Test
-    public void unlockBiome() {
-        MainCharacter character = new MainCharacter(1, 1, 1, "character", 10);
-        ArrayList<String> lockedBiomes = new ArrayList<>();
-
-        lockedBiomes.add("mountain");
-        lockedBiomes.add("volcanic_mountains");
-
-        assertNotEquals(lockedBiomes, character.getlockedBiomes());
-
-        character.unlockBiome("desert");
-        assertEquals(lockedBiomes, character.getlockedBiomes());
-    }
-
-
-    @Test
-    public void teleportUnlockBiomes() {
-        MainCharacter character = new MainCharacter(1,1,1, "character", 10);
-        when(save.getMainCharacter()).thenReturn(character);
-        save.setMainCharacter(character);
-        character.setSave(save);
-        ArrayList<String> lockedBiomes = new ArrayList<>();
-
-        lockedBiomes.add("mountain");
-        lockedBiomes.add("volcanic_mountains");
-
-        assertNotEquals(lockedBiomes, character.getlockedBiomes());
-
-        ForestPortal forestPortal = new ForestPortal(2,2,1);
-        forestPortal.teleport(save);
-
-        assertEquals(lockedBiomes, character.getlockedBiomes());
-
-        lockedBiomes.remove("mountain");
-        assertNotEquals(lockedBiomes, character.getlockedBiomes());
-
-        DesertPortal desertPortal = new DesertPortal(2,2,1);
-        desertPortal.teleport(save);
-
-        assertEquals(lockedBiomes, character.getlockedBiomes());
-
-        lockedBiomes.remove("volcanic_mountains");
-        assertNotEquals(lockedBiomes, character.getlockedBiomes());
-
-        MountainPortal mountainPortal = new MountainPortal(2,2,1);
-        mountainPortal.teleport(save);
-
-        assertEquals(lockedBiomes, character.getlockedBiomes());
-    }
-
-    @Test
     public void testForestPortal() {
         AbstractPortal portal = new ForestPortal(1, 1, 1);
         assertEquals("desert", portal.getNext());

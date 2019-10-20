@@ -25,7 +25,7 @@ public class DesertEnvironment extends AbstractEnvironment {
 
     private void setupParams() {
         this.setObjectName(ENTITY_ID_STRING);
-        this.entityType = "Desert_Environment";
+        this.entityType = ENTITY_ID_STRING;
     }
 
     /**
