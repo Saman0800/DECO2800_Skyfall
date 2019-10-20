@@ -436,7 +436,7 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
      */
     // @Override
     public int getRequiredWood() {
-        return 1;
+        return this.buildingType.getRequiredWood();
     }
 
     /**
@@ -446,7 +446,7 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
      */
     // @Override
     public int getRequiredStone() {
-        return 30;
+        return this.buildingType.getRequiredStone();
     }
 
     /**
@@ -456,7 +456,7 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
      */
     // @Override
     public int getRequiredMetal() {
-        return 10;
+        return this.buildingType.getRequiredMetal();
     }
 
     /**
@@ -468,9 +468,9 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
     // @Override
     public Map<String, Integer> getAllRequirements() {
 
-        buildCost.put("Wood", 50);
-        buildCost.put("Stone", 30);
-        buildCost.put("Metal", 10);
+        buildCost.put("Wood", this.buildingType.getRequiredWood());
+        buildCost.put("Stone", this.buildingType.getRequiredStone());
+        buildCost.put("Metal", this.buildingType.getRequiredMetal());
         return buildCost;
     }
 
