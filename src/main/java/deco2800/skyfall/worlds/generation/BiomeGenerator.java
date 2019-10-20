@@ -112,6 +112,11 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         this.noLakes = worldParameters.getNumOfLakes();
         this.noRivers = worldParameters.getNoRivers();
         this.lakeSizes = worldParameters.getLakeSizesArray();
+
+        // This doesn't actually do anything, but it should remove an erroneous code smell; because `nodeIsFree` is only
+        // used in lambdas, it doesn't get recognised as being used outside of the inner class by SonarQube, so it is
+        // used here to nullify that.
+        nodeIsFree(nodes.get(0));
     }
 
     /**
@@ -204,7 +209,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
                 // Pick a random point on the border to start the next biome from.
                 WorldGenNode node = selectWeightedRandomNode(borderNodes, random);
                 ArrayList<WorldGenNode> startNodeCandidates = node.getNeighbours().stream()
-                        .filter(BiomeGenerator.this::nodeIsFree)
+                        .filter(this::nodeIsFree)
                         .collect(Collectors.toCollection(ArrayList::new));
                 WorldGenNode startNode = startNodeCandidates.get(random.nextInt(startNodeCandidates.size()));
                 biome.addNode(startNode);
