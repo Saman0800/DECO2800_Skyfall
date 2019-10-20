@@ -385,8 +385,17 @@ public class GameScreen implements Screen, KeyDownObserver {
         cameraDebug.update();
     }
 
+    /**
+     * Disposes of assets etc when the rendering system is stopped.
+     */
     @Override
-    public void pause() {
+    public void dispose() {
+        // Don't need this at the moment
+        System.exit(0);
+    }
+
+    @Override
+    public void hide() {
         // do nothing
     }
 
@@ -396,17 +405,8 @@ public class GameScreen implements Screen, KeyDownObserver {
     }
 
     @Override
-    public void hide() {
+    public void pause() {
         // do nothing
-    }
-
-    /**
-     * Disposes of assets etc when the rendering system is stopped.
-     */
-    @Override
-    public void dispose() {
-        // Don't need this at the moment
-        System.exit(0);
     }
 
     @Override
