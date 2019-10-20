@@ -44,7 +44,7 @@ public class IceWhitebear extends AbstractPet implements Animatable, Harvestable
     @Override
     public List<AbstractEntity> harvest(Tile tile) {
         List<AbstractEntity> abstractEntityList = new ArrayList<>();
-        Whitebear whitebear = new Whitebear(-2, 0, mc);
+        Whitebear whitebear = new Whitebear(0, 0, mc);
         whitebear.setDomesticated(false);
         abstractEntityList.add(whitebear);
         return abstractEntityList;

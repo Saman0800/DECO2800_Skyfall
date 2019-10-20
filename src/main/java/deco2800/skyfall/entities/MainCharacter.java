@@ -1406,6 +1406,8 @@ public class MainCharacter extends Peon
         if (tile != null && (tile.getTextureName().contains("water") || tile.getTextureName().contains("lake")
                 || tile.getTextureName().contains("ocean")) && !canSwim) {
             valid = false;
+
+            getBody().setLinearVelocity(getBody().getLinearVelocity().scl(-0.1f));
         }
 
         return valid;
