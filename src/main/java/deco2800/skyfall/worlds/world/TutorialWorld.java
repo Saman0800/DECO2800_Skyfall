@@ -16,9 +16,4 @@ public class TutorialWorld extends World implements TouchDownObserver {
     public TutorialWorld(WorldParameters worldParameters) {
         super(worldParameters);
     }
-
-    @Override
-    public void onTick(long i) {
-        super.onTick(i);
-    }
 }
