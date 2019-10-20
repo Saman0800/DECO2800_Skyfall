@@ -29,6 +29,8 @@ public class EnemySpawnTable implements TimeObserver {
     // Logger for tracking enemy information
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private static Random rand = new Random();
+
     /**
      * The radius in the which the enemies may spawn in
      */
@@ -287,7 +289,7 @@ public class EnemySpawnTable implements TimeObserver {
             int enemiesPlaced = 0;
 
             while (tileIter.hasNext() && (enemiesPlaced <= numberToSpawn)) {
-                place_enemy_into_world(tileIter);
+                enemiesPlaced += place_enemy_into_world(tileIter);
             }
         }
     }

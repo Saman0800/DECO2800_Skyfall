@@ -218,17 +218,21 @@ public class Renderer3D implements Renderer {
             } else {
                 if (!(entity instanceof Animatable)) {
                     renderAbstractEntity(batch, entity, entityWorldCoord, tex);
-                } else {
-                    if (entity instanceof MainCharacter) {
-                        if (((MainCharacter) entity).isHurt() || ((MainCharacter) entity).isDead()) {
-                            entity.setModulatingColor(Color.RED);
-                        } else if (((MainCharacter) entity).isRecovering()
-                                && ((MainCharacter) entity).isTexChanging()) {
-                            entity.setModulatingColor(Color.WHITE);
-                            ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
+                }
+
+                if(entity instanceof MainCharacter) {
+                    Color originalCol = batch.getColor();
+                    if (((MainCharacter) entity).isRecovering()){
+                        if(((MainCharacter) entity).isTexChanging()){
+                            originalCol.set(Color.LIGHT_GRAY);
+                        } else {
+                            originalCol.set(Color.WHITE);
                         }
+                        entity.setModulatingColor(originalCol);
+                        ((MainCharacter) entity).setTexChanging(!((MainCharacter) entity).isTexChanging());
                     }
                 }
+
                 runAnimation(batch, entity, entityWorldCoord);
             }
 
@@ -383,11 +387,10 @@ public class Renderer3D implements Renderer {
         int[] offset = aniLink.getOffset();
 
         if (entity instanceof MainCharacter) {
-            if (((MainCharacter) entity).isHurt()) {
-                batch.setColor(Color.RED);
-            } else {
-                batch.setColor(Color.WHITE);
-
+            if (((MainCharacter) entity).isHurt() || ((MainCharacter) entity).isDead()) {
+                entity.setModulatingColor(Color.RED);
+            } else if (!((MainCharacter) entity).isRecovering()){
+                entity.setModulatingColor(Color.WHITE);
             }
         }
 

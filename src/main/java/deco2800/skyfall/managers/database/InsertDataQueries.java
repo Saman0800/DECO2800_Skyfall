@@ -151,6 +151,16 @@ public class InsertDataQueries {
         }
     }
 
+    public void writeObjectToDatabase(PreparedStatement preparedStatement, int index, Object object)
+            throws SQLException,
+            IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(object);
+        objectOutputStream.close();
+        preparedStatement.setBytes(index, byteArrayOutputStream.toByteArray());
+    }
+
     /**
      * @param worldId The world id
      * @param x       The row of the chunk
@@ -197,16 +207,5 @@ public class InsertDataQueries {
             preparedStatement.setLong(8, entityId);
             preparedStatement.executeUpdate();
         }
-    }
-
-
-    public void writeObjectToDatabase(PreparedStatement preparedStatement, int index, Object object)
-        throws SQLException,
-        IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-        objectOutputStream.writeObject(object);
-        objectOutputStream.close();
-        preparedStatement.setBytes(index, byteArrayOutputStream.toByteArray());
     }
 }

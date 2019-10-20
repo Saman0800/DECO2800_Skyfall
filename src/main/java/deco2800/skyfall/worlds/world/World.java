@@ -388,6 +388,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
      * @deprecated since this only affects the loaded chunks and is no longer a
      *             trivial replacement of lists
      */
+    @Deprecated
     public void setTileMap(List<Tile> tileMap) {
         for (Chunk chunk : loadedChunks.values()) {
             chunk.getEntities().clear();
@@ -469,10 +470,10 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         loadedChunks.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey))
                 .flatMap(entry -> entry.getValue().getTiles().stream()
                         .sorted(Comparator.comparing(tile -> new Pair<>(tile.getCol(), tile.getRow()))))
-                .forEachOrdered(tile -> {
+                .forEachOrdered(tile ->
                     string.append(String.format("%f, %f, %s, %s", tile.getCol(), tile.getRow(),
-                            tile.getBiome().getBiomeName(), tile.getTextureName()) + '\n');
-                });
+                            tile.getBiome().getBiomeName(), tile.getTextureName()) + '\n'
+                    ));
         return string.toString();
     }
 
@@ -804,6 +805,10 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         private NoiseGenerator tileOffsetNoiseGeneratorY;
         private long seed;
         private int worldSize;
+
+        private long getThisSaveID() {
+            return saveID;
+        }
 
         public WorldMemento(World world) {
             this.saveID = world.save.getSaveID();
