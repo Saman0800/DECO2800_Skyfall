@@ -6,7 +6,12 @@ import deco2800.skyfall.worlds.Tile;
 public class Axe extends Weapon implements Item, IWeapon {
 
     public Axe(Tile tile, boolean obstructed) {
-        super(tile, "axe_tex", obstructed, "axe", "melee", "slash", 4, 4, 10);
+        super(tile, "axe_tex", obstructed, "axe");
+        this.setWeaponType("melee");
+        this.setDamageType("slash");
+        this.setAttackRate(4);
+        this.setDamage(4);
+        this.setDurability(10);
         setCostValues(20, 10, 10, 5);
     }
 

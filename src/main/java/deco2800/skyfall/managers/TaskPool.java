@@ -26,7 +26,7 @@ public class TaskPool extends AbstractManager {
 	public AbstractTask getTask(AgentEntity entity) {
 		if (poolOfTasks.isEmpty()) {
 			List<Tile> tiles = world.getLoadedChunks().values().stream().flatMap(chunk ->
-					chunk.getTiles().stream()).collect(Collectors.toList());;
+					chunk.getTiles().stream()).collect(Collectors.toList());
 			if (tiles.isEmpty()) {
 				// There are no tiles
 				return null;

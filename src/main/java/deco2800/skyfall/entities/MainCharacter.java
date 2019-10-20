@@ -1971,7 +1971,7 @@ public class MainCharacter extends Peon
     /**
      * Toggles if the camera should follow the player
      */
-    private void toggleCameraLock() {
+    public void toggleCameraLock() {
         if (!cameraLock) {
             cameraLock = true;
             centreCameraManual();
@@ -1987,7 +1987,6 @@ public class MainCharacter extends Peon
         if (cameraLock) {
             float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
             GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
-
         }
     }
 
@@ -2047,7 +2046,7 @@ public class MainCharacter extends Peon
         this.goldPouch = memento.goldPouch;
     }
 
-    public static class MainCharacterMemento extends AbstractMemento implements Serializable {
+    public static class MainCharacterMemento implements AbstractMemento , Serializable {
         private long mainCharacterID;
         private int level;
         private int foodLevel;
@@ -2067,5 +2066,12 @@ public class MainCharacter extends Peon
             this.foodAccum = character.foodAccum;
             this.goldPouch = character.goldPouch;
         }
+    }
+
+    /**
+     * Gets the players camera lock status
+     */
+    public Boolean getCameraStatus(){
+        return this.cameraLock;
     }
 }

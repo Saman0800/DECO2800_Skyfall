@@ -6,7 +6,12 @@ import deco2800.skyfall.worlds.Tile;
 public class Bow extends Weapon implements Item, IWeapon {
 
     public Bow(Tile tile, boolean obstructed) {
-        super(tile, "bow_tex", obstructed, "bow", "range", "splash", 3, 4, 10);
+        super(tile, "bow_tex", obstructed, "bow");
+        this.setWeaponType("range");
+        this.setDamageType("splash");
+        this.setAttackRate(3);
+        this.setDamage(4);
+        this.setDurability(10);
         setCostValues(40, 20, 15, 30);
     }
 
