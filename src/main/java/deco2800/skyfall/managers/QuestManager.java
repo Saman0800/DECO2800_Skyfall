@@ -96,31 +96,31 @@ public class QuestManager extends TickableManager {
         //reduced for ease of testing in game
         switch (questLevel) {
             case 0 :
-                setGoldTotal(10);
-                setWoodTotal(10);
-                setStoneTotal(10);
+                setGoldTotal(100);
+                setWoodTotal(25);
+                setStoneTotal(25);
                 setMetalTotal(10);
                 setBuildingsTotal(levelOneBuildings);
-                setWeaponTotal(SWORD, 0);
-                setWeaponTotal("bow", 0);
-                setWeaponTotal(SPEAR, 0);
-                setWeaponTotal("axe", 0);
-                break;
-            case 1 :
-                setGoldTotal(20);
-                setWoodTotal(20);
-                setStoneTotal(20);
-                setMetalTotal(20);
-                setBuildingsTotal(levelTwoBuildings);
                 setWeaponTotal(SWORD, 3);
                 setWeaponTotal("bow", 3);
                 setWeaponTotal(SPEAR, 0);
                 setWeaponTotal("axe", 0);
                 break;
+            case 1 :
+                setGoldTotal(150);
+                setWoodTotal(50);
+                setStoneTotal(50);
+                setMetalTotal(20);
+                setBuildingsTotal(levelTwoBuildings);
+                setWeaponTotal(SWORD, 3);
+                setWeaponTotal("bow", 3);
+                setWeaponTotal(SPEAR, 4);
+                setWeaponTotal("axe", 0);
+                break;
             case 2 :
-                setGoldTotal(30);
-                setWoodTotal(30);
-                setStoneTotal(30);
+                setGoldTotal(200);
+                setWoodTotal(75);
+                setStoneTotal(75);
                 setMetalTotal(30);
                 setBuildingsTotal(levelThreeBuildings);
                 setWeaponTotal(SWORD, 4);

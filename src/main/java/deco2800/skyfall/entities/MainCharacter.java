@@ -1675,16 +1675,17 @@ public class MainCharacter extends Peon
             break;
         case 2:
             unlocked.add(WATCHTOWER);
+            unlocked.add(new Hatchet());
+            unlocked.add(new PickAxe());
             break;
         case 1:
             unlocked.add(CABIN);
+            unlocked.add(new Hatchet());
+            unlocked.add(new PickAxe());
             break;
         case 0:
             unlocked.add(new Hatchet());
             unlocked.add(new PickAxe());
-            unlocked.add(new Sword());
-            unlocked.add(new Bow());
-            unlocked.add(new Spear());
             unlocked.add(CASTLE);
             break;
         default:
