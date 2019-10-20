@@ -254,7 +254,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         this.id = memento.biomeID;
     }
 
-    public static class AbstractBiomeMemento extends AbstractMemento implements Serializable {
+    public static class AbstractBiomeMemento implements AbstractMemento , Serializable {
         // The ID of the world this is in
         private long worldID;
 

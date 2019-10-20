@@ -111,7 +111,7 @@ public class BuildingTable extends AbstractPopUpElement {
         }
 
         baseTable.add(blueprint).width(400).top().expand();
-        baseTable.add(items).width(400).top().expand();
+        baseTable.add(items).width(400).top().expand().center().padRight(30);
         baseTable.row();
 
         TextButton buildIt = new TextButton("BUILD IT", skin, "game");

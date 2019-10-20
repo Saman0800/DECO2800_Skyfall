@@ -66,6 +66,8 @@ public class MainCharacter extends Peon
     private static MainCharacter mainCharacterInstance = null;
     private boolean residualFromPopUp = false;
 
+    private FeedbackManager fm;
+
     /**
      * Removes the stored main character instance so that the next call to any of
      * the {@code getInstance} methods will create a new {@code MainCharacter}.
@@ -364,8 +366,10 @@ public class MainCharacter extends Peon
 
         this.level = 1;
 
-        // create a new goldPouch object
+        // Sets up the main character
         setUpCharacter();
+
+        fm  =  GameManager.get().getManager(FeedbackManager.class);
     }
 
     /**
@@ -439,6 +443,10 @@ public class MainCharacter extends Peon
                 this.inventories.add(this.equippedItem);
             }
             this.equippedItem = item;
+            if (fm != null) {
+                fm.setFeedbackBarUpdate(true);
+                fm.setFeedbackText(item.getName() + " equipped");
+            }
             return true;
         } else {
             logger.warn("You can't equip {}.", item.getName());
@@ -786,7 +794,6 @@ public class MainCharacter extends Peon
         if (recoverTime > 1000) {
             logger.info("Recovered");
             setRecovering(false);
-            setTexChanging(false);
             changeCollideability(true);
             recoverTime = 0;
         }
@@ -897,7 +904,7 @@ public class MainCharacter extends Peon
                 QuestManager qm = GameManager.getManagerFromInstance(QuestManager.class);
 
                 ConstructionTable bs = (ConstructionTable) gmm.getPopUp(CONSTRUCTION_TABLE);
-                bs.build(GameManager.get().getWorld(), (int) clickedPosition[0], (int) clickedPosition[1]);
+                bs.build(GameManager.get().getWorld(), clickedPosition[0], clickedPosition[1]);
                 qm.addBuilding(bs.selectBuilding(bs.getBuildingID(), 0, 0).getBuildingType());
                 toBuild = false;
             }
@@ -973,6 +980,7 @@ public class MainCharacter extends Peon
         onTickNotPaused();
         this.movementSound();
         this.centreCameraAuto();
+        this.setRecovering(false);
 
         // Mana restoration.
         this.manaCD++;
@@ -1025,12 +1033,11 @@ public class MainCharacter extends Peon
         }
 
         // Revive health if character has revived for 100 ticks
-        if (revive == 100) {
+        if (revive == 500) {
             changeHealth(1);
             updateHealth();
             revive = 0;
         }
-
     }
 
     private void onTickNotPaused() {
@@ -1300,7 +1307,10 @@ public class MainCharacter extends Peon
     public void addGold(GoldPiece gold, Integer count) {
         // store the gold's value (5G, 10G etc) as a variable
         Integer goldValue = gold.getValue();
+        addGold(goldValue, count);
+    }
 
+    public void addGold(Integer goldValue, Integer count ) {
         // if this gold value already exists in the pouch
         if (goldPouch.containsKey(goldValue)) {
             // add this piece to the already existing list of pieces
@@ -1310,19 +1320,40 @@ public class MainCharacter extends Peon
         }
     }
 
+
     /**
      * Removes one instance of a gold piece in the pouch with a specific value.
      *
      * @param goldValue The value of the gold piece to be removed from the pouch.
      */
     public void removeGold(Integer goldValue) {
-        // if this gold value does not exist in the pouch
-        if (goldPouch.containsKey(goldValue)) {
-            if (goldPouch.get(goldValue) > 1) {
-                goldPouch.put(goldValue, goldPouch.get(goldValue) - 1);
-            } else {
-                goldPouch.remove(goldValue);
-            }
+        int totalGold = getGoldPouchTotalValue();
+
+        if(getGoldPouchTotalValue() >= goldValue){
+            totalGold -= goldValue;
+
+            int goldCount = totalGold;
+
+            int req100 = goldCount / 100;
+            goldCount -= req100 * 100;
+
+            int req50 = goldCount / 50;
+            goldCount -= req50 * 50;
+
+            int req10 = goldCount / 10;
+            goldCount -= req10 * 10;
+
+            int req5 = goldCount / 5;
+
+            goldPouch.clear();
+            goldPouch.put(100, req100);
+            goldPouch.put(50, req50);
+            goldPouch.put(10, req10);
+            goldPouch.put(5, req5);
+
+
+        }else{
+            logger.warn("Not enough gold!");
         }
     }
 
@@ -1659,6 +1690,12 @@ public class MainCharacter extends Peon
         }
     }
 
+    public void removeBlueprint(Blueprint blueprint) {
+        if (blueprint != null) {
+            this.blueprintsLearned.remove(blueprint);
+        }
+    }
+
     public List<Blueprint> getUnlockedBlueprints() {
         List<Blueprint> unlocked = new ArrayList<>();
 
@@ -1670,9 +1707,16 @@ public class MainCharacter extends Peon
             break;
         case 2:
             unlocked.add(WATCHTOWER);
+            unlocked.add(CABIN);
+            unlocked.add(CASTLE);
+            unlocked.add(new Hatchet());
+            unlocked.add(new PickAxe());
             break;
         case 1:
             unlocked.add(CABIN);
+            unlocked.add(CASTLE);
+            unlocked.add(new Hatchet());
+            unlocked.add(new PickAxe());
             break;
         case 0:
             unlocked.add(new Hatchet());
@@ -1700,11 +1744,13 @@ public class MainCharacter extends Peon
             break;
         case 1:
             if (qm.questFinished()) {
+                logger.info("QUEST FINISHED ADDED DESERT PORTAL");
                 unlocked.add(new DesertPortal(0, 0, 0));
             }
             break;
         case 0:
             if (qm.questFinished()) {
+                logger.info("QUEST FINISHED ADDED FOREST PORTAL");
                 unlocked.add(new ForestPortal(0, 0, 0));
             }
             break;
@@ -1766,6 +1812,7 @@ public class MainCharacter extends Peon
     public void createItem (Blueprint newItem) {
         if (checkRequiredResources(newItem)){
             switch (newItem.getName()) {
+
                 case HATCHET:
                     this.getInventoryManager().add(new Hatchet());
                     break;
@@ -1777,6 +1824,7 @@ public class MainCharacter extends Peon
                 case SWORD:
                     this.getInventoryManager().add(new Sword());
                     break;
+
                 case SPEAR:
                     this.getInventoryManager().add(new Spear());
                     break;
@@ -2097,7 +2145,7 @@ public class MainCharacter extends Peon
     /**
      * Toggles if the camera should follow the player
      */
-    private void toggleCameraLock() {
+    public void toggleCameraLock() {
         if (!cameraLock) {
             cameraLock = true;
             centreCameraManual();
@@ -2113,7 +2161,6 @@ public class MainCharacter extends Peon
         if (cameraLock) {
             float[] coords = WorldUtil.colRowToWorldCords(this.getCol(), this.getRow());
             GameManager.get().getCamera().position.set(coords[0], coords[1], 0);
-
         }
     }
 
@@ -2171,9 +2218,10 @@ public class MainCharacter extends Peon
         this.foodLevel = memento.foodLevel;
         this.foodAccum = memento.foodAccum;
         this.goldPouch = memento.goldPouch;
+        this.setHealth(memento.health);
     }
 
-    public static class MainCharacterMemento extends AbstractMemento implements Serializable {
+    public static class MainCharacterMemento implements AbstractMemento , Serializable {
         private long mainCharacterID;
         private int level;
         private int foodLevel;
@@ -2193,5 +2241,12 @@ public class MainCharacter extends Peon
             this.foodAccum = character.foodAccum;
             this.goldPouch = character.goldPouch;
         }
+    }
+
+    /**
+     * Gets the players camera lock status
+     */
+    public Boolean getCameraStatus(){
+        return this.cameraLock;
     }
 }

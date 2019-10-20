@@ -94,8 +94,10 @@ public enum BuildingType implements Blueprint {
         buildingTextures.add("cabin_270");
 
         buildingCost = new HashMap<>();
-        buildingCost.put(BluePrintNames.WOOD_STRING, 5);
-        buildingCost.put(BluePrintNames.STONE_STRING, 2);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 15);
+        buildingCost.put(BluePrintNames.STONE_STRING, 10);
+        buildingCost.put(BluePrintNames.METAL_STRING, 5);
+
     }
 
     public List<String> initialiseCabinTextures() {
@@ -192,9 +194,9 @@ public enum BuildingType implements Blueprint {
      */
     public void initialiseWatchTower() {
         buildingCost = new HashMap<>();
-        buildingCost.put(BluePrintNames.WOOD_STRING, 10);
-        buildingCost.put(BluePrintNames.STONE_STRING, 7);
-        buildingCost.put(BluePrintNames.METAL_STRING, 3);
+        buildingCost.put(BluePrintNames.WOOD_STRING, 20);
+        buildingCost.put(BluePrintNames.STONE_STRING, 10);
+        buildingCost.put(BluePrintNames.METAL_STRING, 10);
     }
 
     public void initialiseForestPortal() {
@@ -319,8 +321,12 @@ public enum BuildingType implements Blueprint {
             return 150;
         case BluePrintNames.TOWN_CENTRE_STRING:
             return 200;
-        case "Wall":
+        case BluePrintNames.WALL_STRING:
             return 250;
+        case BluePrintNames.CASTLE_STRING:
+            return 50;
+        case BluePrintNames.WATCH_TOWER_STRING:
+            return 75;
         default:
             return 0;
         }

@@ -27,7 +27,7 @@ public class HealthCircleTest extends BaseGDXTest{
     private StatisticsManager sm;
 
     @Before
-    public void setUp () {
+    public void setUp() {
         stage = mock(Stage.class);
         skin = spy(Skin.class);
         gmm = mock(GameMenuManager.class);
@@ -52,7 +52,7 @@ public class HealthCircleTest extends BaseGDXTest{
     }
 
     @Test
-    public void updateInnerCircle1() {
+    public void updateInnerCircle1Test() {
         Camera c = new OrthographicCamera();
         c.viewportHeight = 100;
         c.viewportWidth = 100;
@@ -71,7 +71,7 @@ public class HealthCircleTest extends BaseGDXTest{
     }
 
     @Test
-    public void updateInnerCircle2() {
+    public void updateInnerCircle2Test() {
         Camera c = new OrthographicCamera();
         c.viewportHeight = 100;
         c.viewportWidth = 100;
@@ -87,6 +87,13 @@ public class HealthCircleTest extends BaseGDXTest{
         healthCircle.update();
 
         assertEquals(0, (int) healthCircle.getInnerCircle().getWidth());
+    }
+
+    @Test
+    public void nullInnerCircleTest() {
+        healthCircle.smallerCircle = null;
+
+        assertNull(healthCircle.getInnerCircle());
     }
 
     @After

@@ -261,6 +261,20 @@ public class TextureManager extends AbstractManager {
 
             textureMap.put("rock", new Texture("resources/rocks.png"));
 
+            // Tutorial Textures
+            textureMap.put("story", new Texture("resources/tutorial/story.png"));
+            textureMap.put("your_mission", new Texture("resources/tutorial/your_mission.png"));
+            textureMap.put("tutorial_1", new Texture("resources/tutorial/tutorial_1.png"));
+            textureMap.put("tutorial_2", new Texture("resources/tutorial/tutorial_2.png"));
+            textureMap.put("tutorial_3", new Texture("resources/tutorial/tutorial_3.png"));
+            textureMap.put("tutorial_4", new Texture("resources/tutorial/tutorial_4.png"));
+            textureMap.put("tutorial_5", new Texture("resources/tutorial/tutorial_5.png"));
+            textureMap.put("home_button", new Texture("resources/tutorial/home_button.png"));
+
+            // End Game Textures
+            textureMap.put("continueGame", new Texture("resources/new_ui/endGameTable/continue.png"));
+            textureMap.put("endGame", new Texture("resources/new_ui/endGameTable/endGame.png"));
+
             files = new File("resources/world_details").listFiles();
             if (files == null) {
                 throw new FileNotFoundException();
@@ -358,23 +372,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("knob", new Texture("resources/new_ui/pauseTable/volume_knob.png"));
             textureMap.put("knob_before", new Texture("resources/new_ui/pauseTable/volume_green.png"));
             textureMap.put("equipped_bar", new Texture("resources/new_ui/equipped_bar.png"));
-
+            textureMap.put("arrow", new Texture("resources/new_ui/arrow.png"));
 
             // Help table
             textureMap.put("help_page1", new Texture("resources/new_ui/helpTable/help_page1.png"));
             textureMap.put("help_page2", new Texture("resources/new_ui/helpTable/help_page2.png"));
             textureMap.put("help_page3", new Texture("resources/new_ui/helpTable/help_page3.png"));
-            textureMap.put("help_arrow", new Texture("resources/new_ui/helpTable/arrow.png"));
-
-            // Clock/Season graphics
-            textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
-            textureMap.put("dusk", new Texture("resources/clock/dusk_clock.png"));
-            textureMap.put("day", new Texture("resources/clock/day_clock.png"));
-            textureMap.put("night", new Texture("resources/clock/night_clock.png"));
-            textureMap.put("summer", new Texture("resources/clock/summer.png"));
-            textureMap.put("winter", new Texture("resources/clock/winter.png"));
-            textureMap.put("spring", new Texture("resources/clock/spring.png"));
-            textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
 
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
             textureMap.put("chest_banner", new Texture("resources/chest_banner.png"));
@@ -408,6 +411,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("unchecked", new Texture("resources/unchecked.png"));
             textureMap.put("take all", new Texture("resources/inventory/take_all.png"));
             textureMap.put("inventory_panel", new Texture("resources/inventory/inventory_panel.png"));
+            textureMap.put("feedback_bar", new Texture("resources/new_ui/feedback_bar.png"));
+            textureMap.put("feedback_bar_big", new Texture("resources/new_ui/feedback_bar_big.png"));
 
 
 
@@ -428,6 +433,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bow_inv", new Texture("resources/items_icons/bow.png"));
             textureMap.put("sword_inv", new Texture("resources/items_icons/sword.png"));
             textureMap.put("spear_inv", new Texture("resources/items_icons/spear.png"));
+
+            textureMap.put("construction_info", new Texture("resources/items_icons/construction_description.png"));
 
 
             //Items in World

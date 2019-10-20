@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
  * Builds biomes from the nodes generated in the previous phase of the world generation.
  */
 public class BiomeGenerator implements BiomeGeneratorInterface {
+
+    public static final String UNABLE_TO_GENERATE_MORE_NODES = "Unable to generate more nodes";
     /**
      * The world this is generating biomes for
      */
@@ -83,8 +85,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
      * @throws NotEnoughPointsException if there are not enough non-border nodes from which to form the biomes
      */
     public BiomeGenerator(World world, List<WorldGenNode> nodes, List<VoronoiEdge> voronoiEdges, Random random,
-                          WorldParameters worldParameters)
-            throws NotEnoughPointsException {
+                          WorldParameters worldParameters) {
         Objects.requireNonNull(nodes, "nodes must not be null");
         Objects.requireNonNull(random, "random must not be null");
         Objects.requireNonNull(worldParameters.getBiomeSizes(), "biomeSizes must not be null");
@@ -353,24 +354,20 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             // If there hasn't been a valid spot for a lake found after enough
             // attempts, assume there is no valid spot
             if (attempts > usedNodes.size()) {
-                throw new DeadEndGenerationException();
+                throw new DeadEndGenerationException(UNABLE_TO_GENERATE_MORE_NODES);
             }
             // Try to find a valid node to start a lake
             WorldGenNode chosenNode = nodes.get(random.nextInt(nodes.size()));
-            if (!validLakeNode(chosenNode, tempLakeNodes)) {
-                continue;
+            if (validLakeNode(chosenNode, tempLakeNodes)) {
+                // Add the initial node
+                nodesFound.clear();
+                nodesFound.add(chosenNode);
+                expandLakeNodes(size, tempLakeNodes, nodesFound);
+
+                if (nodesFound.size() >= size) {
+                    return nodesFound;
+                }
             }
-
-            // Add the initial node
-            nodesFound.clear();
-            nodesFound.add(chosenNode);
-            expandLakeNodes(size, tempLakeNodes, nodesFound);
-
-            if (nodesFound.size() < size) {
-                continue;
-            }
-
-            return nodesFound;
         }
     }
 
@@ -469,37 +466,8 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
             // Choose a random lake
             BiomeInProgress chosenLake = lakes.get(random.nextInt(lakes.size()));
 
-            VoronoiEdge startingEdge = null;
-            double[] startingVertex = null;
-            int attempts = 0;
-            while (true) {
-                // If too many unsuccessful attempts are taken, assume that they
-                // world layout does not allow a river to be created
-                if (attempts > chosenLake.nodes.size() * 2) {
-                    throw new DeadEndGenerationException();
-                }
-                // Get a random node from the lake
-                WorldGenNode node = chosenLake.nodes.get(random.nextInt(chosenLake.nodes.size()));
-                attempts++;
-
-                // Only allow the node if it is on the edge of the lake, and
-                // has a protruding edge
-                if (!hasNeighbourOfDifferentBiome(node, chosenLake)) {
-                    continue;
-                }
-                startingEdge = edgeProtrudingFromBiome(edges, node, chosenLake);
-                if (startingEdge == null) {
-                    continue;
-                }
-
-                // Find which vertex the edge starts with
-                if (node.getVertices().contains(startingEdge.getA())) {
-                    startingVertex = startingEdge.getA();
-                } else {
-                    startingVertex = startingEdge.getB();
-                }
-                break;
-            }
+            double[] startingVertex = new double[2];
+            VoronoiEdge startingEdge = getRiverStart(edges, chosenLake, startingVertex);
 
             // Generate the path for the river
             List<VoronoiEdge> riverEdges = VoronoiEdge.generatePath(edges, startingEdge, startingVertex, random, 2);
@@ -534,6 +502,39 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         }
 
         world.setRiverEdges(nonDuplicateEdges);
+    }
+
+    private VoronoiEdge getRiverStart(List<VoronoiEdge> edges, BiomeInProgress chosenLake,
+                                      double[] startingVertex) throws DeadEndGenerationException {
+        VoronoiEdge startingEdge;
+        int attempts = 0;
+        while (true) {
+            // If too many unsuccessful attempts are taken, assume that they
+            // world layout does not allow a river to be created
+            if (attempts > chosenLake.nodes.size() * 2) {
+                throw new DeadEndGenerationException(UNABLE_TO_GENERATE_MORE_NODES);
+            }
+            // Get a random node from the lake
+            WorldGenNode node = chosenLake.nodes.get(random.nextInt(chosenLake.nodes.size()));
+            attempts++;
+
+            // Only allow the node if it is on the edge of the lake, and
+            // has a protruding edge
+            if (hasNeighbourOfDifferentBiome(node, chosenLake)) {
+                startingEdge = edgeProtrudingFromBiome(edges, node, chosenLake);
+                if (startingEdge != null) {
+
+                    // Find which vertex the edge starts with
+                    if (node.getVertices().contains(startingEdge.getA())) {
+                        System.arraycopy(startingEdge.getA(), 0, startingVertex, 0, 2);
+                    } else {
+                        System.arraycopy(startingEdge.getB(), 0, startingVertex, 0, 2);
+                    }
+                    break;
+                }
+            }
+        }
+        return startingEdge;
     }
 
     /**
@@ -715,7 +716,7 @@ public class BiomeGenerator implements BiomeGeneratorInterface {
         private void growBiome() throws DeadEndGenerationException {
             for (int remainingNodes = biomeSizes[id] - nodes.size(); remainingNodes > 0; remainingNodes--) {
                 if (borderNodes.isEmpty()) {
-                    throw new DeadEndGenerationException();
+                    throw new DeadEndGenerationException(UNABLE_TO_GENERATE_MORE_NODES);
                 }
 
                 // Pick a border node to grow from.

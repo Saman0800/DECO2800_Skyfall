@@ -49,7 +49,8 @@ import java.util.stream.Collectors;
  * items.
  */
 public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
-    public static final int LOADED_RADIUS = 50;
+    public static final int LOADED_RADIUS = 25;
+
     protected long id;
 
     protected int width;
@@ -93,7 +94,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
     // Import coin sound effect
     public static final String GOLD_SOUND_EFFECT = "coins";
-
     // Item pick-up sound effect
     private static final String PICK_UP_SOUND = "pick_up";
 
@@ -245,7 +245,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         biomeGenerator.generateBiomes();
 
         if(dummyBoolean) {
-            throw new DeadEndGenerationException();
+            throw new DeadEndGenerationException("Unable to generation more notes");
         }
 
     }
@@ -515,80 +515,99 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         for (AbstractEntity entity : clickedChunk.getEntities()) {
             // NOTE: DO NOT RUN REMOVE ENTITY IN THIS LOOP, IT WILL CAUSE
             // ConcurrentModificationException
-            if (!tile.getCoordinates().equals(entity.getPosition())) {
-                continue;
-            }
-
-            if (entity instanceof Harvestable) {
-                entityToBeDeleted = entity;
-
-            } else if (entity instanceof Weapon) {
-                MainCharacter mc = gmm.getMainCharacter();
-                if (tile.getCoordinates().distance(mc.getPosition()) <= 2) {
-                    entityToBeDeleted = entity;
-                    SoundManager.playSound(PICK_UP_SOUND);
-                    gmm.getInventory().add((Item) entity);
-                }
-            } else if (entity instanceof Chest) {
-                ChestTable chest = (ChestTable) gmm.getPopUp("chestTable");
-                chest.setWorldAndChestEntity(this, (Chest) entity);
-                chest.updateChestPanel((Chest) entity);
-                gmm.setPopUp("chestTable");
-            } else if (entity instanceof Item) {
-                MainCharacter mc = gmm.getMainCharacter();
-                if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
-                    continue;
-                }
-                entityToBeDeleted = entity;
-                gmm.getInventory().add((Item) entity);
-            } else if (entity instanceof GoldPiece) {
-                MainCharacter mc = gmm.getMainCharacter();
-                if (tile.getCoordinates().distance(mc.getPosition()) <= 3) {
-                    mc.addGold((GoldPiece) entity, 1);
-                    SoundManager.playSound(GOLD_SOUND_EFFECT);
-                    // remove the gold piece instance from the world
-                    entityToBeDeleted = entity;
-                }
-            } else if (entity instanceof BlueprintShop) {
-                BlueprintShopTable bs = (BlueprintShopTable) gmm.getPopUp("blueprintShopTable");
-                bs.updateBlueprintShopPanel();
-                gmm.setPopUp("blueprintShopTable");
-            } else if (entity instanceof BuildingEntity) {
-                BuildingEntity e = (BuildingEntity) entity;
-                switch (e.getBuildingType()) {
-                case FORESTPORTAL:
-                    ForestPortal forestPortal = new ForestPortal(0, 0, 0);
-                    updateTeleportTable("FOREST",
-                            forestPortal.getNext().toUpperCase(),
-                            this.save, forestPortal, gmm);
-                    break;
-                case MOUNTAINPORTAL:
-                    MountainPortal mountainPortal = new MountainPortal(0, 0, 0);
-                    updateTeleportTable("MOUNTAIN",
-                            mountainPortal.getNext().toUpperCase(),
-                            this.save, mountainPortal, gmm);
-                    break;
-                case DESERTPORTAL:
-                    DesertPortal desertPortal = new DesertPortal(0, 0, 0);
-                    updateTeleportTable("DESERT",
-                            desertPortal.getNext().toUpperCase(),
-                            this.save, desertPortal, gmm);
-                    break;
-                case VOLCANOPORTAL:
-                    VolcanoPortal volcanoPortal = new VolcanoPortal(0, 0, 0);
-                    updateTeleportTable("VOLCANO",
-                            volcanoPortal.getNext().toUpperCase(),
-                            this.save, volcanoPortal, gmm);
-                    break;
-                default:
-                    break;
-                }
-            }
+            handleEntity(tile, entity);
         }
 
         if (entityToBeDeleted != null) {
             removeEntity(entityToBeDeleted);
             entityToBeDeleted = null;
+        }
+    }
+
+    /**
+     * Handles a entity
+     * @param tile The tile the entity is one
+     * @param entity The entity
+     */
+    private void handleEntity(Tile tile, AbstractEntity entity) {
+        if (!tile.getCoordinates().equals(entity.getPosition())) {
+            return;
+        }
+
+        if (entity instanceof Harvestable) {
+            entityToBeDeleted = entity;
+
+        } else if (entity instanceof Weapon) {
+            MainCharacter mc = gmm.getMainCharacter();
+            if (tile.getCoordinates().distance(mc.getPosition()) <= 2) {
+                entityToBeDeleted = entity;
+                SoundManager.playSound(PICK_UP_SOUND);
+                gmm.getInventory().add((Item) entity);
+            }
+        } else if (entity instanceof Chest) {
+            ChestTable chest = (ChestTable) gmm.getPopUp("chestTable");
+            chest.setWorldAndChestEntity(this, (Chest) entity);
+            chest.updateChestPanel((Chest) entity);
+            gmm.setPopUp("chestTable");
+        } else if (entity instanceof Item) {
+            MainCharacter mc = gmm.getMainCharacter();
+            if (tile.getCoordinates().distance(mc.getPosition()) > 2) {
+                return;
+            }
+            entityToBeDeleted = entity;
+            gmm.getInventory().add((Item) entity);
+        } else if (entity instanceof GoldPiece) {
+            MainCharacter mc = gmm.getMainCharacter();
+            if (tile.getCoordinates().distance(mc.getPosition()) <= 3) {
+                String amt = entity.getTexture().replace("goldPiece", "");
+                int numericalAmt = Integer.parseInt(amt);
+                mc.addGold(numericalAmt, 1);
+                SoundManager.playSound(GOLD_SOUND_EFFECT);
+                // remove the gold piece instance from the world
+                entityToBeDeleted = entity;
+            }
+        } else if (entity instanceof BlueprintShop) {
+            BlueprintShopTable bs = (BlueprintShopTable) gmm.getPopUp("blueprintShopTable");
+            bs.updateBlueprintShopPanel();
+            gmm.setPopUp("blueprintShopTable");
+        } else if (entity instanceof BuildingEntity) {
+            handleBuildingEntity((BuildingEntity) entity);
+        }
+    }
+
+    /**
+     * Handles a building entities
+     * @param entity The entity to be handled
+     */
+    private void handleBuildingEntity(BuildingEntity entity) {
+        BuildingEntity e = entity;
+        switch (e.getBuildingType()) {
+        case FORESTPORTAL:
+            ForestPortal forestPortal = new ForestPortal(0, 0, 0);
+            updateTeleportTable("FOREST",
+                    forestPortal.getNext().toUpperCase(),
+                    this.save, forestPortal, gmm);
+            break;
+        case MOUNTAINPORTAL:
+            MountainPortal mountainPortal = new MountainPortal(0, 0, 0);
+            updateTeleportTable("MOUNTAIN",
+                    mountainPortal.getNext().toUpperCase(),
+                    this.save, mountainPortal, gmm);
+            break;
+        case DESERTPORTAL:
+            DesertPortal desertPortal = new DesertPortal(0, 0, 0);
+            updateTeleportTable("DESERT",
+                    desertPortal.getNext().toUpperCase(),
+                    this.save, desertPortal, gmm);
+            break;
+        case VOLCANOPORTAL:
+            VolcanoPortal volcanoPortal = new VolcanoPortal(0, 0, 0);
+            updateTeleportTable("VOLCANO",
+                    volcanoPortal.getNext().toUpperCase(),
+                    this.save, volcanoPortal, gmm);
+            break;
+        default:
+            break;
         }
     }
 
@@ -606,9 +625,9 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                                     AbstractPortal portal, GameMenuManager gmm) {
         TeleportTable teleportTable = (TeleportTable) gmm.getPopUp("teleportTable");
         teleportTable.updateLocation(updateLocation);
-        teleportTable.updateTeleportTo(teleportTo);
         teleportTable.setSave(save);
         teleportTable.setPortal(portal);
+        teleportTable.updateTeleportTo(teleportTo);
         gmm.setPopUp("teleportTable");
 
     }
@@ -770,8 +789,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         this.worldParameters.setWorldSize(worldMemento.worldSize);
     }
 
-    public static class WorldMemento extends AbstractMemento implements Serializable {
-        private long saveID;
+    public static class WorldMemento implements AbstractMemento , Serializable {
         private long worldID;
         private int nodeSpacing;
         private double riverWidth;
@@ -782,7 +800,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         private int worldSize;
 
         public WorldMemento(World world) {
-            this.saveID = world.save.getSaveID();
             this.worldID = world.id;
             this.nodeSpacing = world.worldParameters.getNodeSpacing();
             this.riverWidth = world.worldParameters.getRiverWidth();
