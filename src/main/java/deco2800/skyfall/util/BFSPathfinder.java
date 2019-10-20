@@ -4,6 +4,7 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BFSPathfinder implements Pathfinder {
 
@@ -57,7 +58,8 @@ public class BFSPathfinder implements Pathfinder {
 	}
 
 	private Tile getTileByHexVector(World world, HexVector vector) {
-		for (Tile tile : world.getTileMap()) {
+		for (Tile tile : world.getLoadedChunks().values().stream().flatMap(chunk ->
+				chunk.getTiles().stream()).collect(Collectors.toList())) {
 			if ((int) tile.getCol() == (int) vector.getCol() && (int) tile.getRow() == (int) vector.getRow()) {
 				return tile;
 			}

@@ -716,7 +716,6 @@ public class MainCharacter extends Peon
 
                 if (hurtTime >= 400) {
                     setRecovering(true);
-                   // setHurt(false);
                 }
             }
         }
