@@ -1,9 +1,12 @@
 package deco2800.skyfall.gamemenu;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.managers.FeedbackManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
@@ -26,10 +29,14 @@ public class FeedbackBar extends AbstractUIElement {
     //Feedback bar
     private Table feedbackBarTable;
 
-    public FeedbackBar(Stage stage, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm) {
+    //Close button
+    private ImageButton exitButton;
+
+    public FeedbackBar(Stage stage, ImageButton exitButton, String[] textureNames, TextureManager tm, Skin skin, GameMenuManager gmm) {
         super(stage, textureNames, tm);
         this.gmm = gmm;
         this.fm = GameManager.get().getManager(FeedbackManager.class);
+        this.exitButton = exitButton;
         this.skin = skin;
         this.draw();
     }
@@ -47,7 +54,15 @@ public class FeedbackBar extends AbstractUIElement {
 
         feedback = new Label("Click 'HELP' if you get stuck", skin, "white-text");
         feedback.setFontScale(0.8f);
-        feedbackBarTable.add(feedback);
+        feedbackBarTable.add(feedback).left().expandX().padLeft(30f);
+
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideFeedbackBar();
+            }
+        });
+        feedbackBarTable.add(exitButton).size(60f, 60f).right().padRight(30f);
         stage.addActor(feedbackBarTable);
     }
 
