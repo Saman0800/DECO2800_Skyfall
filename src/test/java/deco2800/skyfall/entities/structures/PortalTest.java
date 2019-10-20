@@ -36,7 +36,7 @@ public class PortalTest {
 
     @Before
     public void setup() {
-        world = mock(World.class);
+        world = WorldDirector.constructTestWorld(new WorldBuilder(), 0).getWorld();
         save = mock(Save.class);
         save.setCurrentWorld(world);
         when(save.getCurrentWorld()).thenReturn(world);
