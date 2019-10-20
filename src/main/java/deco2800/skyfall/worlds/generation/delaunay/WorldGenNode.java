@@ -176,13 +176,13 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
         for (int i = 0; i < nodes.size(); i++) {
             for (int j = i + 1; j < nodes.size(); j++) {
                 double[] vertexA = sharedVertex(nodes.get(i), nodes.get(j), null);
-                if (vertexA.length != 0) {
+                if (vertexA == null) {
                     continue;
                 }
                 nodes.get(i).assignNeighbour(nodes.get(j));
                 nodes.get(j).assignNeighbour(nodes.get(i));
                 double[] vertexB = sharedVertex(nodes.get(i), nodes.get(j), vertexA);
-                if (vertexB.length != 0) {
+                if (vertexB != null) {
                     VoronoiEdge edge = new VoronoiEdge(vertexA, vertexB, world);
                     edges.add(edge);
                     edge.addEdgeNode(nodes.get(i));
@@ -235,7 +235,7 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
                 }
             }
         }
-        return new double[0];
+        return null;
     }
 
     /**
@@ -294,8 +294,14 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
             int lower = nearestIndex - iterations;
             int upper = nearestIndex + iterations;
             // Stop the algorithm from checking off the end of the list
+            if (lower < 0) {
+                lowerLimitFound = true;
+            }
+            if (upper > nodes.size() - 1) {
+                upperLimitFound = true;
+            }
 
-            if (!lowerLimitFound && lower >= 0) {
+            if (!lowerLimitFound) {
                 double distance = nodes.get(lower).distanceTo(tileX, tileY);
                 // Update the closest node if necessary
                 if (distance < minDistance) {
@@ -306,15 +312,19 @@ public class WorldGenNode implements Comparable<WorldGenNode>, Saveable<WorldGen
                 // y value, if the difference in y value is greater than the
                 // smallest distance to a node, all future nodes in that
                 // direction will be further away
-                lowerLimitFound = nodes.get(lower).yDistanceTo(tileY) > minDistance;
+                if (nodes.get(lower).yDistanceTo(tileY) > minDistance) {
+                    lowerLimitFound = true;
+                }
             }
-            if (!upperLimitFound && upper > nodes.size() - 1) {
+            if (!upperLimitFound) {
                 double distance = nodes.get(upper).distanceTo(tileX, tileY);
                 if (distance < minDistance) {
                     minDistance = distance;
                     minDistanceIndex = upper;
                 }
-                upperLimitFound = nodes.get(upper).yDistanceTo(tileY) > minDistance;
+                if (nodes.get(upper).yDistanceTo(tileY) > minDistance) {
+                    upperLimitFound = true;
+                }
             }
             iterations++;
         }
