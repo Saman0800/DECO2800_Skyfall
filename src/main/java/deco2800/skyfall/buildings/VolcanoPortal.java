@@ -7,7 +7,7 @@ import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.saving.Save;
 
 public class VolcanoPortal extends AbstractPortal implements Blueprint {
-    private final transient Logger logger = LoggerFactory.getLogger(BuildingEntity.class);
+    private final transient Logger logger = LoggerFactory.getLogger(VolcanoPortal.class);
 
     /**
      * Constructor for an building entity with normal rendering size.
@@ -17,7 +17,7 @@ public class VolcanoPortal extends AbstractPortal implements Blueprint {
      * @param renderOrder the height position on the world
      */
     public VolcanoPortal(float col, float row, int renderOrder) {
-        super(col, row, renderOrder);
+        super(col, row, renderOrder, 0, 0, 0);
         this.setTexture("portal");
         this.setNext("volcanic_mountains");
         this.entityType = "VolcanoPortal";

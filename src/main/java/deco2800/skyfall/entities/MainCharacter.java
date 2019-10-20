@@ -1782,6 +1782,7 @@ public class MainCharacter extends Peon
     public void createItem (Blueprint newItem) {
         if (checkRequiredResources(newItem)){
             switch (newItem.getName()) {
+
                 case HATCHET:
                     this.getInventoryManager().add(new Hatchet());
                     break;
@@ -1793,6 +1794,7 @@ public class MainCharacter extends Peon
                 case SWORD:
                     this.getInventoryManager().add(new Sword());
                     break;
+
                 case SPEAR:
                     this.getInventoryManager().add(new Spear());
                     break;
