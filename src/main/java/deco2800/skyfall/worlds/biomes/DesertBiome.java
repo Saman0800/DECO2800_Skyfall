@@ -1,8 +1,9 @@
 package deco2800.skyfall.worlds.biomes;
 
-
-import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import java.util.Random;
+
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
 /**
  * Desert Biome
@@ -21,10 +22,15 @@ public class DesertBiome extends AbstractBiome {
 
     /**
      * Loads a biome from a memento
+     * 
      * @param memento The memento that holds the save data
      */
-    public DesertBiome(AbstractBiomeMemento memento){
-        super(memento);
-        textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 4, 50, 0.5);
+    public DesertBiome(AbstractBiomeMemento memento) {
+        super(memento, memento.noiseGeneratorSeed, 4, 50, 0.5);
+    }
+
+    @Override
+    public void setTileTexture(Tile tile) {
+        super.setTileTexture(tile, "desert_1", "desert_2", "desert_3");
     }
 }

@@ -204,6 +204,60 @@ public class EnemySpawnTable implements TimeObserver {
     }
 
     /**
+     * Attempts to place an enemy entity into the world.
+     * 
+     * @param tileIter An iterator used to get the next tile to place an enemy.
+     * 
+     * @return The number of enemies placed into the world.
+     */
+    private int place_enemy_into_world(Iterator<Tile> tileIter) {
+
+        Tile nextTile = tileIter.next();
+        Random rand = new Random();
+
+        if (nextTile.isObstructed()) {
+            return 0;
+        }
+
+        // Check if the tile is in sight of the player
+        float[] tileWorldCord = WorldUtil.colRowToWorldCords(nextTile.getCol(), nextTile.getRow());
+
+        if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1], GameManager.get().getCamera())) {
+            return 0;
+        }
+
+        // Create an enemy using one of the appropriate constructors
+        List<Function<HexVector, ? extends Enemy>> possibleConstructors = biomeToConstructor
+                .get(nextTile.getBiome().getBiomeName());
+
+        if ((possibleConstructors == null) || (possibleConstructors.isEmpty())) {
+            // There are no suitable enemies to spawn on this tile
+            return 0;
+        }
+
+        // Get the chance to spawn the enemy using the provided lambda function
+        double spawnChance = probAdjFunc.apply(environManager);
+
+        // Find all the enemies within close proximity to this tile and adjust the
+        // spawning chance accordingly
+        spawnChance = Math.pow(spawnChance, Math.log(enemiesNearTargetCount(nextTile.getRow(), nextTile.getCol())));
+
+        // Pick a class, any class!
+        Function<HexVector, ? extends Enemy> randEnemyType = possibleConstructors
+                .get(rand.nextInt(possibleConstructors.size()));
+
+        try {
+            Enemy newEnemy = randEnemyType.apply(new HexVector(nextTile.getRow(), nextTile.getCol()));
+            world.addEntity(newEnemy);
+            return 1;
+        } catch (Exception e) {
+            logger.error("Could not create new AbstractEnemy: " + e.toString());
+        }
+
+        return 0;
+    }
+
+    /**
      * Spawns the enemies into the world under the conditions specified by input
      * parameters.
      */
@@ -233,50 +287,9 @@ public class EnemySpawnTable implements TimeObserver {
             Iterator<Tile> tileIter = chunkTiles.iterator();
 
             int enemiesPlaced = 0;
-            Tile nextTile = null;
 
             while (tileIter.hasNext() && (enemiesPlaced <= numberToSpawn)) {
-
-                nextTile = tileIter.next();
-
-                if (nextTile.isObstructed()) {
-                    continue;
-                }
-
-                // Check if the tile is in sight of the player
-                float[] tileWorldCord = WorldUtil.colRowToWorldCords(nextTile.getCol(), nextTile.getRow());
-
-                if (!WorldUtil.areCoordinatesOffScreen(tileWorldCord[0], tileWorldCord[1],
-                        GameManager.get().getCamera())) {
-                    continue;
-                }
-
-                // Create an enemy using one of the appropriate constructors
-                List<Function<HexVector, ? extends Enemy>> possibleConstructors = biomeToConstructor
-                        .get(nextTile.getBiome().getBiomeName());
-
-                if ((possibleConstructors == null) || (possibleConstructors.isEmpty())) {
-                    // There are no suitable enemies to spawn on this tile
-                    continue;
-                }
-
-                // Get the chance to spawn the enemy using the provided lambda function
-                double spawnChance = probAdjFunc.apply(environManager);
-
-                // Find all the enemies within close proximity to this tile and adjust the
-                // spawning chance accordingly
-
-                // Pick a class, any class!
-                Function<HexVector, ? extends Enemy> randEnemyType = possibleConstructors
-                        .get(rand.nextInt(possibleConstructors.size()));
-
-                if (rand.nextFloat() <= spawnChance) {
-                    Enemy newEnemy = randEnemyType.apply(new HexVector(nextTile.getRow(), nextTile.getCol()));
-                    world.addEntity(newEnemy);
-                    enemiesPlaced += 1;
-
-                    logger.info("Enemy Spawned in {}",  nextTile.getBiome().getBiomeName());
-                }
+                enemiesPlaced += place_enemy_into_world(tileIter);
             }
         }
     }

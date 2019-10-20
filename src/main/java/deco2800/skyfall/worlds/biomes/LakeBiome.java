@@ -1,7 +1,9 @@
 package deco2800.skyfall.worlds.biomes;
 
-import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import java.util.Random;
+
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 
 /**
  * Lake biome that is used for the lakes
@@ -20,10 +22,15 @@ public class LakeBiome extends AbstractBiome {
 
     /**
      * Loads a biome from a memento
+     * 
      * @param memento The memento that holds the save data
      */
-    public LakeBiome(AbstractBiomeMemento memento){
-        super(memento);
-        textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 3, 40, 0.7);
+    public LakeBiome(AbstractBiomeMemento memento) {
+        super(memento, memento.noiseGeneratorSeed, 3, 40, 0.7);
+    }
+
+    @Override
+    public void setTileTexture(Tile tile) {
+        super.setTileTexture(tile, "lake1.1", "lake1.2", "lake1.3");
     }
 }

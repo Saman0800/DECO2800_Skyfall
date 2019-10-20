@@ -159,7 +159,7 @@ public class WorldBuilder implements WorldBuilderInterface {
         EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new Chest(tile, true, ChestManager.generateRandomLoot(
                 (int) Math.floor(NoiseGenerator
                         .fade(world.getStaticEntityNoise().getOctavedPerlinValue(tile.getCol(), tile.getRow()), 2)) + 5,
-                LootRarity.LEGENDARY)), random.nextInt(), 0.002);
+                LootRarity.LEGENDARY)), random.nextInt(), 0.001);
         biomeSpawnRules.add(chestRule);
     }
 
@@ -240,15 +240,15 @@ public class WorldBuilder implements WorldBuilderInterface {
         long worldSeed = world.getSeed();
 
         // Spawn some swords
-        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.002);
+        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.001);
         biomeSpawnRules.add(swordRule);
 
         // Spawn some axes
-        EntitySpawnRule axeRule = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.002);
+        EntitySpawnRule axeRule = new EntitySpawnRule(tile -> new Axe(tile, true), random.nextInt(), 0.001);
         biomeSpawnRules.add(axeRule);
 
         // Spawn some spears
-        EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.002);
+        EntitySpawnRule spearRule = new EntitySpawnRule(tile -> new Spear(tile, true), random.nextInt(), 0.001);
         biomeSpawnRules.add(spearRule);
 
         // Spawn some bows

@@ -1,13 +1,13 @@
 package deco2800.skyfall.worlds.biomes;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class that represents the biomes.
@@ -40,10 +40,35 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
     }
 
     /**
+     * Constructor for a biome being loaded
+     *
+     * @param memento     the memento this biome is being loaded from
+     * @param seed        The random number generator, allows for seeding. Used for
+     *                    the Noise Generator of the biome.
+     * @param octaves     The number of sets of perlin values that will be generated
+     *                    and than combined. The higher the value The more small
+     *                    details and anomlies in the world there will and there
+     *                    more perceived realism world will have, as it will have
+     *                    small bits of chaos. Used for the Noise Generator of the
+     *                    biome.
+     * @param startPeriod The intial period, the higher the value the longer it will
+     *                    take to go from one value to another. Used for the Noise
+     *                    Generator of the biome.
+     * @param attenuation The weight of the octaves, the higher the value the more
+     *                    sporatic the land will be when there are many octaves.
+     *                    Used for the Noise Generator of the biome.
+     */
+    public AbstractBiome(AbstractBiomeMemento memento, long seed, int octaves, double startPeriod, double attenuation) {
+        this(memento);
+        textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, octaves, startPeriod, attenuation);
+    }
+
+    /**
      * Constructor for a Biome
      *
-     * @param biomeName The biome name
-     * @param parentBiome The biome that the biome lives in, null if the biome has no parent
+     * @param biomeName   The biome name
+     * @param parentBiome The biome that the biome lives in, null if the biome has
+     *                    no parent
      */
     public AbstractBiome(String biomeName, AbstractBiome parentBiome) {
         this.biomeName = biomeName;
@@ -64,9 +89,10 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
 
     /**
      * Sets the tiles in the biome
+     * 
      * @param tiles The list of tiles for the biome
      */
-    public void setTiles(List<Tile> tiles){
+    public void setTiles(List<Tile> tiles) {
         this.tiles = (ArrayList<Tile>) tiles;
     }
 
@@ -192,6 +218,27 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         tile.setTexture(textures.get(adjustedPerlinValue));
     }
 
+    /**
+     * Sets the texture of the given tile assuming it is in this biome for the
+     * variable number of textures used for the biome's tiles.
+     */
+    public void setTileTexture(Tile tile, String... varTextures) {
+        ArrayList<String> textures = new ArrayList<>();
+
+        for (String texture : varTextures) {
+            textures.add(texture);
+        }
+
+        double perlinValue = NoiseGenerator.fade(textureGenerator.getOctavedPerlinValue(tile.getCol(), tile.getRow()),
+                2);
+        int adjustedPerlinValue = (int) Math.floor(perlinValue * textures.size());
+        if (adjustedPerlinValue >= textures.size()) {
+            adjustedPerlinValue = textures.size() - 1;
+        }
+        tile.setPerlinValue(adjustedPerlinValue);
+        tile.setTexture(textures.get(adjustedPerlinValue));
+    }
+
     public long getBiomeID() {
         return this.id;
     }
@@ -220,7 +267,7 @@ public abstract class AbstractBiome implements Saveable<AbstractBiome.AbstractBi
         // The ID of this Biome's parent
         private long parentBiomeID;
 
-        //Starting seed for the noise generator for the biome
+        // Starting seed for the noise generator for the biome
         protected long noiseGeneratorSeed;
 
         private AbstractBiomeMemento(AbstractBiome biome) {

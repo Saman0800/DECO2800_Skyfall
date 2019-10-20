@@ -1,6 +1,7 @@
 package deco2800.skyfall.worlds.biomes;
 
 
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import java.util.Random;
 
@@ -21,10 +22,15 @@ public class MountainBiome extends AbstractBiome {
 
     /**
      * Loads a biome from a memento
+     * 
      * @param memento The memento that holds the save data
      */
-    public MountainBiome(AbstractBiomeMemento memento){
-        super(memento);
-        textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 3, 60, 0.5);
+    public MountainBiome(AbstractBiomeMemento memento) {
+        super(memento, memento.noiseGeneratorSeed, 3, 60, 0.5);
+    }
+
+    @Override
+    public void setTileTexture(Tile tile) {
+        super.setTileTexture(tile, "mountain_1", "mountain_2", "mountain_3");
     }
 }
