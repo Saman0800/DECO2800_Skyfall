@@ -1,6 +1,6 @@
 package deco2800.skyfall.entities.enemies;
 
-import deco2800.skyfall.util.HexVector;
+
 
 /**
  * An instance of a Heavy (hard level) enemy.

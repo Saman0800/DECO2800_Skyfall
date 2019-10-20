@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="119.00000000000003" y="299.0">deco2800.skyfall.entities.spells.Spell</node>
+    <node x="354.0" y="466.0">deco2800.skyfall.entities.spells.FlameWall</node>
+    <node x="177.00000000000003" y="466.0">deco2800.skyfall.entities.spells.Shield</node>
+    <node x="-203.0" y="329.0">deco2800.skyfall.entities.spells.SpellFactory</node>
+    <node x="0.0" y="477.0">deco2800.skyfall.entities.spells.Tornado</node>
+    <node x="141.00000000000003" y="0.0">deco2800.skyfall.entities.Projectile</node>
+    <node x="582.0" y="0.0">deco2800.skyfall.entities.spells.SpellType</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="deco2800.skyfall.entities.spells.Tornado" target="deco2800.skyfall.entities.spells.Spell">
+      <point x="0.0" y="-36.5" />
+      <point x="78.5" y="441.0" />
+      <point x="164.50000000000003" y="441.0" />
+      <point x="-91.0" y="58.5" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.Spell" target="deco2800.skyfall.entities.Projectile">
+      <point x="0.0" y="-58.5" />
+      <point x="0.0" y="124.5" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.FlameWall" target="deco2800.skyfall.entities.spells.Spell">
+      <point x="0.0" y="-47.5" />
+      <point x="445.5" y="441.0" />
+      <point x="346.5" y="441.0" />
+      <point x="91.0" y="58.5" />
+    </edge>
+    <edge source="deco2800.skyfall.entities.spells.Shield" target="deco2800.skyfall.entities.spells.Spell">
+      <point x="0.0" y="-47.5" />
+      <point x="0.0" y="58.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="245.0" y="471.5" />
+  <SelectedNodes>
+    <node>deco2800.skyfall.entities.spells.SpellFactory</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

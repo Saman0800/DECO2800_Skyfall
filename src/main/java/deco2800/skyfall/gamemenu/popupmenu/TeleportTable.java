@@ -7,9 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import deco2800.skyfall.buildings.AbstractPortal;
+import deco2800.skyfall.buildings.MountainPortal;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.saving.Save;
 
 public class TeleportTable extends AbstractPopUpElement {
@@ -18,7 +20,7 @@ public class TeleportTable extends AbstractPopUpElement {
     private Label teleportLabel;
     private Save save;
     private AbstractPortal portal;
-
+    private Blueprint purchased;
     public TeleportTable(Stage stage, ImageButton exit, String[] textureNames,
                          TextureManager tm, GameMenuManager gameMenuManager, Skin skin) {
         super(stage,exit, textureNames, tm, gameMenuManager);
@@ -39,9 +41,12 @@ public class TeleportTable extends AbstractPopUpElement {
     /**
      * Updates the teleport to label
      * @param text The new text for it
-     */
-    public void updateTeleportTo(String text) {
-        teleportLabel.setText("TELEPORT TO : " + text);
+                */
+        public void updateTeleportTo(String text) {
+            teleportLabel.setText("TELEPORT TO : " + text);
+        if (portal instanceof MountainPortal) {
+            teleportLabel.setText("GAME FINISHED");
+        }
     }
 
 
@@ -79,8 +84,19 @@ public class TeleportTable extends AbstractPopUpElement {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gameMenuManager.hideOpened();
+
+                if (save.getGameStage() == 2) {
+                    gameMenuManager.hideOpened();
+                    gameMenuManager.setPopUp("endGameTable");
+                    return;
+                }
+
                 portal.teleport(save);
                 gameMenuManager.getQuestManager().nextQuest();
+
+                if (purchased != null) {
+                    gameMenuManager.getMainCharacter().removeBlueprint(purchased);
+                }
             }
         });
 
@@ -107,5 +123,9 @@ public class TeleportTable extends AbstractPopUpElement {
 
     public void setPortal(AbstractPortal abstractPortal) {
         this.portal = abstractPortal;
+    }
+
+    public void setPurchased(Blueprint purchased) {
+        this.purchased = purchased;
     }
 }

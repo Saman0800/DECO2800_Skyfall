@@ -321,6 +321,10 @@ public enum BuildingType implements Blueprint {
             return 200;
         case "Wall":
             return 250;
+        case "Castle":
+            return 50;
+        case "WatchTower":
+            return 75;
         default:
             return 0;
         }
