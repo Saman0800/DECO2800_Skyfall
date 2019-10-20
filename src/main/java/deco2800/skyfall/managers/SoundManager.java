@@ -36,6 +36,7 @@ public class SoundManager extends AbstractManager {
     private static float gameSoundVolume = 1f;
     private static float gameMusicVolume = 1f;
 
+
     /**
      * Initialize SoundManager by adding different sounds in a map
      */
@@ -148,6 +149,12 @@ public class SoundManager extends AbstractManager {
                     (Gdx.files.internal(path + "walk_D.mp3")));
             soundMap.put("walk_N", Gdx.audio.newSound
                     (Gdx.files.internal(path + "walk_N.mp3")));
+            soundMap.put("bike_animation", Gdx.audio.newSound
+                    (Gdx.files.internal(path + "bike-movement.wav")));
+            soundMap.put("sand_car_animation", Gdx.audio.newSound
+                    (Gdx.files.internal(path + "movement-car.wav")));
+            soundMap.put("running", Gdx.audio.newSound
+                    (Gdx.files.internal(path + "run.wav")));
 
             // make into for-loop for nicer code :)
             musicMap.put("forest_day", Gdx.audio.newMusic
@@ -209,7 +216,9 @@ public class SoundManager extends AbstractManager {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
+
                 sound.play(gameSoundVolume);
+
                 return true;
             } else if (musicMap.containsKey(soundName)) {
                 Music music = musicMap.get(soundName);
@@ -234,7 +243,9 @@ public class SoundManager extends AbstractManager {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
+
                 sound.loop(gameSoundVolume);
+
                 // Add to the sounds which are being looped
                 soundLoops.put(soundName, soundMap.get(soundName));
             } else if (musicMap.containsKey(soundName)) {
@@ -353,7 +364,7 @@ public class SoundManager extends AbstractManager {
      * @param soundName name of the sound in soundMap.
      * @return true if it does, otherwise return false.
      */
-    public boolean checkLoop(String soundName) {
+    public static boolean checkLoop(String soundName) {
         return soundMap.containsKey(soundName)
                 || musicMap.containsKey(soundName);
     }
@@ -397,6 +408,10 @@ public class SoundManager extends AbstractManager {
         updateVolume();
     }
 
+    public static float getSoundVolume() {
+        return gameSoundVolume;
+    }
+
     public static String getPlaying() {
         return playing;
     }
@@ -416,5 +431,6 @@ public class SoundManager extends AbstractManager {
             music.dispose();
         }
     }
+
 
 }

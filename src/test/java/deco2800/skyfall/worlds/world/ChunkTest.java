@@ -81,8 +81,8 @@ public class ChunkTest {
         world.onTick(0);
 
         expected.clear();
-        for (int y = -6; y <= 6; y++) {
-            for (int x = -6; x <= 5; x++) {
+        for (int y = -4; y <= 3; y++) {
+            for (int x = -4; x <= 3; x++) {
                 expected.add(new Pair<>(x, y));
             }
         }
@@ -92,8 +92,8 @@ public class ChunkTest {
         world.onTick(0);
 
         expected.clear();
-        for (int y = -6; y <= 6; y++) {
-            for (int x = -12; x <= 0; x++) {
+        for (int y = -4; y <= 3; y++) {
+            for (int x = -9; x <= -3; x++) {
                 expected.add(new Pair<>(x, y));
             }
         }

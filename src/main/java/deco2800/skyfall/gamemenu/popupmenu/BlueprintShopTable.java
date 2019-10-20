@@ -7,6 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import deco2800.skyfall.buildings.DesertPortal;
+import deco2800.skyfall.buildings.ForestPortal;
+import deco2800.skyfall.buildings.MountainPortal;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
@@ -90,29 +93,27 @@ public class BlueprintShopTable extends AbstractPopUpElement {
             icon.setName("icon");
             icon.setSize(100, 100);
             icon.setPosition(xpos + count * 130, ypos);
+            Label cost;
             if (isBought(b)) {
-                Label cost = new Label("X", skin, "white-label");
+                cost = new Label("X", skin, "white-label");
                 cost.setName(b.getName());
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
-                blueprintPanel.addActor(cost);
-            } else {
-                Label cost = new Label("$" + b.getCost(), skin, "white-label");
-                cost.setPosition(xpos + 85 + count * 130, ypos + 75);
-                cost.setName(b.getName());
-                blueprintPanel.addActor(cost);
+                cost.setPosition(xpos + 80 + count * 130, ypos + 75);
+                cost.setFontScale((float)0.5);
 
-                icon.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        if (sm.getCharacter().getGoldPouchTotalValue() >= b.getCost()) {
-                            sm.getCharacter().removeGold(b.getCost());
-                            sm.getCharacter().addBlueprint(b);
-                        }
-                        updateBlueprintShopPanel();
-                    }
-                });
+                int costWidth = 30;
+                if(b.getCost()>9){
+                    costWidth += 10;
+                }
+                if(b.getCost()>99){
+                    costWidth += 10;
+                }
+
+                cost.setSize(costWidth, 40);
+            } else {
+                cost = handleNotBought(count, xpos, ypos, b, icon);
             }
             blueprintPanel.addActor(icon);
+            blueprintPanel.addActor(cost);
 
             count++;
 
@@ -121,6 +122,48 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                 count = 0;
             }
         }
+    }
+
+    /**
+     * For when a blue print is not bought
+     * @param count The count of the blue print
+     * @param xpos The x position of the blue print
+     * @param ypos The y position of the blue print
+     * @param b The blue print
+     * @param icon The icon of the blue print
+     * @return Returns the label
+     */
+    private Label handleNotBought(float count, float xpos, float ypos, Blueprint b, ImageButton icon) {
+        Label cost;
+        cost = new Label("$" + b.getCost(), skin, "white-label");
+        cost.setPosition(xpos + 80 + count * 130, ypos + 75);
+        cost.setName(b.getName());
+        cost.setFontScale((float)0.5);
+
+        int costWidth = 35;
+        if(b.getCost()>9){
+            costWidth += 10;
+        }
+        if(b.getCost()>99){
+            costWidth += 10;
+        }
+
+        cost.setSize(costWidth, 40);
+
+        icon.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (sm.getCharacter().getGoldPouchTotalValue() >= b.getCost()) {
+                    sm.getCharacter().removeGold(b.getCost());
+                    sm.getCharacter().addBlueprint(b);
+                    if (b instanceof ForestPortal || b instanceof DesertPortal || b instanceof MountainPortal) {
+                        ((TeleportTable) gameMenuManager.getPopUp("teleportTable")).setPurchased(b);
+                    }
+                }
+                updateBlueprintShopPanel();
+            }
+        });
+        return cost;
     }
 
     /**

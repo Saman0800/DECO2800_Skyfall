@@ -11,15 +11,14 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class SoundEffectTest {
-    SoundManager sound = GameManager.getManagerFromInstance(SoundManager.class);
+    private SoundManager sound = new SoundManager();
 
-    String path = "resources/sounds/";
+    private String path = "resources/sounds/";
 
     /**
      *  To test whether the file path is correct, whether the selected audio can be opened
@@ -32,10 +31,10 @@ public class SoundEffectTest {
         Sound sm = mock(Sound.class);
         SoundManager soundItem = mock(SoundManager.class);
 
-        when(Gdx.files.internal("resources/sounds/" + "spell_fire.mp3"))
+        when(Gdx.files.internal(path + "spell_fire.mp3"))
                 .thenReturn(null);
 
-        when(Gdx.audio.newSound(Gdx.files.internal("resources/sounds/" + "spell_fire.mp3")))
+        when(Gdx.audio.newSound(Gdx.files.internal(path + "spell_fire.mp3")))
                 .thenReturn(sm);
 
         when(sm.play(1)).thenReturn(1L);
@@ -47,7 +46,7 @@ public class SoundEffectTest {
         // when(soundItem.getTheSound("spell_fire")).thenReturn(sm);
 
         SoundManager s = new SoundManager();
-        s.playSound("spell_fire");
+        SoundManager.playSound("spell_fire");
     }
 
     /**
@@ -57,9 +56,10 @@ public class SoundEffectTest {
     @Test
     public void testHasSound() {
         try {
-            assertEquals(sound.getSoundMap().get("spear"),
+            assertEquals(SoundManager.getSoundMap().get("spear"),
                     Gdx.audio.newSound(Gdx.files.internal(path + "spear" + ".mp3")));
         } catch (NullPointerException npe) {
+            fail();
         }
     }
 
@@ -68,7 +68,7 @@ public class SoundEffectTest {
      */
     @Test
     public void playSound() {
-        assertFalse(sound.playSound("invalid-name!"));
+        assertFalse(SoundManager.playSound("invalid-name!"));
     }
 
     /**
@@ -76,17 +76,18 @@ public class SoundEffectTest {
      */
     @Test
     public void testStopSound() {
-        sound.playSound("died");
-        assertFalse(sound.stopSound("tester"));
+        SoundManager.playSound("died");
+        assertFalse(SoundManager.stopSound("tester"));
     }
 
     @Test
     public void exceptionTest() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
         try {
-            sound.playSound("walk_D");
+            SoundManager.playSound("walk_D");
         } catch (Exception e) {
             e.getMessage();
+            fail();
         }
     }
 
@@ -100,5 +101,11 @@ public class SoundEffectTest {
         } catch (Exception e){
             // exception caught
         }
+    }
+
+    @Test
+    public void testSetVolume() {
+        SoundManager.setSoundVolume(10);
+        assertEquals(SoundManager.getSoundVolume(), 0.1, 0.0001);
     }
 }

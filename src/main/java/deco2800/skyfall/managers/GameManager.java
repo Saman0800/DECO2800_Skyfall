@@ -20,7 +20,6 @@ public class GameManager {
     private int tilesRendered;
     private int tilesCount;
 
-    private boolean isTutorial = false;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
 
@@ -44,7 +43,7 @@ public class GameManager {
     // Showing if the game is paused.
     private static boolean paused = false;
 
-    private boolean debugMode = true;
+    private boolean debugMode = false;
 
     /**
      * Whether or not we render info over the tiles.
@@ -190,22 +189,6 @@ public class GameManager {
      */
     public void toggleShowPath() {
         this.showPath = !showPath;
-    }
-
-    /**
-     * Returns true if this is a tutorial world.
-     * 
-     * @return The isTutorial boolean
-     */
-    public boolean getIsTutorial() {
-        return this.isTutorial;
-    }
-
-    /**
-     * Sets the is tutorial variable for this class.
-     */
-    public void setIsTutorial(boolean isTutorial) {
-        this.isTutorial = isTutorial;
     }
 
     /**

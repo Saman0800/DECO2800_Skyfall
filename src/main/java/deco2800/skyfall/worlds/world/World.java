@@ -49,7 +49,8 @@ import java.util.stream.Collectors;
  * items.
  */
 public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
-    public static final int LOADED_RADIUS = 50;
+    public static final int LOADED_RADIUS = 25;
+
     protected long id;
 
     protected int width;
@@ -93,7 +94,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
     // Import coin sound effect
     public static final String GOLD_SOUND_EFFECT = "coins";
-
     // Item pick-up sound effect
     private static final String PICK_UP_SOUND = "pick_up";
 
@@ -199,6 +199,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
     }
+
+
 
     /**
      * Generates the tiles and biomes in a world
@@ -559,7 +561,9 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         } else if (entity instanceof GoldPiece) {
             MainCharacter mc = gmm.getMainCharacter();
             if (tile.getCoordinates().distance(mc.getPosition()) <= 3) {
-                mc.addGold((GoldPiece) entity, 1);
+                String amt = entity.getTexture().replace("goldPiece", "");
+                int numericalAmt = Integer.parseInt(amt);
+                mc.addGold(numericalAmt, 1);
                 SoundManager.playSound(GOLD_SOUND_EFFECT);
                 // remove the gold piece instance from the world
                 entityToBeDeleted = entity;
@@ -623,9 +627,9 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                                     AbstractPortal portal, GameMenuManager gmm) {
         TeleportTable teleportTable = (TeleportTable) gmm.getPopUp("teleportTable");
         teleportTable.updateLocation(updateLocation);
-        teleportTable.updateTeleportTo(teleportTo);
         teleportTable.setSave(save);
         teleportTable.setPortal(portal);
+        teleportTable.updateTeleportTo(teleportTo);
         gmm.setPopUp("teleportTable");
 
     }
