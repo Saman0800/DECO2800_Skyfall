@@ -342,6 +342,12 @@ public class WorldBuilder implements WorldBuilderInterface {
         mRockRule.setLimitAdjacent(true);
         biomeSpawnRules.add(mRockRule);
 
+        SpawnControl cubic = x -> (x * x * x) / 6.0 + 0.01;
+        EntitySpawnRule mTreeControl = new EntitySpawnRule(tile -> new VolcanicTree(tile, true), random.nextInt(), true,
+                cubic);
+        mTreeControl.setLimitAdjacent(true);
+        biomeSpawnRules.add(mTreeControl);
+
         // Spawn some bones
         EntitySpawnRule boneRule = new EntitySpawnRule(tile -> new Bone(tile, true), random.nextInt(), 0.004);
         biomeSpawnRules.add(boneRule);
