@@ -53,9 +53,9 @@ public abstract class AbstractPortal extends SaveableEntity implements Blueprint
         this.setObjectName(ENTITY_ID_STRING);
 
         buildCost = new HashMap<>();
-        buildCost.put("wood", requiredWood);
-        buildCost.put("stone", requiredStone);
-        buildCost.put("metal", requiredMetal);
+        buildCost.put("Wood", requiredWood);
+        buildCost.put("Stone", requiredStone);
+        buildCost.put("Metal", requiredMetal);
 
         if (!WorldUtil.validColRow(new HexVector(col, row))) {
             LOGGER.debug("Invalid position");
@@ -122,7 +122,7 @@ public abstract class AbstractPortal extends SaveableEntity implements Blueprint
      * @return The amount of wood needed
      */
     public int getRequiredWood() {
-        return getBuildCost().get("wood");
+        return getBuildCost().get("Wood");
     }
 
     /**
@@ -131,7 +131,7 @@ public abstract class AbstractPortal extends SaveableEntity implements Blueprint
      * @return The amount of stone needed
      */
     public int getRequiredStone() {
-        return getBuildCost().get("stone");
+        return getBuildCost().get("Stone");
     }
 
     /**
@@ -140,7 +140,7 @@ public abstract class AbstractPortal extends SaveableEntity implements Blueprint
      * @return The amount of metal needed
      */
     public int getRequiredMetal() {
-        return getBuildCost().get("metal");
+        return getBuildCost().get("Metal");
     }
 
     /**
