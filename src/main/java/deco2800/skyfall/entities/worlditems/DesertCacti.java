@@ -88,6 +88,6 @@ public class DesertCacti extends StaticEntity implements Tickable {
     public int getWoodAmount() {
         return woodAmount;
     }
-    
+
 
 }
