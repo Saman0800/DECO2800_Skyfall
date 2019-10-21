@@ -22,7 +22,6 @@ public class House extends AbstractBuilding {
     //Currently just uses basic X/Y coords, will be changed at a later date.
     private int sizeX = 1;
     private int sizeY = 1;
-    private HexVector coords;
     private String texture = "house1";
 
     @Expose
