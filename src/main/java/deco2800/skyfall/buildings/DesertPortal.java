@@ -15,10 +15,10 @@ public class DesertPortal extends AbstractPortal implements Blueprint {
         super(col, row, renderOrder, 50, 20, 10);
         this.setTexture("portal_desert");
         this.setNext("mountain");
+        this.entityType = "DesertPortal";
         this.currentBiome = "desert";
         this.name = "desertPortal";
         this.blueprintLearned = false;
     }
-
 
 }
