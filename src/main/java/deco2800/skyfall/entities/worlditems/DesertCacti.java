@@ -1,7 +1,7 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.Tickable;
+import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
 
 public class DesertCacti extends StaticEntity implements Tickable {

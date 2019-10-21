@@ -5,6 +5,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
+
+import org.javatuples.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.Animatable;
@@ -566,7 +571,7 @@ public class MainCharacter extends Peon
                                     + 1.5f * startPosition.getCol(),
                             position.getRow()
                                     + 1.5f * startPosition.getRow()),
-                    ((Weapon) equippedItem).getDamage(), currentAttackIsMelee ? 0.f : 1.f, range, currentAttackIsMelee ? 5 : 10);
+                    ((Weapon) equippedItem).getDamage(), currentAttackIsMelee ? 0.f : 1.f, new Pair<>((float) range, currentAttackIsMelee ? 5 : 10));
         } else {
             currentProjectile = defaultProjectile;
         }

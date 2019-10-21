@@ -218,6 +218,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bikeSOUTHWEST", new Texture("resources/Bike/bike RF1.png"));
             textureMap.put("bikeSOUTHEAST", new Texture("resources/Bike/bike LF1.png"));
 
+            textureMap.put("bike_inv", new Texture("resources/Bike/bike-left.png"));
+
             // Sand Car
             textureMap.put("sand_car", new Texture("resources/sand_car_image/sand_car_right.png"));
             textureMap.put("sand_car_SOUTH", new Texture("resources/resized_sand_car/sand_car_front_with_player.png"));
@@ -228,6 +230,8 @@ public class TextureManager extends AbstractManager {
             textureMap.put("sand_car_SOUTHEAST", new Texture("resources/resized_sand_car/sand_car_front_right_with_player.png"));
             textureMap.put("sand_car_NORTHEAST", new Texture("resources/resized_sand_car/sand_car_back_right_with_player.png"));
             textureMap.put("sand_car_NORTHWEST", new Texture("resources/resized_sand_car/sand_car_back_left_with_player.png"));
+
+            textureMap.put("sand_car_inv", new Texture("resources/sand_car_image/sand_car_right.png"));
 
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));

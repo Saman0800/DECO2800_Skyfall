@@ -58,7 +58,6 @@ public class ConstructionTable extends AbstractPopUpElement {
         baseTable.setSize(910, 510);
         baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2 + 40,
                 (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight() / 2);
-        baseTable.setDebug(true);
         baseTable.top();
         baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
         baseTable.setName("constructionTable");
