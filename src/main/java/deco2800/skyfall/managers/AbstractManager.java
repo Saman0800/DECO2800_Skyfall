@@ -4,6 +4,7 @@ package deco2800.skyfall.managers;
  * :tumbleweed:
  */
 public abstract class AbstractManager {
+    private AbstractManager am;
 
     public AbstractManager() {
 
