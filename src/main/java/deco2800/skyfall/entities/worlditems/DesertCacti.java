@@ -4,8 +4,6 @@ import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.worlds.Tile;
 
-import java.util.Random;
-
 public class DesertCacti extends StaticEntity implements Tickable {
     private int woodAmount; // amount of wood that each tree has
 
