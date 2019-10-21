@@ -713,6 +713,11 @@ public class MainCharacter extends Peon
         }
     }
 
+
+    public float getMaxSpeed(){
+        return this.maxSpeed;
+    }
+
     /**
      * Lets the player exit the vehicle by setting their speed back to default and
      * changing the texture. Also changing swimming to false in case they were in a
@@ -1197,6 +1202,22 @@ public class MainCharacter extends Peon
         spellCaster.onKeyPressed(keycode);
     }
 
+    public void setOnVehicle(boolean onVehicle){
+        this.isOnVehicle = onVehicle;
+    }
+
+    public void setVehicleType(String vehicleType){
+        this.vehicleType = vehicleType;
+    }
+
+    public boolean isOnVehicle(){
+        return isOnVehicle;
+    }
+
+    public String getVehicleType(){
+        return this.vehicleType;
+    }
+
     /**
      * To apply a type vehicle between Bike and SandCar when the player pressed "V"
      * and loop the vehicle sound when it is on use
@@ -1226,9 +1247,10 @@ public class MainCharacter extends Peon
     /**
      * When the character is not on a vehicle
      */
-    private void notOnVehicle() {
+    void notOnVehicle() {
         AbstractVehicle vehicle = null;
         for (AbstractEntity ve : GameManager.get().getWorld().getEntities()) {
+            float thing = ve.distance(this);
             if (ve instanceof Bike && ve.distance(this) < 3) {
                 vehicle = (Bike) ve;
                 ((Bike) vehicle).removeBike();
