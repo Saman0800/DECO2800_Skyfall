@@ -41,8 +41,8 @@ import static org.mockito.Mockito.anyInt;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class,
-        GameManager.class })
+@PrepareForTest({WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class,
+        GameManager.class})
 public class MainCharacterTest {
 
     private MainCharacter testCharacter;
@@ -131,7 +131,8 @@ public class MainCharacterTest {
         assertEquals("mainCharacter", testCharacter.getTexture());
 
         Assert.assertEquals(testCharacter.getName(),
-        "Main Piece"); testCharacter.setName("Side Piece");
+                "Main Piece");
+        testCharacter.setName("Side Piece");
         Assert.assertEquals(testCharacter.getName(), "Side Piece");
 
         Assert.assertFalse(testCharacter.isDead());
@@ -286,15 +287,15 @@ public class MainCharacterTest {
 
         testCharacter.equippedItem = mockSword;
         testCharacter.defaultProjectile = projectile;
-        testCharacter.attack(new HexVector(0,0));
+        testCharacter.attack(new HexVector(0, 0));
 
         //Ensure the projectile has been added.
         Assert.assertTrue(GameManager.get().getWorld().getEntities().contains(projectile));
 
         //Test other branch.
         testCharacter.spellSelected = SpellType.FLAME_WALL;
-        testCharacter.attack(new HexVector(0,0));
-        
+        testCharacter.attack(new HexVector(0, 0));
+
         Assert.assertTrue(GameManager.get().getWorld().getEntities().stream().anyMatch(e -> e instanceof Spell));
     }
 
@@ -442,12 +443,12 @@ public class MainCharacterTest {
         // ensure the gold piece is added to the pouch
         Assert.assertTrue(testCharacter.getGoldPouch().containsKey(5));
         // ensure the gold piece is only added once
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(5), 1);
+        Assert.assertEquals((int) testCharacter.getGoldPouch().get(5), 1);
         // ensure that total pouch value has been calculated correctly
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(5));
 
         testCharacter.addGold(g5, count);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(5), 2);
+        Assert.assertEquals((int) testCharacter.getGoldPouch().get(5), 2);
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(10));
 
         // create a new gold piece with a value of 50
@@ -457,7 +458,7 @@ public class MainCharacterTest {
         // ensure the gold piece is added to the pouch
         Assert.assertTrue(testCharacter.getGoldPouch().containsKey(50));
         // ensure the gold piece is only added once
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(50), 1);
+        Assert.assertEquals((int) testCharacter.getGoldPouch().get(50), 1);
 
         // ensure that the pouch total value is correct
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(60));
@@ -486,7 +487,6 @@ public class MainCharacterTest {
 
         // remove a piece of gold from the pouch
         testCharacter.removeGold(5);
-
 
 
         // ensure that the necessary adjustments have been made
@@ -633,9 +633,9 @@ public class MainCharacterTest {
         int m;
 
         for (m = 0; m < 1000; m++) {
-        testCharacter.getInventoryManager().add(new Wood());
-        testCharacter.getInventoryManager().add(new Stone());
-        testCharacter.getInventoryManager().add(new Metal());
+            testCharacter.getInventoryManager().add(new Wood());
+            testCharacter.getInventoryManager().add(new Stone());
+            testCharacter.getInventoryManager().add(new Metal());
         }
 
         testCharacter.createItem(new Hatchet());
@@ -657,7 +657,7 @@ public class MainCharacterTest {
         assertTrue(testCharacter.getCraftedBuildings().contains(CASTLE));
 
         Assert.assertEquals(2,
-        testCharacter.getInventoryManager().getAmount("Hatchet"));
+                testCharacter.getInventoryManager().getAmount("Hatchet"));
 
         Assert.assertEquals(2,
                 testCharacter.getInventoryManager().getAmount("Pick Axe"));
@@ -817,7 +817,7 @@ public class MainCharacterTest {
 
     }
 
-     //Test the removeAllGold() method works.
+    //Test the removeAllGold() method works.
 
     @Test
     public void removeAllGoldTest() {
@@ -885,7 +885,7 @@ public class MainCharacterTest {
      * Except the movement code as it is tested seperately
      */
     @Test
-    public void notifyKeyDownTest(){
+    public void notifyKeyDownTest() {
         testCharacter.notifyKeyDown(Input.Keys.Z);
         assertEquals(SpellType.FLAME_WALL, testCharacter.spellSelected);
 
@@ -896,9 +896,157 @@ public class MainCharacterTest {
         assertEquals(SpellType.TORNADO, testCharacter.spellSelected);
     }
 
+    /**
+     * Tests the processMovement method for main character and subsequently called methods
+     * Rapidly changing the player direction should trigger the preventSliding method allowing
+     * it to be tested
+     * <p>
+     * When process each movement direction 30 iterations are used so that movement can be processed
+     * for 1 second
+     * <p>
+     * The time step setting for processing movement are the same as in the actual game
+     */
+    @Test
+    public void processMovementTest() {
+        List<Float> velHistory;
+
+        // Stationary
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertEquals(0, velHistory.get(0), 0.0);
+        assertEquals(0, velHistory.get(1), 0.0);
+        assertEquals(0, velHistory.get(2), 0.0);
+        assertEquals("East", testCharacter.getPlayerDirectionCardinal());
+
+        // North-West movement
+        testCharacter.notifyKeyDown(Input.Keys.W);
+        testCharacter.notifyKeyDown(Input.Keys.A);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) < 0);
+        assertTrue(velHistory.get(1) > 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertEquals("North-West", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.W);
+        testCharacter.notifyKeyUp(Input.Keys.A);
+
+        // North movement
+        testCharacter.notifyKeyDown(Input.Keys.W);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertEquals(0, velHistory.get(0), 0.0);
+        assertTrue(velHistory.get(1) > 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertEquals("North", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.W);
+
+        // South-West movement
+        testCharacter.notifyKeyDown(Input.Keys.S);
+        testCharacter.notifyKeyDown(Input.Keys.A);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) < 0);
+        assertTrue(velHistory.get(1) < 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertEquals("South-West", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.S);
+        testCharacter.notifyKeyUp(Input.Keys.A);
+
+        // East movement
+        testCharacter.notifyKeyDown(Input.Keys.D);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) > 0);
+        assertEquals(0, velHistory.get(1), 0.0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertEquals("East", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.D);
+
+        // North-East movement
+        testCharacter.notifyKeyDown(Input.Keys.W);
+        testCharacter.notifyKeyDown(Input.Keys.D);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) > 0);
+        assertTrue(velHistory.get(1) > 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertEquals("North-East", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.W);
+        testCharacter.notifyKeyUp(Input.Keys.D);
+
+        // South movement
+        testCharacter.notifyKeyDown(Input.Keys.S);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertEquals(0, velHistory.get(0), 0.0);
+        assertTrue(velHistory.get(1) < 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertEquals("South", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.S);
+
+        // South-East movement
+        testCharacter.notifyKeyDown(Input.Keys.S);
+        testCharacter.notifyKeyDown(Input.Keys.D);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) > 0);
+        assertTrue(velHistory.get(1) < 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertEquals("South-East", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.S);
+        testCharacter.notifyKeyUp(Input.Keys.D);
+
+        // West movement
+        testCharacter.notifyKeyDown(Input.Keys.A);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) < 0);
+        assertEquals(0, velHistory.get(1), 0.0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertEquals("West", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.A);
+
+        // Stationary but with movement history changing angle
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertEquals(0, velHistory.get(0), 0.0);
+        assertEquals(0, velHistory.get(1), 0.0);
+        assertEquals(0, velHistory.get(2), 0.0);
+        assertEquals("West", testCharacter.getPlayerDirectionCardinal());
+    }
+
     @After
     public void cleanup() {
         testCharacter = null;
-
     }
 }
