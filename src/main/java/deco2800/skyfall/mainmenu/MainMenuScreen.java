@@ -221,6 +221,7 @@ public class MainMenuScreen implements Screen {
             loadSaveButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    music.stop();
                     game.setScreen(new GameScreen(game, saveID));
                 }
             });
