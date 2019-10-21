@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.managers.TextureManager;
 
 /**
@@ -52,6 +53,8 @@ public class AbstractPopUpElement extends AbstractUIElement {
         if (exitButton != null) {
             exitButton.setVisible(false);
         }
+        // Play menu sound when the player click exit button
+        SoundManager.playSound("menu");
         isVisible = false;
         gameMenuManager.getMainCharacter().resetVelocity();
         if (baseTable != null) {
@@ -85,8 +88,11 @@ public class AbstractPopUpElement extends AbstractUIElement {
             exitButton.setVisible(true);
             exitButton.top();
         }
+        // Play menu sound when the player open the menu
+        SoundManager.playSound("menu");
         gameMenuManager.getMainCharacter().resetVelocity();
         if (baseTable != null) {
+            baseTable.setZIndex(30);
             baseTable.setVisible(true);
         }
         isVisible = true;
@@ -144,16 +150,14 @@ public class AbstractPopUpElement extends AbstractUIElement {
     protected void blueprintShopTableDuplicatedCode () {
         baseTable = new Table();
         baseTable.setSize(910, 510);
-        baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2,
+        baseTable.setPosition(Gdx.graphics.getWidth() / 2f - baseTable.getWidth() / 2 + 60,
                 (Gdx.graphics.getHeight() + 160) / 2f - baseTable.getHeight() / 2);
-        baseTable.setDebug(true);
         baseTable.top();
         baseTable.setBackground(gameMenuManager.generateTextureRegionDrawableObject("popup_bg"));
     }
 
 
     protected  void goldAndConstructionTableDuplicatedFunctionality (String bannerName) {
-
 
         Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject(bannerName));
         infoBar.setSize(550, 55);

@@ -109,6 +109,8 @@ public class InventoryManagerTest {
         assertEquals(3, test.getAmount("Sand"));
         assertEquals(0, test.getAmount("Apple"));
 
+        assertEquals(10, test.getTotalAmount());
+
         assertTrue(test.drop("Stone") instanceof Stone);
         assertEquals(1, test.getAmount("Stone"));
         test.drop("Stone");
@@ -122,12 +124,29 @@ public class InventoryManagerTest {
         assertEquals(3, test.getAmounts().size());
         assertEquals(0, test.getAmount("Wood"));
 
+        Map<String, List<Item>> addMultiple = new HashMap<>();
+        List<Item> woodList = new ArrayList<>();
+        woodList.add(new Wood());
+        woodList.add(new Wood());
+        woodList.add(new Wood());
+        addMultiple.put("Wood", woodList);
+
+        test.inventoryAddMultiple(addMultiple);
+        assertEquals(4, test.getAmounts().size());
+        assertEquals(3, test.getAmount("Wood"));
+
+        test.inventoryAddMultiple(addMultiple);
+        assertEquals(6, test.getAmount("Wood"));
+
+        test.dropMultiple("Wood", 6);
+
         test.dropMultiple("Sand", 2);
         assertEquals(3, test.getAmounts().size());
         assertEquals(1, test.getAmount("Sand"));
 
         assertNull(test.dropMultiple("Sand", 2));
         assertNull(test.dropMultiple("Apple", 3));
+        assertEquals(4, test.getTotalAmount());
     }
 
     @Test
@@ -136,6 +155,10 @@ public class InventoryManagerTest {
         assertEquals(test.toString(), toStringTest);
     }
 
+    @Test
+    public void getItemInstanceTest(){
+        assertTrue(test.getItemInstance("Stone") instanceof Stone);
+    }
 
     @Test
     public void QuickAccessTest(){

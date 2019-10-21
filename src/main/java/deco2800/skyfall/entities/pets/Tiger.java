@@ -22,7 +22,7 @@ public class Tiger extends Enemy implements Animatable {
     // The biome of tiger
     private static final String BIOME = "forest";
     // Moving direction
-    private Direction movingDirection;
+    private Direction movingDirection = Direction.SOUTH;
     // Set boolean moving
     private boolean moving = false;
 

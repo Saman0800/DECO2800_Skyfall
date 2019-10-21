@@ -154,10 +154,6 @@ public abstract class HealthResources extends AbstractEntity implements Item {
         return location;
     }
 
-    public int getFoodValue() {
-        return foodValue;
-    }
-
     public void setHealthValue(int health){
         this.healthValue = health;
     }

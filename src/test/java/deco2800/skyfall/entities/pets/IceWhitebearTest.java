@@ -4,6 +4,7 @@ import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.worlds.Tile;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -33,19 +34,14 @@ public class IceWhitebearTest {
     public void setDirectionTextures() {
     }
 
+    /**
+     * Tempt to destory ice
+     */
     @Test
     public void destoryice() {
         iceWhitebear.setHealth(3);
         iceWhitebear.destoryice();
         assertEquals(2,iceWhitebear.getHealth());
     }
-
-    @Test
-    public void harvest() {
-        mockTile = Mockito.mock(Tile.class);
-        iceWhitebear.setHealth(1);
-        iceWhitebear.destoryice();
-        List<AbstractEntity> drops = iceWhitebear.harvest(mockTile);
-        assertTrue(drops.get(0) instanceof Whitebear);
-    }
+    
 }

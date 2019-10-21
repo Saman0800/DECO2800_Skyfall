@@ -9,7 +9,6 @@ import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.weapons.Bow;
 import deco2800.skyfall.entities.weapons.EmptyItem;
-
 import deco2800.skyfall.entities.weapons.Spear;
 import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.managers.*;
@@ -105,7 +104,7 @@ public class MainCharacterTest {
 
     @After
     /**
-     * Sets up all variables to be null after esting
+     * Sets up all variables to be null after testing
      */
     public void tearDown() {
         // testCharacter = null;
@@ -479,9 +478,6 @@ public class MainCharacterTest {
 
         // ensure all the pieces have been added
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(180));
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(5), 4);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(10), 1);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(50), 3);
 
         // remove a piece of gold from the pouch
         testCharacter.removeGold(5);
@@ -490,16 +486,12 @@ public class MainCharacterTest {
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(175));
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(5), 3);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(10), 1);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(50), 3);
 
         // remove a piece of gold from the pouch which is the last piece
         testCharacter.removeGold(10);
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(165));
-        Assert.assertFalse(testCharacter.getGoldPouch().containsKey(10));
 
 
     }
@@ -702,12 +694,15 @@ public class MainCharacterTest {
         Apple apple = new Apple();
         Berry berry = new Berry();
 
+        testCharacter.getInventoryManager().add(alo);
+        testCharacter.getInventoryManager().add(apple);
+        testCharacter.getInventoryManager().add(berry);
+
         testCharacter.changeHealth(-8);
 
         int currentHealth = testCharacter.getHealth();
 
         // Check that health increases by 2
-        testCharacter.pickUpInventory(alo);
         testCharacter.setEquippedItem(alo);
         testCharacter.useEquipped();
         Assert.assertEquals(currentHealth + 2, testCharacter.getHealth());
