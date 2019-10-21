@@ -155,15 +155,6 @@ public class MainCharacter extends Peon
     // Manager for all of MainCharacter's inventories
     private InventoryManager inventories;
 
-    /**
-     * Gets toBuild
-     *
-     * @return The toBuild value
-     */
-    public boolean isToBuild() {
-        return toBuild;
-    }
-
     private boolean toBuild;
     // List of blueprints that the player has learned.
 
@@ -180,15 +171,6 @@ public class MainCharacter extends Peon
     }
 
     private List<BuildingType> craftedBuildings;
-
-    /**
-     * Gets the constructed builds
-     *
-     * @return The constructored buildings
-     */
-    public List<BuildingType> getConstructedBuildings() {
-        return constructedBuildings;
-    }
 
     private List<BuildingType> constructedBuildings;
 
@@ -964,15 +946,6 @@ public class MainCharacter extends Peon
     }
 
     /**
-     * Adds a crafted building
-     *
-     * @param building The BuildingType to add to crafted buildings
-     */
-    public void addCraftedBuilding(BuildingType building) {
-        craftedBuildings.add(building);
-    }
-
-    /**
      * Adds a constructed building
      *
      * @param building The building to add to constructed buildings
@@ -988,15 +961,6 @@ public class MainCharacter extends Peon
      */
     public void removeCraftedBuilding(BuildingType building) {
         craftedBuildings.remove(building);
-    }
-
-    /**
-     * Removes a constructed building
-     *
-     * @param building The constructed building to remove
-     */
-    public void removeConstructedBuilding(BuildingType building) {
-        constructedBuildings.remove(building);
     }
 
     /**
@@ -1250,7 +1214,6 @@ public class MainCharacter extends Peon
     void notOnVehicle() {
         AbstractVehicle vehicle = null;
         for (AbstractEntity ve : GameManager.get().getWorld().getEntities()) {
-            float thing = ve.distance(this);
             if (ve instanceof Bike && ve.distance(this) < 3) {
                 vehicle = (Bike) ve;
                 ((Bike) vehicle).removeBike();
@@ -2273,7 +2236,7 @@ public class MainCharacter extends Peon
     /**
      * Gets the players camera lock status
      */
-    public Boolean getCameraStatus() {
+    public boolean getCameraStatus() {
         return this.cameraLock;
     }
 }

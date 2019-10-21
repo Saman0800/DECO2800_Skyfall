@@ -29,7 +29,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.PlayerPeon;
 import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
@@ -81,7 +80,6 @@ public class EnemySpawnTableTest {
         agentEntities.add(new Heavy(20f, 20f, 0.1f));
         agentEntities.add(new Heavy(100f, 150f, 0.1f));
         agentEntities.add(new Heavy(150f, 50f, 0.1f));
-        agentEntities.add(new PlayerPeon(10f, 10f, 2));
         when(testWorld.getSortedAgentEntities()).thenReturn(agentEntities);
 
         testTable = new EnemySpawnTable(50, 10, 10, null, null, null, testWorld);

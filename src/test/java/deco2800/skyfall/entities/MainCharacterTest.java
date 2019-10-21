@@ -36,6 +36,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.Assert;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static deco2800.skyfall.buildings.BuildingType.*;
 import static org.junit.Assert.*;
@@ -94,7 +95,9 @@ public class MainCharacterTest {
 
         testGoldPiece = new GoldPiece(5);
 
-        inventoryManager = GameManager.get().getManagerFromInstance(InventoryManager.class);
+        inventoryManager = GameManager.getManagerFromInstance(InventoryManager.class);
+        // Reset the inventory contents.
+        inventoryManager.setContents(new HashMap<>(new InventoryManager().getContents()));
 
         WorldBuilder builder = new WorldBuilder();
         WorldDirector.constructTestWorld(builder, 0);
@@ -124,11 +127,11 @@ public class MainCharacterTest {
     @Test
     public void setterGetterTest() {
         testCharacter.setTexChanging(true);
-        Assert.assertTrue(testCharacter.isTexChanging());
+        assertTrue(testCharacter.isTexChanging());
         testCharacter.setHurt(true);
-        Assert.assertTrue(testCharacter.isHurt());
+        assertTrue(testCharacter.isHurt());
         testCharacter.setHurt(true);
-        Assert.assertTrue(testCharacter.isHurt());
+        assertTrue(testCharacter.isHurt());
 
         testCharacter.changeTexture("mainCharacter");
         assertEquals("mainCharacter", testCharacter.getTexture());
@@ -145,7 +148,7 @@ public class MainCharacterTest {
         testCharacter.changeHealth(-55);
         Assert.assertEquals(testCharacter.getHealth(), 0);
         Assert.assertEquals(testCharacter.getDeaths(), 1);
-        Assert.assertTrue(testCharacter.isDead());
+        assertTrue(testCharacter.isDead());
 
         testCharacter.changeHealth(50);
         Assert.assertEquals(testCharacter.getHealth(), 50);
@@ -183,10 +186,10 @@ public class MainCharacterTest {
     // LEAVE COMMENTED! As discussed on Gitlab ticket #197, after fixing an issue
     // with the MainCharacter inventory this
     // causes issues with gradle that need to be fixed.
-    @Test
     /**
      * Test main character is interacting correctly with basic inventory action
      */
+    @Test
     public void inventoryTest() {
         Assert.assertEquals((int) testCharacter.getInventoryManager().getAmount("Stone"),
             inventoryManager.getAmount("Stone"));
@@ -256,7 +259,7 @@ public class MainCharacterTest {
     public void playerHurtTest() {
         // Set isHurt to true.
         testCharacter.playerHurt(3);
-        Assert.assertTrue(testCharacter.isHurt());
+        assertTrue(testCharacter.isHurt());
         // Health decreases
         Assert.assertEquals(47, testCharacter.getHealth());
         // set current animation to hurt
@@ -275,7 +278,7 @@ public class MainCharacterTest {
         testCharacter.checkIfHurtEnded();
         // set animation status to "not hurt" and is recovering.
         Assert.assertFalse(testCharacter.isHurt());
-        Assert.assertTrue(testCharacter.isRecovering());
+        assertTrue(testCharacter.isRecovering());
         // reset hurt time.
         Assert.assertEquals(0, testCharacter.getHurtTime());
     }
@@ -293,13 +296,13 @@ public class MainCharacterTest {
         testCharacter.attack(new HexVector(0, 0));
 
         //Ensure the projectile has been added.
-        Assert.assertTrue(GameManager.get().getWorld().getEntities().contains(projectile));
+        assertTrue(GameManager.get().getWorld().getEntities().contains(projectile));
 
         //Test other branch.
         testCharacter.spellSelected = SpellType.FLAME_WALL;
         testCharacter.attack(new HexVector(0, 0));
 
-        Assert.assertTrue(GameManager.get().getWorld().getEntities().stream().anyMatch(e -> e instanceof Spell));
+        assertTrue(GameManager.get().getWorld().getEntities().stream().anyMatch(e -> e instanceof Spell));
     }
 
     /**
@@ -323,7 +326,7 @@ public class MainCharacterTest {
         // reset recover time.
         Assert.assertEquals(0, testCharacter.getRecoverTime());
         // main character able to be touched by other objects again.
-        Assert.assertTrue(testCharacter.getCollidable());
+        assertTrue(testCharacter.getCollidable());
         // set animation/sprite status to "not recovering".
         Assert.assertFalse(testCharacter.isRecovering());
     }
@@ -386,30 +389,30 @@ public class MainCharacterTest {
         assertEquals(currentYInput, testCharacter.getYInput());
 
         // Test press D
-        testCharacter.notifyKeyDown(Input.Keys.W);
+        testCharacter.notifyKeyDown(Input.Keys.D);
         currentXInput += 1;
-        assertEquals(currentXInput, testCharacter.getYInput());
+        assertEquals(currentXInput, testCharacter.getXInput());
 
         // Test release D
-        testCharacter.notifyKeyUp(Input.Keys.W);
+        testCharacter.notifyKeyUp(Input.Keys.D);
         currentXInput -= 1;
-        assertEquals(currentXInput, testCharacter.getYInput());
+        assertEquals(currentXInput, testCharacter.getXInput());
 
         // Test press A
-        testCharacter.notifyKeyDown(Input.Keys.S);
+        testCharacter.notifyKeyDown(Input.Keys.A);
         currentXInput -= 1;
-        assertEquals(currentXInput, testCharacter.getYInput());
+        assertEquals(currentXInput, testCharacter.getXInput());
 
         // Test release A
-        testCharacter.notifyKeyUp(Input.Keys.S);
+        testCharacter.notifyKeyUp(Input.Keys.A);
         currentXInput += 1;
-        assertEquals(currentXInput, testCharacter.getYInput());
+        assertEquals(currentXInput, testCharacter.getXInput());
 
         testCharacter.notifyKeyDown(Input.Keys.SHIFT_LEFT);
         assertTrue(testCharacter.getIsSprinting());
     }
 
-
+    @Test
     public void movementAnimationsExist() {
         testCharacter.setCurrentState(AnimationRole.MOVE);
         testCharacter.setCurrentDirection(Direction.EAST);
@@ -443,27 +446,27 @@ public class MainCharacterTest {
         // adding one gold piece at a time
         testCharacter.addGold(g5, count);
         // ensure the gold piece is added to the pouch
-        Assert.assertTrue(testCharacter.getGoldPouch().containsKey(5));
+        assertTrue(testCharacter.getGoldPouch().containsKey(5));
         // ensure the gold piece is only added once
         Assert.assertEquals((int) testCharacter.getGoldPouch().get(5), 1);
         // ensure that total pouch value has been calculated correctly
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(5));
+        assertEquals(5, (int) testCharacter.getGoldPouchTotalValue());
 
         testCharacter.addGold(g5, count);
         Assert.assertEquals((int) testCharacter.getGoldPouch().get(5), 2);
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(10));
+        assertEquals(10, (int) testCharacter.getGoldPouchTotalValue());
 
         // create a new gold piece with a value of 50
         GoldPiece g50 = new GoldPiece(50);
 
         testCharacter.addGold(g50, count);
         // ensure the gold piece is added to the pouch
-        Assert.assertTrue(testCharacter.getGoldPouch().containsKey(50));
+        assertTrue(testCharacter.getGoldPouch().containsKey(50));
         // ensure the gold piece is only added once
         Assert.assertEquals((int) testCharacter.getGoldPouch().get(50), 1);
 
         // ensure that the pouch total value is correct
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(60));
+        assertEquals(60, (int) testCharacter.getGoldPouchTotalValue());
 
     }
 
@@ -485,19 +488,19 @@ public class MainCharacterTest {
         testCharacter.addGold(g50, 3);
 
         // ensure all the pieces have been added
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(180));
+        assertEquals(180, (int) testCharacter.getGoldPouchTotalValue());
 
         // remove a piece of gold from the pouch
         testCharacter.removeGold(5);
 
         // ensure that the necessary adjustments have been made
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(175));
+        assertEquals(175, (int) testCharacter.getGoldPouchTotalValue());
 
         // remove a piece of gold from the pouch which is the last piece
         testCharacter.removeGold(10);
 
         // ensure that the necessary adjustments have been made
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(165));
+        assertEquals(165, (int) testCharacter.getGoldPouchTotalValue());
 
 
     }
@@ -515,9 +518,9 @@ public class MainCharacterTest {
         testCharacter.addGold(g50, 2);
 
         // ensure all the pieces have been added
-        Assert.assertTrue(testCharacter.getGoldPouch().containsKey(5));
-        Assert.assertTrue(testCharacter.getGoldPouch().containsKey(10));
-        Assert.assertTrue(testCharacter.getGoldPouch().containsKey(50));
+        assertTrue(testCharacter.getGoldPouch().containsKey(5));
+        assertTrue(testCharacter.getGoldPouch().containsKey(10));
+        assertTrue(testCharacter.getGoldPouch().containsKey(50));
         Assert.assertEquals(3, (int) testCharacter.getGoldPouch().get(5));
         Assert.assertEquals(1, (int) testCharacter.getGoldPouch().get(10));
         Assert.assertEquals(2, (int) testCharacter.getGoldPouch().get(50));
@@ -537,7 +540,7 @@ public class MainCharacterTest {
         testCharacter.addGold(g50, 3);
 
         // ensure all the pieces have been added
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(180));
+        assertEquals(180, (int) testCharacter.getGoldPouchTotalValue());
     }
 
     @Test
@@ -598,7 +601,7 @@ public class MainCharacterTest {
         testGoldPiece.setCol(1f);
         testGoldPiece.setRow(1f);
         testCharacter.addClosestGoldPiece();
-        Assert.assertTrue(testCharacter.getGoldPouch().containsKey(5));
+        assertTrue(testCharacter.getGoldPouch().containsKey(5));
         Assert.assertEquals(5, (int) testCharacter.getGoldPouchTotalValue());
 
     }
@@ -612,7 +615,13 @@ public class MainCharacterTest {
 
         Assert.assertFalse(testCharacter.checkRequiredResources(new Bow()));
 
+        for (int i = 0; i < 100; i++) {
+            testCharacter.getInventoryManager().add(new Wood());
+            testCharacter.getInventoryManager().add(new Stone());
+            testCharacter.getInventoryManager().add(new Metal());
+        }
 
+        assertTrue(testCharacter.checkRequiredResources(new Bow()));
     }
 
     @Test
@@ -817,11 +826,11 @@ public class MainCharacterTest {
 
     @Test
     public void removeAllGoldTest() {
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
+        assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
 
         testCharacter.removeAllGold();
 
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
+        assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
     }
 
     /**
@@ -829,11 +838,11 @@ public class MainCharacterTest {
      */
     @Test
     public void playerAddGoldTest() {
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
+        assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
 
         testCharacter.removeAllGold();
 
-        Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
+        assertTrue(testCharacter.getGoldPouchTotalValue().equals(0));
     }
 
     /**
@@ -930,9 +939,6 @@ public class MainCharacterTest {
         assertEquals(13f, testCharacter.getMaxSpeed(), 0.0001);
     }
 
-
-
-
     @Test
     public void notOnVehicleTest() {
         List<AbstractEntity> entities = new ArrayList<>();
@@ -966,5 +972,13 @@ public class MainCharacterTest {
         assertEquals(10.f, testCharacter.getAcceleration(), 0.00001);
         assertEquals(5.f, testCharacter.getMaxSpeed(), 0.00001);
         assertEquals("sand_car", testCharacter.getVehicleType());
+    }
+
+    @Test
+    public void getTileTest() {
+        assertEquals(new HexVector(0, 0), testCharacter.getTile(0, 0).getCoordinates());
+        assertEquals(new HexVector(0, 0), testCharacter.getTile(0.4f, 0.4f).getCoordinates());
+        assertEquals(new HexVector(1, 0.5f), testCharacter.getTile(0.6f, 0.4f).getCoordinates());
+        assertEquals(new HexVector(1, 1.5f), testCharacter.getTile(0.6f, 0.6f).getCoordinates());
     }
 }

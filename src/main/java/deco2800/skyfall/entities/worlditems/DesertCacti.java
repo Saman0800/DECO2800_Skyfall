@@ -12,8 +12,6 @@ public class DesertCacti extends StaticEntity implements Tickable {
     private static int nextImage = 1;
     protected static final String ENTITY_ID_STRING = "desert_cacti";
 
-    private static Random random = new Random();
-
     public DesertCacti(SaveableEntityMemento memento) {
         super(memento);
         setCactiParams();
@@ -92,6 +90,6 @@ public class DesertCacti extends StaticEntity implements Tickable {
     public int getWoodAmount() {
         return woodAmount;
     }
-    
+
 
 }
