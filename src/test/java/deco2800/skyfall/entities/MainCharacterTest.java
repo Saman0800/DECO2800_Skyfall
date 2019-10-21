@@ -905,6 +905,8 @@ public class MainCharacterTest {
      * for 1 second
      * <p>
      * The time step setting for processing movement are the same as in the actual game
+     *
+     * During testing +0.1 needs to be added to the max speed due to rounding/numerical errors
      */
     @Test
     public void processMovementTest() {
@@ -931,7 +933,7 @@ public class MainCharacterTest {
         velHistory = testCharacter.getVelocity();
         assertTrue(velHistory.get(0) < 0);
         assertTrue(velHistory.get(1) > 0);
-        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("North-West", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.W);
         testCharacter.notifyKeyUp(Input.Keys.A);
@@ -945,7 +947,7 @@ public class MainCharacterTest {
         velHistory = testCharacter.getVelocity();
         assertEquals(0, velHistory.get(0), 0.0);
         assertTrue(velHistory.get(1) > 0);
-        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("North", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.W);
 
@@ -959,7 +961,7 @@ public class MainCharacterTest {
         velHistory = testCharacter.getVelocity();
         assertTrue(velHistory.get(0) < 0);
         assertTrue(velHistory.get(1) < 0);
-        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("South-West", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.S);
         testCharacter.notifyKeyUp(Input.Keys.A);
@@ -973,7 +975,7 @@ public class MainCharacterTest {
         velHistory = testCharacter.getVelocity();
         assertTrue(velHistory.get(0) > 0);
         assertEquals(0, velHistory.get(1), 0.0);
-        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("East", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.D);
 
@@ -987,7 +989,7 @@ public class MainCharacterTest {
         velHistory = testCharacter.getVelocity();
         assertTrue(velHistory.get(0) > 0);
         assertTrue(velHistory.get(1) > 0);
-        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("North-East", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.W);
         testCharacter.notifyKeyUp(Input.Keys.D);
@@ -1001,7 +1003,7 @@ public class MainCharacterTest {
         velHistory = testCharacter.getVelocity();
         assertEquals(0, velHistory.get(0), 0.0);
         assertTrue(velHistory.get(1) < 0);
-        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("South", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.S);
 
@@ -1015,7 +1017,7 @@ public class MainCharacterTest {
         velHistory = testCharacter.getVelocity();
         assertTrue(velHistory.get(0) > 0);
         assertTrue(velHistory.get(1) < 0);
-        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("South-East", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.S);
         testCharacter.notifyKeyUp(Input.Keys.D);
@@ -1029,7 +1031,7 @@ public class MainCharacterTest {
         velHistory = testCharacter.getVelocity();
         assertTrue(velHistory.get(0) < 0);
         assertEquals(0, velHistory.get(1), 0.0);
-        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed());
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("West", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.A);
 
