@@ -26,6 +26,9 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
 
     private SoundManager sm;
 
+    /**
+     * initialises the requirements
+     */
     private void init() {
         this.name = "Hatchet";
         allRequirements = new HashMap<>();

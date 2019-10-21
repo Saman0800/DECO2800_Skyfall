@@ -2,7 +2,9 @@ package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.resources.HealthResources;
 
-
+/*
+    A mushroom that hurts the players health when they eat it
+ */
 public class PoisonousMushroom extends HealthResources {
 
     /**
