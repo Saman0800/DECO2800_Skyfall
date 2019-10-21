@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.world.World;
+import org.javatuples.Pair;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -26,7 +27,7 @@ public class ProjectileTest  {
      * Create a new Projectile.
      */
     private Projectile projectile = new Projectile(new HexVector(),"slash",
-            "projectileTest",new HexVector(1,1),1,1,1, 40);
+            "projectileTest",new HexVector(1,1),1,1,new Pair<>(1f, 40));
 
 
     /**
