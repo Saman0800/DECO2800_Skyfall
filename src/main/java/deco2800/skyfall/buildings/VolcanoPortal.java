@@ -1,10 +1,9 @@
 package deco2800.skyfall.buildings;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.saving.Save;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VolcanoPortal extends AbstractPortal implements Blueprint {
     private final transient Logger logger = LoggerFactory.getLogger(VolcanoPortal.class);

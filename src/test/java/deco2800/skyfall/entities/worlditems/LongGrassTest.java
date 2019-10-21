@@ -1,7 +1,21 @@
 package deco2800.skyfall.entities.worlditems;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.OnScreenMessageManager;
+import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
@@ -9,6 +23,7 @@ import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
+import java.util.Random;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,16 +32,6 @@ import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.Random;
-
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, MainCharacter.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,

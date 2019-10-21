@@ -1,13 +1,15 @@
 package deco2800.skyfall.resources.items;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.entities.worlditems.ForestTree;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.World;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class HatchetTest {
 

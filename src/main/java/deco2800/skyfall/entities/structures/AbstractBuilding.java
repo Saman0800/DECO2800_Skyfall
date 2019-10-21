@@ -1,8 +1,6 @@
 package deco2800.skyfall.entities.structures;
 
 import deco2800.skyfall.entities.SaveableEntity;
-import deco2800.skyfall.worlds.world.World;
-
 import java.util.HashMap;
 import java.util.Map;
 

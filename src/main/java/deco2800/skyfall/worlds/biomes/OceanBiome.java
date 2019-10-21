@@ -1,13 +1,8 @@
 package deco2800.skyfall.worlds.biomes;
 
 import deco2800.skyfall.worlds.Tile;
-
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * Ocean Biome

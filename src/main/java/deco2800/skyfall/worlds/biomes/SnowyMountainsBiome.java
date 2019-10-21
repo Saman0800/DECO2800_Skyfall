@@ -1,9 +1,8 @@
 package deco2800.skyfall.worlds.biomes;
 
-import java.util.Random;
-
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import java.util.Random;
 
 /**
  * Snowy Mountains biome

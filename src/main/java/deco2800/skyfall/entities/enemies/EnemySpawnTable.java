@@ -1,18 +1,5 @@
 package deco2800.skyfall.entities.enemies;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.EnvironmentManager;
@@ -23,6 +10,17 @@ import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EnemySpawnTable implements TimeObserver {
 
@@ -72,15 +70,6 @@ public class EnemySpawnTable implements TimeObserver {
      * A reference to a main character for easy queries.
      */
     private MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, "Main Piece", 10);
-
-    public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
-            Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor,
-            Function<EnvironmentManager, Double> probAdjFunc) {
-
-        this(spawnRadius, maxInRadius, frequency, biomeToConstructor,
-                GameManager.getManagerFromInstance(EnvironmentManager.class), probAdjFunc,
-                GameManager.get().getWorld());
-    }
 
     public EnemySpawnTable(int spawnRadius, int maxInRadius, int frequency,
             Map<String, List<Function<HexVector, ? extends Enemy>>> biomeToConstructor,

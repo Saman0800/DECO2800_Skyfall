@@ -1,5 +1,7 @@
 package deco2800.skyfall.graphics;
 
+import static deco2800.skyfall.util.MathUtil.clamp;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -9,8 +11,6 @@ import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.util.SettingsFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static deco2800.skyfall.util.MathUtil.clamp;
 
 /**
  * A class that wraps a shader program Handles loading, compiling, disabling and

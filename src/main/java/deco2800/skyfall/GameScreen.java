@@ -1,6 +1,10 @@
 package deco2800.skyfall;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.LifecycleListener;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,13 +13,26 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import deco2800.skyfall.buildings.ForestPortal;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.enemies.*;
+import deco2800.skyfall.entities.enemies.Abductor;
+import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.entities.enemies.EnemySpawnTable;
+import deco2800.skyfall.entities.enemies.Heavy;
+import deco2800.skyfall.entities.enemies.Medium;
+import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.graphics.HasPointLight;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.ShaderWrapper;
 import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.handlers.KeyboardManager;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.EnvironmentManager;
+import deco2800.skyfall.managers.FeedbackManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.PathFindingService;
+import deco2800.skyfall.managers.QuestManager;
+import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.renderers.OverlayRenderer;
@@ -23,20 +40,23 @@ import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.renderers.Renderer3D;
 import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.lightinghelpers.*;
+import deco2800.skyfall.util.lightinghelpers.FunctionalSpectralValue;
+import deco2800.skyfall.util.lightinghelpers.IntensityFunction;
+import deco2800.skyfall.util.lightinghelpers.LinearSpectralValue;
+import deco2800.skyfall.util.lightinghelpers.SpectralValue;
+import deco2800.skyfall.util.lightinghelpers.TFTuple;
 import deco2800.skyfall.worlds.packing.BirthPlacePacking;
 import deco2800.skyfall.worlds.packing.EnvironmentPacker;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An instance of a Game screen.

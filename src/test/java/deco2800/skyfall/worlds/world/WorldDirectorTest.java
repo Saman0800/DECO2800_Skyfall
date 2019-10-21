@@ -1,8 +1,19 @@
 package deco2800.skyfall.worlds.world;
 
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,9 +21,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, DatabaseManager.class, MainCharacter.class })

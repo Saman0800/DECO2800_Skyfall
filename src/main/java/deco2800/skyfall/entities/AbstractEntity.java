@@ -2,7 +2,12 @@ package deco2800.skyfall.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.google.gson.annotations.Expose;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
@@ -15,10 +20,12 @@ import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.resources.NaturalResources;
 import deco2800.skyfall.util.BodyEditorLoader;
 import deco2800.skyfall.util.HexVector;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * A AbstractEntity is an item that can exist in both 3D and 2D worlds
@@ -48,10 +55,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     private int height;
     private float colRenderLength;
     private float rowRenderLength;
-
-    public void setFixture(Fixture fixture) {
-        this.fixture = fixture;
-    }
 
     public void setColRenderLength(float colRenderLength) {
         this.colRenderLength = colRenderLength;
@@ -399,12 +402,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
 
     public void setEntityID(int id) {
         this.entityID = id;
-    }
-
-    public void dispose() {
-        body.destroyFixture(fixture);
-
-        GameManager.get().getWorld().getEntities().remove(this);
     }
 
     /**

@@ -1,8 +1,8 @@
 package deco2800.skyfall.util.lightinghelpers;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class TFTupleTest {
 

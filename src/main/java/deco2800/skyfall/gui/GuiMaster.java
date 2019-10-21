@@ -31,25 +31,6 @@ public class GuiMaster {
     }
 
     /**
-     * Creates a scrolling text box if the hash is not in the map
-     * otherwise it grabs the existing scrolling text box in the map
-     * @param hash the hash to check for in the elements map
-     */
-    public static ScrollingTextBox scrollingtextBox(String hash) {
-        if (guiElementsMap.containsKey(hash)) {
-            AbstractGui item = guiElementsMap.get(hash);
-
-            if (item instanceof ScrollingTextBox) {
-                return (ScrollingTextBox)item;
-            } else {
-                return null;
-            }
-        }
-
-        return add(new ScrollingTextBox(hash));
-    }
-
-    /**
      * Updates all elements currently in the elements list
      * @param timeDelta time between last update
      */

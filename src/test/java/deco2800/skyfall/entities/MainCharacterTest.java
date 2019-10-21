@@ -1,5 +1,20 @@
 package deco2800.skyfall.entities;
 
+import static deco2800.skyfall.buildings.BuildingType.CABIN;
+import static deco2800.skyfall.buildings.BuildingType.CASTLE;
+import static deco2800.skyfall.buildings.BuildingType.SAFEHOUSE;
+import static deco2800.skyfall.buildings.BuildingType.TOWNCENTRE;
+import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 import com.badlogic.gdx.Input;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
@@ -14,34 +29,42 @@ import deco2800.skyfall.entities.weapons.Bow;
 import deco2800.skyfall.entities.weapons.EmptyItem;
 import deco2800.skyfall.entities.weapons.Spear;
 import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.DatabaseManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.items.*;
+import deco2800.skyfall.resources.items.AloeVera;
+import deco2800.skyfall.resources.items.Apple;
+import deco2800.skyfall.resources.items.Berry;
+import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.Metal;
+import deco2800.skyfall.resources.items.PickAxe;
+import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.resources.items.Wood;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
-import org.junit.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-
-import static deco2800.skyfall.buildings.BuildingType.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyInt;
-import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class,
@@ -1035,7 +1058,7 @@ public class MainCharacterTest {
         }
         velHistory = testCharacter.getVelocity();
         assertTrue(velHistory.get(0) < 0);
-        assertEquals(0, velHistory.get(1), 0.3);
+        assertEquals(0, velHistory.get(1), 0.4);
         assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("West", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.A);

@@ -26,28 +26,6 @@ public class EntityHexVector extends HexVector {
     }
 
     /**
-     * Constructs an {@code EntityHexVector} from an entity and a vector.
-     *
-     * @param entity the entity whose position is represented by this vector
-     * @param vector the vector to copy
-     */
-    public EntityHexVector(AbstractEntity entity, HexVector vector) {
-        super(vector);
-        this.entity = entity;
-    }
-
-    /**
-     * Constructs an {@code EntityHexVector} from an entity and a string representation of a vector.
-     *
-     * @param entity the entity whose position is represented by this vector
-     * @param vector the string representation of the vector to copy
-     */
-    public EntityHexVector(AbstractEntity entity, String vector) {
-        super(vector);
-        this.entity = entity;
-    }
-
-    /**
      * Constructs an {@code EntityHexVector} from an entity. The initial value of the vector is (0, 0).
      *
      * @param entity the entity whose position is represented by this vector

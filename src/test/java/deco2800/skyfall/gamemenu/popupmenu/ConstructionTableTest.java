@@ -1,8 +1,10 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.mock;
+
 import deco2800.skyfall.buildings.BuildingEntity;
 import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.entities.AbstractEntity;
@@ -16,9 +18,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
 
 @PrepareForTest({ WorldBuilder.class, TextureManager.class,
         GameMenuManager.class, StatisticsManager.class })

@@ -4,12 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Timer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages the sounds for the game.
@@ -215,16 +214,6 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Check whether this music is stored in the map
-     *
-     * @param musicName Name/Key of the music in the musicMap.
-     * @return true if it does, otherwise, false.
-     */
-    public boolean musicInMap(String musicName) {
-        return musicMap.containsKey(musicName);
-    }
-
-    /**
      * Plays a given sound if it exists in the HashMap. Returns true if sound is
      * played.
      *
@@ -385,55 +374,10 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Check whether the sound is in the loop
-     *
-     * @param soundName name of the sound in soundMap.
-     * @return true if it does, otherwise return false.
-     */
-    public boolean checkLoop(String soundName) {
-        return soundMap.containsKey(soundName)
-                || musicMap.containsKey(soundName);
-    }
-
-    /**
-     * Return the selected sound
-     */
-    public Sound getTheSound(String soundName) {
-        return soundMap.get(soundName);
-    }
-
-    /**
      * Return the selected music
      */
     public Music getTheMusic(String musicName) {
         return musicMap.get(musicName);
-    }
-
-    /**
-     * Returns the map of sounds
-     *
-     * @return soundMap<String, Sound>
-     */
-    public Map<String, Sound> getSoundMap() {
-        return Collections.unmodifiableMap(soundMap);
-    }
-
-    /**
-     * Returns the map of music
-     *
-     * @return musicMap<String, Music>
-     */
-    public Map<String, Music> getMusicMap() {
-        return Collections.unmodifiableMap(musicMap);
-    }
-
-    /**
-     * Sets the toggle to be paused so that other managers know
-     *
-     * @param paused True if paused, false otherwise
-     */
-    public void setPaused(boolean paused) {
-        this.paused = paused;
     }
 
     /**
@@ -467,24 +411,6 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Getter for the music volume of the game
-     *
-     * @return the music volume
-     */
-    public float getMusicVolume() {
-        return gameMusicVolume;
-    }
-
-    /**
-     * Gets the music currently playing
-     *
-     * @return
-     */
-    public String getPlaying() {
-        return playing;
-    }
-
-    /**
      * Updates the volume of the currently playing music (called by menu's
      * elsewhere)
      *
@@ -492,22 +418,6 @@ public class SoundManager extends AbstractManager {
     public void updateVolume() {
         Music bgm = getTheMusic(playing);
         bgm.setVolume(gameMusicVolume);
-    }
-
-    /**
-     * Disposes of the sound/music object so that no memory leaks are created
-     *
-     * @param soundName the string mapping to the object to dispose of
-     */
-    public void dispose(String soundName) {
-        if (soundLoops.containsKey(soundName)) {
-            Sound sound = soundMap.get(soundName);
-            sound.dispose();
-            soundLoops.remove(soundName);
-        } else if (musicMap.containsKey(soundName)) {
-            Music music = musicMap.get(soundName);
-            music.dispose();
-        }
     }
 
 }

@@ -8,7 +8,6 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
-
 import java.util.List;
 
 public class Lizard extends AbstractPet implements Animatable, Item {

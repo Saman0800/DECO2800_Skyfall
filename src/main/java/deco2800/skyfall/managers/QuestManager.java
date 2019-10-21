@@ -1,12 +1,14 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.buildings.*;
+import deco2800.skyfall.buildings.AbstractPortal;
+import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.items.Hatchet;
 import deco2800.skyfall.resources.items.PickAxe;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class QuestManager extends TickableManager {
 

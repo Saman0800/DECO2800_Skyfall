@@ -3,7 +3,10 @@ package deco2800.skyfall.gamemenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.managers.GameManager;
@@ -157,17 +160,4 @@ public class AbstractPopUpElement extends AbstractUIElement {
     }
 
 
-    protected  void goldAndConstructionTableDuplicatedFunctionality (String bannerName) {
-
-        Image infoBar = new Image(gameMenuManager.generateTextureRegionDrawableObject(bannerName));
-        infoBar.setSize(550, 55);
-        infoBar.setPosition(90, 600);
-
-        Table infoPanel = new Table();
-        infoPanel.setSize(410, 400);
-        infoPanel.setPosition(25, 18);
-        infoPanel.setBackground(gameMenuManager.generateTextureRegionDrawableObject("info_panel"));
-        baseTable.addActor(infoBar);
-
-    }
 }

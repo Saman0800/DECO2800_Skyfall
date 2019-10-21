@@ -1,5 +1,9 @@
 package deco2800.skyfall.managers;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.pets.AbstractPet;
 import deco2800.skyfall.entities.pets.Lizard;
@@ -14,10 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({GameManager.class, DatabaseManager.class, MainCharacter.class, InventoryManager.class})

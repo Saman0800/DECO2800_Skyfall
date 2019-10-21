@@ -1,14 +1,14 @@
 package deco2800.skyfall.entities;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.pets.Tiger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TigerTest {
     Tiger tiger;

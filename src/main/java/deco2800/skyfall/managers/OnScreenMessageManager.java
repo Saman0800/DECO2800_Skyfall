@@ -1,10 +1,13 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.enemies.*;
+import deco2800.skyfall.entities.enemies.Abductor;
+import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.entities.enemies.Heavy;
+import deco2800.skyfall.entities.enemies.Medium;
+import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.handlers.KeyboardManager;
 import deco2800.skyfall.observers.KeyTypedObserver;
-
 import java.util.ArrayList;
 import java.util.List;
 

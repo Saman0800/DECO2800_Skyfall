@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities;
 
 import com.google.gson.annotations.Expose;
-
 import deco2800.skyfall.util.HexVector;
 
 public abstract class AgentEntity extends AbstractEntity{

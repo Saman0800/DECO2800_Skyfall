@@ -2,7 +2,6 @@ package deco2800.skyfall.entities;
 
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
-
 import java.io.Serializable;
 
 public abstract class SaveableEntity extends AbstractEntity

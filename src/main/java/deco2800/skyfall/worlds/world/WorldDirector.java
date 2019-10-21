@@ -1,8 +1,5 @@
 package deco2800.skyfall.worlds.world;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import deco2800.skyfall.entities.Camel;
 import deco2800.skyfall.entities.Horse;
 import deco2800.skyfall.entities.MainCharacter;
@@ -18,7 +15,6 @@ import deco2800.skyfall.entities.worlditems.HotSpring;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
-
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
@@ -27,6 +23,8 @@ import deco2800.skyfall.worlds.biomes.MountainBiome;
 import deco2800.skyfall.worlds.biomes.SnowyMountainsBiome;
 import deco2800.skyfall.worlds.biomes.SwampBiome;
 import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 /**

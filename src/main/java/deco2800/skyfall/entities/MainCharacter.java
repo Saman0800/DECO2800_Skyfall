@@ -1,15 +1,22 @@
 package deco2800.skyfall.entities;
 
+import static deco2800.skyfall.buildings.BuildingType.CABIN;
+import static deco2800.skyfall.buildings.BuildingType.CASTLE;
+import static deco2800.skyfall.buildings.BuildingType.DESERTPORTAL;
+import static deco2800.skyfall.buildings.BuildingType.FENCE;
+import static deco2800.skyfall.buildings.BuildingType.FORESTPORTAL;
+import static deco2800.skyfall.buildings.BuildingType.MOUNTAINPORTAL;
+import static deco2800.skyfall.buildings.BuildingType.SAFEHOUSE;
+import static deco2800.skyfall.buildings.BuildingType.STORAGE_UNIT;
+import static deco2800.skyfall.buildings.BuildingType.TOWNCENTRE;
+import static deco2800.skyfall.buildings.BuildingType.VOLCANOPORTAL;
+import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-
-import org.javatuples.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.Animatable;
@@ -27,10 +34,21 @@ import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
-import deco2800.skyfall.entities.weapons.*;
+import deco2800.skyfall.entities.weapons.Bow;
+import deco2800.skyfall.entities.weapons.EmptyItem;
+import deco2800.skyfall.entities.weapons.Spear;
+import deco2800.skyfall.entities.weapons.Sword;
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.FeedbackManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.PetsManager;
+import deco2800.skyfall.managers.QuestManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -45,14 +63,16 @@ import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
-import java.util.*;
-import java.util.Map.Entry;
-
-import static deco2800.skyfall.buildings.BuildingType.*;
 
 /**
  * Main character in the game

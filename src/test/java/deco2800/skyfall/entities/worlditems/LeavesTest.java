@@ -5,14 +5,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-import java.util.Random;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import deco2800.skyfall.entities.SaveableEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+import java.util.Random;
+import org.junit.Before;
+import org.junit.Test;
 
 public class LeavesTest {
 

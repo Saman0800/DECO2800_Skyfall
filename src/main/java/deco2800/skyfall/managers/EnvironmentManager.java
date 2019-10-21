@@ -6,7 +6,6 @@ import deco2800.skyfall.observers.DayNightObserver;
 import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
 import deco2800.skyfall.worlds.Tile;
-
 import java.util.ArrayList;
 import java.util.List;
 

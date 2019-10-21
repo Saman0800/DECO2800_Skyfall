@@ -1,15 +1,17 @@
 package deco2800.skyfall.resources;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.resources.items.Apple;
 import deco2800.skyfall.resources.items.AloeVera;
+import deco2800.skyfall.resources.items.Apple;
 import deco2800.skyfall.resources.items.Berry;
 import deco2800.skyfall.resources.items.PoisonousMushroom;
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.Mockito.*;
-
-import static org.junit.Assert.*;
 
 public class HealthResourcesTest {
     private HealthResources apple;

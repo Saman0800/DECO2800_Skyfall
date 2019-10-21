@@ -1,11 +1,13 @@
 package deco2800.skyfall.util;
 
-import java.io.*;
+import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 public class SettingsFileTest {
     @Before

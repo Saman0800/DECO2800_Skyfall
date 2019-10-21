@@ -2,7 +2,6 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.tasks.MovementTask;
 import deco2800.skyfall.tasks.PathFindingServiceThread;
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 

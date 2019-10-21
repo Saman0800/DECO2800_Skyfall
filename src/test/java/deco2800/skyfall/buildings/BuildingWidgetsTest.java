@@ -1,12 +1,19 @@
 package deco2800.skyfall.buildings;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import deco2800.skyfall.BaseGDXTest;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.world.World;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import deco2800.skyfall.BaseGDXTest;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,20 +1,18 @@
 package deco2800.skyfall.entities;
 
-import deco2800.skyfall.managers.ChestManager;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
-import org.junit.Before;
-
-import java.util.HashMap;
-import org.junit.Test;
-
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import deco2800.skyfall.managers.ChestManager;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.Tile;
+import java.util.HashMap;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ChestTest {
 

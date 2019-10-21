@@ -1,8 +1,17 @@
 package deco2800.skyfall.worlds.world;
 
 import com.badlogic.gdx.Gdx;
-import deco2800.skyfall.buildings.*;
-import deco2800.skyfall.entities.*;
+import deco2800.skyfall.buildings.AbstractPortal;
+import deco2800.skyfall.buildings.BuildingEntity;
+import deco2800.skyfall.buildings.DesertPortal;
+import deco2800.skyfall.buildings.ForestPortal;
+import deco2800.skyfall.buildings.MountainPortal;
+import deco2800.skyfall.buildings.VolcanoPortal;
+import deco2800.skyfall.entities.AbstractEntity;
+import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.entities.BlueprintShop;
+import deco2800.skyfall.entities.Chest;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
@@ -32,15 +41,21 @@ import deco2800.skyfall.worlds.generation.WorldGenException;
 import deco2800.skyfall.worlds.generation.delaunay.NotEnoughPointsException;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-import org.javatuples.Pair;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
+import org.javatuples.Pair;
 
 /**
  * AbstractWorld is the Game AbstractWorld

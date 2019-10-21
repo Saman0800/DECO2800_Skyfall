@@ -1,15 +1,27 @@
 package deco2800.skyfall.managers;
 
-import com.badlogic.gdx.Game;
-import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.entities.StaticEntity;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.items.*;
-
-import org.junit.*;
-import java.util.*;
-
-import static org.junit.Assert.*;
+import deco2800.skyfall.resources.items.AloeVera;
+import deco2800.skyfall.resources.items.Apple;
+import deco2800.skyfall.resources.items.Berry;
+import deco2800.skyfall.resources.items.Metal;
+import deco2800.skyfall.resources.items.Sand;
+import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.resources.items.Vine;
+import deco2800.skyfall.resources.items.Wood;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.Before;
+import org.junit.Test;
 
 public class InventoryManagerTest {
 

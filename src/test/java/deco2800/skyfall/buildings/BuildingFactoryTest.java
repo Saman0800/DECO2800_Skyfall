@@ -3,10 +3,10 @@ package deco2800.skyfall.buildings;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.After;
 
 public class BuildingFactoryTest {
 
