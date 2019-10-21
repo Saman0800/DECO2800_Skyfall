@@ -57,7 +57,28 @@ public class QuestManagerTest {
     public void setMilestonesLevel2Test() {
         manager.setQuestLevel(2);
         assertEquals(2, manager.getQuestLevel());
+        this.assertAllResourcesGreaterThan0();
+    }
 
+    @Test
+    public void setMilestonesLevel1Test() {
+        manager.setQuestLevel(1);
+        assertEquals(1, manager.getQuestLevel());
+        this.assertAllResourcesGreaterThan0();
+    }
+
+    @Test
+    public void setMilestonesLevel0Test() {
+        manager.setQuestLevel(0);
+        assertEquals(0, manager.getQuestLevel());
+        this.assertAllResourcesGreaterThan0();
+    }
+
+    private void assertAllResourcesGreaterThan0() {
+        assertTrue(manager.getGoldTotal() > 0);
+        assertTrue(manager.getMetalTotal() > 0);
+        assertTrue(manager.getStoneTotal() > 0);
+        assertTrue(manager.getWoodTotal() > 0);
     }
 
     @Test
@@ -261,5 +282,36 @@ public class QuestManagerTest {
 
         assertFalse(manager.checkGold());
     }
+
+    @Test
+    public void nextQuestTest() {
+        manager.setQuestLevel(0);
+        manager.nextQuest();
+        assertEquals(1, manager.getQuestLevel());
+    }
+
+    @Test
+    public void collectNumTest() {
+        manager.setWoodTotal(0);
+        manager.setGoldTotal(0);
+        manager.setMetalTotal(0);
+        manager.setStoneTotal(0);
+
+        manager.setWeaponTotal("bow", 1);
+        manager.setWeaponTotal("sword", 1);
+        manager.setWeaponTotal("spear", 1);
+        manager.setWeaponTotal("axe", 1);
+
+        assertEquals(4, manager.collectNum());
+    }
+
+
+    @Test
+    public void getBuildingsTotal() {
+        manager.setQuestLevel(0);
+
+        assertTrue(manager.getBuildingsTotal().size() > 0); // weak test but future proof as changes in buildings will not break this test
+    }
+
 
 }
