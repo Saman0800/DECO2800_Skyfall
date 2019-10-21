@@ -436,7 +436,7 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
      */
     // @Override
     public int getRequiredWood() {
-        return 1;
+        return this.buildingType.getRequiredWood();
     }
 
     /**
@@ -446,7 +446,7 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
      */
     // @Override
     public int getRequiredStone() {
-        return 30;
+        return this.buildingType.getRequiredStone();
     }
 
     /**
@@ -456,7 +456,7 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
      */
     // @Override
     public int getRequiredMetal() {
-        return 10;
+        return this.buildingType.getRequiredMetal();
     }
 
     /**
@@ -468,15 +468,15 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
     // @Override
     public Map<String, Integer> getAllRequirements() {
 
-        buildCost.put("Wood", 50);
-        buildCost.put("Stone", 30);
-        buildCost.put("Metal", 10);
+        buildCost.put("Wood", this.buildingType.getRequiredWood());
+        buildCost.put("Stone", this.buildingType.getRequiredStone());
+        buildCost.put("Metal", this.buildingType.getRequiredMetal());
         return buildCost;
     }
 
     // @Override
     public String getName() {
-        return null;
+        return this.buildingType.getName();
     }
 
     /**
@@ -569,12 +569,12 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
             projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
                     new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
                             position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
-                    equippedItem.getName().equals("bow") ? 10 : 0);
+                    equippedItem.getName().equals("bow") ? 10 : 0, 40);
         else
             projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
                     new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
                             position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
-                    0);
+                    0, 40);
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);

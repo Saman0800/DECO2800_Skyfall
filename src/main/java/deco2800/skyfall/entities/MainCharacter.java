@@ -597,20 +597,24 @@ public class MainCharacter extends Peon
 
         currentAttackIsMelee = !(((Weapon) equippedItem).getWeaponType().equals("range"));
 
+        float startAngle = -30.f;
+
+        HexVector startPosition = currentAttackIsMelee ? unitDirection.rotated(startAngle) : unitDirection;
+
         // If there is a default projectile selected to fire, use that.
         if (defaultProjectile == null) {
             currentProjectile = new Projectile(mousePosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
                     new HexVector(
-                            position.getCol() + 0.5f
-                                    + 1.5f * (currentAttackIsMelee ? unitDirection.getRow() : unitDirection.getCol()),
-                            position.getRow() + 0.5f
-                                    + 1.5f * (currentAttackIsMelee ? -unitDirection.getCol() : unitDirection.getRow())),
-                    ((Weapon) equippedItem).getDamage(), ((Weapon) equippedItem).getAttackRate(), range);
+                            position.getCol()
+                                    + 1.5f * startPosition.getCol(),
+                            position.getRow()
+                                    + 1.5f * startPosition.getRow()),
+                    ((Weapon) equippedItem).getDamage(), currentAttackIsMelee ? 0.f : 1.f, range, currentAttackIsMelee ? 5 : 10);
         } else {
             currentProjectile = defaultProjectile;
         }
 
-        currentProjectile.setAngle((currentAttackIsMelee ? -90.f : 0.f) + 180.f
+        currentProjectile.setAngle((currentAttackIsMelee ? startAngle : 0.f) + 180.f
                 + (float) Math.toDegrees(Math.atan2(unitDirection.getRow(), unitDirection.getCol())));
 
         // Add the projectile entity to the game world.
@@ -1513,6 +1517,8 @@ public class MainCharacter extends Peon
         if (tile != null && (tile.getTextureName().contains("water") || tile.getTextureName().contains("lake")
                 || tile.getTextureName().contains("ocean")) && !canSwim) {
             valid = false;
+
+            getBody().setLinearVelocity(getBody().getLinearVelocity().scl(-0.1f));
         }
 
         return valid;

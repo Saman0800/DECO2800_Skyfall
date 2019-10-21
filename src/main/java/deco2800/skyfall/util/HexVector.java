@@ -1,4 +1,5 @@
 package deco2800.skyfall.util;
+import com.badlogic.gdx.math.Vector2;
 
 public class HexVector {
     private float col;
@@ -137,6 +138,47 @@ public class HexVector {
     public boolean isCloseEnoughToBeTheSameByDistance(HexVector vector, float e) {
         return MathUtil.floatEquality(this.getCol(), vector.getCol(), e)
                 && MathUtil.floatEquality(this.getRow(), vector.getRow(), e);
+    }
+
+    /**
+     * Calculates a rotated version of the vector with the angle specified
+     *
+     * @param angle The angle to rotate in degrees
+     * @return the rotated hexvector
+     */
+    public HexVector rotated(float angle) {
+        float radAng = (float)Math.toRadians(angle);
+
+        HexVector temp = new HexVector();
+
+        temp.col = (float)(this.col * Math.cos(radAng) - this.row * Math.sin(radAng));
+        temp.row = (float)(this.col * Math.sin(radAng) + this.row * Math.cos(radAng));
+
+        return temp;
+    }
+
+    /**
+     * Calculates a multiplied version of the vector with the value specified.
+     *
+     * @param val The value to multiply by
+     * @return the scaled hexvector
+     */
+    public HexVector times(float val) {
+        HexVector temp = new HexVector();
+
+        temp.col = this.col * val;
+        temp.col = this.row * val;
+
+        return temp;
+    }
+
+    /**
+     * Returns the identical Vector2 version of this HexVector.
+     *
+     * @return the Vector2 version of this HexVector
+     */
+    public Vector2 toVector2() {
+        return new Vector2(col, row);
     }
 
     /**

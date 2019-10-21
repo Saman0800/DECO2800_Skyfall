@@ -21,7 +21,7 @@ public class Spell extends Projectile {
      */
     public Spell(HexVector movementPosition, String textureName, String objectName,
                  HexVector startPosition, int damage, float speed, int range) {
-        super(movementPosition, textureName, objectName, startPosition, damage, speed, range);
+        super(movementPosition, textureName, objectName, startPosition, damage, speed, range, 40);
     }
 
     /**

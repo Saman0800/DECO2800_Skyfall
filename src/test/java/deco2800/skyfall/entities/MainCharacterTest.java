@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
+import deco2800.skyfall.buildings.BuildingType;
 import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
@@ -34,8 +35,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
+import static deco2800.skyfall.buildings.BuildingType.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyInt;
@@ -52,6 +55,8 @@ public class MainCharacterTest {
     private GoldPiece testGoldPiece;
     private InventoryManager inventoryManager;
     private World w = null;
+    private List<BuildingType> craftedBuildingsTest;
+
 
     @Mock
     private GameManager mockGM;
@@ -610,7 +615,7 @@ public class MainCharacterTest {
 
         Assert.assertFalse(testCharacter.checkRequiredResources(new Bow()));
 
-        for (i = 0; i < 140; i++) {
+        for (i = 0; i < 100; i++) {
             testCharacter.getInventoryManager().add(new Wood());
             testCharacter.getInventoryManager().add(new Stone());
             testCharacter.getInventoryManager().add(new Metal());
@@ -629,20 +634,29 @@ public class MainCharacterTest {
 
         int m;
 
-        for (m = 0; m < 140; m++) {
+        for (m = 0; m < 1000; m++) {
             testCharacter.getInventoryManager().add(new Wood());
             testCharacter.getInventoryManager().add(new Stone());
             testCharacter.getInventoryManager().add(new Metal());
         }
 
-        System.out.println(testCharacter.getInventoryManager().toString());
         testCharacter.createItem(new Hatchet());
         testCharacter.createItem(new PickAxe());
         testCharacter.createItem(new Sword());
         testCharacter.createItem(new Spear());
         testCharacter.createItem(new Bow());
+        testCharacter.createItem(BuildingType.CABIN);
+        testCharacter.createItem(BuildingType.TOWNCENTRE);
+        testCharacter.createItem(BuildingType.SAFEHOUSE);
+        testCharacter.createItem(BuildingType.WATCHTOWER);
+        testCharacter.createItem(BuildingType.CASTLE);
 
-        System.out.println(testCharacter.getInventoryManager().toString());
+
+        assertTrue(testCharacter.getCraftedBuildings().contains(CABIN));
+        assertTrue(testCharacter.getCraftedBuildings().contains(TOWNCENTRE));
+        assertTrue(testCharacter.getCraftedBuildings().contains(SAFEHOUSE));
+        assertTrue(testCharacter.getCraftedBuildings().contains(WATCHTOWER));
+        assertTrue(testCharacter.getCraftedBuildings().contains(CASTLE));
 
         Assert.assertEquals(2,
             testCharacter.getInventoryManager().getAmount("Hatchet"));

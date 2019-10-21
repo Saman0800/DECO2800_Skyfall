@@ -26,7 +26,7 @@ public class ProjectileTest  {
      * Create a new Projectile.
      */
     private Projectile projectile = new Projectile(new HexVector(),"slash",
-            "projectileTest",new HexVector(1,1),1,1,1);
+            "projectileTest",new HexVector(1,1),1,1,1, 40);
 
 
     /**

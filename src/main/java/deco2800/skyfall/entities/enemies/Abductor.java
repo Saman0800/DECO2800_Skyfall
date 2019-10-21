@@ -1,7 +1,5 @@
 package deco2800.skyfall.entities.enemies;
 
-
-
 /**
  * An instance of a Abductor enemy. It captures main character to other enemies.
  */
