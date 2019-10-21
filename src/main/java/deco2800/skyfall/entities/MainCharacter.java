@@ -1250,7 +1250,6 @@ public class MainCharacter extends Peon
     void notOnVehicle() {
         AbstractVehicle vehicle = null;
         for (AbstractEntity ve : GameManager.get().getWorld().getEntities()) {
-            float thing = ve.distance(this);
             if (ve instanceof Bike && ve.distance(this) < 3) {
                 vehicle = (Bike) ve;
                 ((Bike) vehicle).removeBike();

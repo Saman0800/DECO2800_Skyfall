@@ -26,22 +26,22 @@ public class SoundManager extends AbstractManager {
     private static Map<String, Music> musicMap = new HashMap<>();
 
     /* String containing the current music playing */
-    private static String playing;
+    private String playing;
 
     /* Class logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(SoundManager.class);
 
     /* Boolean to state whether the sound manager is paused or not */
-    private static boolean paused = false;
+    private boolean paused = false;
 
     /* Defines how quickly the music fades in/out */
     private static float fadeConstant = 0.1f;
 
     /* Sound effects volume for the game */
-    private static float gameSoundVolume = 1f;
+    private float gameSoundVolume = 1f;
 
     /* Music volume for the game */
-    private static float gameMusicVolume = 1f;
+    private float gameMusicVolume = 1f;
 
 
     /**
@@ -433,7 +433,7 @@ public class SoundManager extends AbstractManager {
      * @param paused True if paused, false otherwise
      */
     public void setPaused(boolean paused) {
-        SoundManager.paused = paused;
+        this.paused = paused;
     }
 
     /**
