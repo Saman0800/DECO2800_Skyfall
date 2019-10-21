@@ -181,25 +181,6 @@ public class StaticEntity extends SaveableEntity implements NewInstance<StaticEn
     }
 
     /**
-     * Gives all the static entities in a world a parent and sets there hit box to
-     * be that of the parent
-     */
-    public void setup() {
-        if (children == null) {
-            return;
-        }
-
-        for (HexVector childPos : children.keySet()) {
-            Tile child = GameManager.get().getWorld().getTile(childPos);
-            if (child != null) {
-                child.setParent(this);
-            }
-        }
-
-        getBody().setType(BodyDef.BodyType.StaticBody);
-    }
-
-    /**
      * This is the default implementation of the newInstance function for the static
      * entity given a tile position.
      *

@@ -1,7 +1,6 @@
 package deco2800.skyfall.buildings;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,14 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
 import com.badlogic.gdx.utils.Timer;
-import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.Tile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +41,6 @@ public class BuildingWidgets {
     private Skin skin;
     private World world;
 
-    private BuildingEntity building;
     private Table menu;
     private Label label;
     private ProgressBar healthBar;
@@ -403,55 +398,4 @@ public class BuildingWidgets {
         setDestroyBtn(building);
     }
 
-    public void update() {
-        // update widget position
-        if (cameraPos.getCol() != gm.getCamera().position.x || cameraPos.getRow() != gm.getCamera().position.y) {
-            menu.setPosition(menu.getX() - gm.getCamera().position.x + cameraPos.getCol(),
-                    menu.getY() - gm.getCamera().position.y + cameraPos.getRow());
-            cameraPos.setCol(gm.getCamera().position.x);
-            cameraPos.setRow(gm.getCamera().position.y);
-        }
-
-        // update health bar value
-        if (menu.isVisible()) {
-            int value = building.getCurrentHealth() / building.getInitialHealth();
-            if ((float) value != healthBar.getValue()) {
-                setHealthBar(building);
-            }
-        }
-    }
-
-    public void apply() {
-        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-            float[] mousePos = WorldUtil.screenToWorldCoordinates(Gdx.input.getX(), Gdx.input.getY());
-            float[] clickedPos = WorldUtil.worldCoordinatesToColRow(mousePos[0], mousePos[1]);
-
-            Tile tile = world.getTile(clickedPos[0], clickedPos[1]);
-            if (tile == null) {
-                return;
-            }
-
-            // initialize widget and building information
-            menu.setVisible(false);
-            building = null;
-
-            for (AbstractEntity entity : world.getEntities()) {
-                if (entity instanceof BuildingEntity) {
-                    Collider collider = ((BuildingEntity) entity).getCollider();
-                    float xLength = collider.getX() + collider.getXLength();
-                    float yLength = collider.getY() + collider.getYLength();
-
-                    // NOTE: a collider should not be null for every building
-                    if ((collider.getX() <= mousePos[0]) && (mousePos[0] <= xLength)
-                            && (collider.getY() <= mousePos[1]) && (mousePos[1] <= yLength)) {
-                        // show the building widgets if a building is clicked
-                        building = (BuildingEntity)entity;
-                        setWidgets((BuildingEntity)entity);
-                        menu.setVisible(true);
-                        break;
-                    }
-                }
-            }
-        }
-    }
 }

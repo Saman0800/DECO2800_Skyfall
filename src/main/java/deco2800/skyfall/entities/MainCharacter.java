@@ -673,15 +673,8 @@ public class MainCharacter extends Peon
         }
     }
 
-    /**
-     * Lets the player exit the vehicle by setting their speed back to default and
-     * changing the texture. Also changing swimming to false in case they were in a
-     * boat
-     */
-    public void exitVehicle() {
-        setAcceleration(0.01f);
-        setMaxSpeed(0.4f);
-    }
+
+
 
     public void pickUpInventory(Item item) {
         this.inventories.add(item);

@@ -57,20 +57,6 @@ public class HotSpring extends AbstractEntity {
     }
 
     /**
-     * Recovering the player healing power, if player in the hot spring
-     *
-     * @param player - MainCharacter
-     */
-    public void playerRecovery(MainCharacter player) {
-        float colDistance = player.getCol() - this.getCol();
-        float rowDistance = player.getRow() - this.getRow();
-        if ((colDistance * colDistance + rowDistance * rowDistance) < 4) {
-            player.changeHealth(this.amountOfRecovering());
-        }
-
-    }
-
-    /**
      * The amount of recovering
      */
     public int amountOfRecovering() {

@@ -100,15 +100,6 @@ public enum BuildingType implements Blueprint {
 
     }
 
-    public List<String> initialiseCabinTextures() {
-        List<String> cabinTextures = new ArrayList<>();
-        cabinTextures.add(BluePrintNames.CABIN_STRING_0);
-        cabinTextures.add("cabin_90");
-        cabinTextures.add("cabin_180");
-        cabinTextures.add("cabin_270");
-        return cabinTextures;
-    }
-
     /**
      * Initialises the textures and building costs for the Storage Unit Building Tpe
      *
@@ -120,12 +111,6 @@ public enum BuildingType implements Blueprint {
         buildingCost = new HashMap<>();
         buildingCost.put(BluePrintNames.WOOD_STRING, 4);
         buildingCost.put(BluePrintNames.STONE_STRING, 2);
-    }
-
-    public List<String> initialiseStorageUnitTextures() {
-        List<String> storageTextures = new ArrayList<>();
-        storageTextures.add(BluePrintNames.STORAGE_UNIT_STRING_LOWER);
-        return storageTextures;
     }
 
     /**
@@ -142,12 +127,6 @@ public enum BuildingType implements Blueprint {
         buildingCost.put(BluePrintNames.METAL_STRING, 2);
     }
 
-    public List<String> initialiseTownCentreTextures() {
-        List<String> townTextures = new ArrayList<>();
-        townTextures.add(BluePrintNames.TOWN_CENTRE_STRING_LOWER);
-        return townTextures;
-    }
-
     /**
      * Initialises the textures and building costs for the Castle Building Tpe
      *
@@ -159,15 +138,6 @@ public enum BuildingType implements Blueprint {
         buildingCost.put(BluePrintNames.METAL_STRING, 5);
     }
 
-    public List<String> initialiseCastleTextures() {
-        List<String> castleTextures = new ArrayList<>();
-        castleTextures.add("castle_0");
-        castleTextures.add("castle_90");
-        castleTextures.add("castle_180");
-        castleTextures.add("castle_270");
-        return castleTextures;
-    }
-
     /**
      * Initialises the textures and building costs for the Safe House Building Tpe
      *
@@ -177,15 +147,6 @@ public enum BuildingType implements Blueprint {
         buildingCost.put(BluePrintNames.WOOD_STRING, 10);
         buildingCost.put(BluePrintNames.STONE_STRING, 5);
         buildingCost.put(BluePrintNames.METAL_STRING, 2);
-    }
-
-    public List<String> initialiseSafeHouseTextures() {
-        List<String> safeHouseTextures = new ArrayList<>();
-        safeHouseTextures.add("safe_house_0");
-        safeHouseTextures.add("safe_house_90");
-        safeHouseTextures.add("safe_house_180");
-        safeHouseTextures.add("safe_house_270");
-        return safeHouseTextures;
     }
 
     /**
@@ -245,15 +206,6 @@ public enum BuildingType implements Blueprint {
         // Need to add initialise textures back.
 
         buildingTextures.add("portal_volcano");
-    }
-
-    public List<String> initialiseWatchTowerTextures() {
-        List<String> watchTowerTextures = new ArrayList<>();
-        watchTowerTextures.add("watchtower_0");
-        watchTowerTextures.add("watchtower_90");
-        watchTowerTextures.add("watchtower_180");
-        watchTowerTextures.add("watchtower_270");
-        return watchTowerTextures;
     }
 
     /**

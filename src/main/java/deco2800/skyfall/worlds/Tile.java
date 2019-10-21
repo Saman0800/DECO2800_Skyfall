@@ -371,24 +371,6 @@ public class Tile {
         this.texture = texture;
     }
 
-    public void dispose() {
-        if (this.hasParent() && this.parent != null) {
-            for (HexVector childposn : parent.getChildrenPositions()) {
-                Tile child = GameManager.get().getWorld().getTile(childposn);
-                if (child != null) {
-                    child.setParent(null);
-                    child.dispose();
-                } else {
-                    // Wat
-                }
-            }
-        }
-
-        this.removeReferanceFromNeighbours();
-        Pair<Integer, Integer> chunk = Chunk.getChunkForCoordinates(getCol(), getRow());
-        GameManager.get().getWorld().getChunk(chunk.getValue0(), chunk.getValue1()).getTiles().remove(this);
-    }
-
     public int calculateIndex() {
         if (index != -1) {
             return index;

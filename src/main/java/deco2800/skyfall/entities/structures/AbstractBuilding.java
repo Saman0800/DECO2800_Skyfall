@@ -31,25 +31,6 @@ public abstract class AbstractBuilding extends SaveableEntity {
         this.ycoord = y;
     }
 
-    /**
-     * @param x      - X coordinate
-     * @param y      - Y coordinate
-     * @param height - Render height
-     * @param world  - World to place building in
-     */
-    public void placeBuilding(float x, float y, int height, World world) {
-        // Construction_Permissions
-        setPosition(x, y, height);
-        world.addEntity(this);
-    }
-
-    /**
-     * @param world - World to remove building from
-     */
-    public void removeBuilding(World world) {
-        world.removeEntity(this);
-    }
-
     // Interaction method (onTick)
 
     /**
@@ -57,13 +38,6 @@ public abstract class AbstractBuilding extends SaveableEntity {
      */
     public Map<String, Integer> getCost() {
         return buildCost;
-    }
-
-    /**
-     * @param newCost set the cost of building
-     */
-    public void setCost(Map<String, Integer> newCost) {
-        this.buildCost = newCost;
     }
 
     /**
@@ -99,34 +73,6 @@ public abstract class AbstractBuilding extends SaveableEntity {
      */
     public void setBuildTime(int newBuildTime) {
         this.buildTime = newBuildTime;
-    }
-
-    /**
-     * @param newXcoord - New X coordinate of building
-     */
-    public void setXcoord(int newXcoord) {
-        this.xcoord = newXcoord;
-    }
-
-    /**
-     * @param newYcoord - New Y coordinate of building
-     */
-    public void setYcoord(int newYcoord) {
-        this.ycoord = newYcoord;
-    }
-
-    /**
-     * @param newXSize - New X length
-     */
-    public void setXSize(int newXSize) {
-        this.sizeX = newXSize;
-    }
-
-    /**
-     * @param newYSize - New Y length
-     */
-    public void setYSize(int newYSize) {
-        this.sizeY = newYSize;
     }
 
     /**

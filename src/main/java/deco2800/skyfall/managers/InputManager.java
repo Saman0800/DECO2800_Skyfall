@@ -37,14 +37,6 @@ public class InputManager extends AbstractManager implements InputProcessor {
 	}
 
 	/**
-	 * Removes an observer from observing the KeyDown action
-	 * @param observer the observer to remove
-	 */
-	public void removeKeyDownListener(KeyDownObserver observer) {
-		keyDownListeners.remove(observer);
-	}
-
-	/**
 	 * Adds an observer to observe the keyUp action
 	 * @param observer the observer to add
 	 */
@@ -53,91 +45,11 @@ public class InputManager extends AbstractManager implements InputProcessor {
 	}
 
 	/**
-	 * removes an observer from observing the keyUp action
-	 * @param observer the observer to remove
-	 */
-	public void removeKeyUpListener(KeyUpObserver observer) {
-		keyUpListeners.remove(observer);
-	}
-
-	/**
 	 * Adds an observer to observe the touchDown action
 	 * @param observer the observer to add
 	 */
 	public void addTouchDownListener(TouchDownObserver observer) {
 		touchDownListeners.add(observer);
-	}
-
-	/**
-	 * removes an observer from observing the touchDown action
-	 * @param observer the observer to remove
-	 */
-	public void removeTouchDownListener(TouchDownObserver observer) {
-		touchDownListeners.remove(observer);
-	}
-
-	/**
-	 * Adds an observer to observe the touchUp action
-	 * @param observer the observer to add
-	 */
-	public void addTouchUpListener(TouchUpObserver observer) {
-		touchUpListeners.add(observer);
-	}
-
-	/**
-	 * removes an observer from observing the touchUp action
-	 * @param observer the observer to remove
-	 */
-	public void removeTouchUpListener(TouchUpObserver observer) {
-		touchUpListeners.remove(observer);
-	}
-
-	/**
-	 * Adds an observer to observe the TouchDragged action
-	 * @param observer the observer to add
-	 */
-	public void addTouchDraggedListener(TouchDraggedObserver observer) {
-		touchDraggedListeners.add(observer);
-	}
-
-	/**
-	 * removes an observer from observing the touchDragged action
-	 * @param observer the observer to remove
-	 */
-	public void removeTouchDraggedListener(TouchDraggedObserver observer) {
-		touchDraggedListeners.remove(observer);
-	}
-
-	/**
-	 * Adds an observer to observe the mouseMoved action
-	 * @param observer the observer to add
-	 */
-	public void addMouseMovedListener(MouseMovedObserver observer) {
-		mouseMovedListeners.add(observer);
-	}
-
-	/**
-	 * removes an observer from observing the mouseMoved action
-	 * @param observer the observer to remove
-	 */
-	public void removeMouseMovedListener(MouseMovedObserver observer) {
-		mouseMovedListeners.remove(observer);
-	}
-
-	/**
-	 * Adds an observer to observe the scroll action
-	 * @param observer the observer to add
-	 */
-	public void addScrollListener(ScrollObserver observer) {
-		scrollListeners.add(observer);
-	}
-
-	/**
-	 * removes an observer from observing the scrolling action
-	 * @param observer the observer to remove
-	 */
-	public void removeScrollListener(ScrollObserver observer) {
-		scrollListeners.remove(observer);
 	}
 
 	@Override
