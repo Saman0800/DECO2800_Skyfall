@@ -25,18 +25,17 @@ import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.junit.Assert;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import static deco2800.skyfall.buildings.BuildingType.*;
 import static org.junit.Assert.*;
@@ -911,6 +910,8 @@ public class MainCharacterTest {
      * The time step setting for processing movement are the same as in the actual game
      *
      * During testing +0.1 needs to be added to the max speed due to rounding/numerical errors
+     *
+     * 0.3 is used for all deltas to account for numerical/rounding errors
      */
     @Test
     public void processMovementTest() {
@@ -922,9 +923,9 @@ public class MainCharacterTest {
             testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
         }
         velHistory = testCharacter.getVelocity();
-        assertEquals(0, velHistory.get(0), 0.0);
-        assertEquals(0, velHistory.get(1), 0.0);
-        assertEquals(0, velHistory.get(2), 0.0);
+        assertEquals(0, velHistory.get(0), 0.3);
+        assertEquals(0, velHistory.get(1), 0.3);
+        assertEquals(0, velHistory.get(2), 0.3);
         assertEquals("East", testCharacter.getPlayerDirectionCardinal());
 
         // North-West movement
@@ -949,7 +950,7 @@ public class MainCharacterTest {
             testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
         }
         velHistory = testCharacter.getVelocity();
-        assertEquals(0, velHistory.get(0), 0.0);
+        assertEquals(0, velHistory.get(0), 0.3);
         assertTrue(velHistory.get(1) > 0);
         assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("North", testCharacter.getPlayerDirectionCardinal());
@@ -978,7 +979,7 @@ public class MainCharacterTest {
         }
         velHistory = testCharacter.getVelocity();
         assertTrue(velHistory.get(0) > 0);
-        assertEquals(0, velHistory.get(1), 0.0);
+        assertEquals(0, velHistory.get(1), 0.3);
         assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("East", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.D);
@@ -1005,7 +1006,7 @@ public class MainCharacterTest {
             testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
         }
         velHistory = testCharacter.getVelocity();
-        assertEquals(0, velHistory.get(0), 0.0);
+        assertEquals(0, velHistory.get(0), 0.3);
         assertTrue(velHistory.get(1) < 0);
         assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("South", testCharacter.getPlayerDirectionCardinal());
@@ -1034,7 +1035,7 @@ public class MainCharacterTest {
         }
         velHistory = testCharacter.getVelocity();
         assertTrue(velHistory.get(0) < 0);
-        assertEquals(0, velHistory.get(1), 0.0);
+        assertEquals(0, velHistory.get(1), 0.3);
         assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("West", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.A);
@@ -1045,9 +1046,9 @@ public class MainCharacterTest {
             testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
         }
         velHistory = testCharacter.getVelocity();
-        assertEquals(0, velHistory.get(0), 0.0);
-        assertEquals(0, velHistory.get(1), 0.0);
-        assertEquals(0, velHistory.get(2), 0.0);
+        assertEquals(0, velHistory.get(0), 0.3);
+        assertEquals(0, velHistory.get(1), 0.3);
+        assertEquals(0, velHistory.get(2), 0.3);
         assertEquals("West", testCharacter.getPlayerDirectionCardinal());
     }
 
