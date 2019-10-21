@@ -1040,7 +1040,7 @@ public class MainCharacterTest {
         assertEquals("West", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.A);
 
-        // Stationary but with movement history changing angle
+        // Stationary
         for (int i = 0; i < 30; ++i) {
             testCharacter.processMovement();
             testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
@@ -1049,7 +1049,6 @@ public class MainCharacterTest {
         assertEquals(0, velHistory.get(0), 0.3);
         assertEquals(0, velHistory.get(1), 0.3);
         assertEquals(0, velHistory.get(2), 0.3);
-        assertEquals("West", testCharacter.getPlayerDirectionCardinal());
     }
 
     @After
