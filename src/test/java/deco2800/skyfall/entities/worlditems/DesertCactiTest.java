@@ -90,18 +90,4 @@ public class DesertCactiTest {
         assertEquals(testCacti.hashCode(), testCactiEq.hashCode());
     }
 
-    @Test
-    public void harvestTest() {
-
-        Tile testTile = new Tile(null, 0.5f, 0.5f);
-
-        testCacti = new DesertCacti(testTile, false);
-        int woodDropped = testCacti.harvest(testTile).size();
-
-        assertTrue((woodDropped > 1) && (woodDropped < 6));
-
-        assertEquals(testCacti.getWoodAmount(), 3);
-        testCacti.decreaseWoodAmount();
-        assertEquals(testCacti.getWoodAmount(), 2);
-    }
 }

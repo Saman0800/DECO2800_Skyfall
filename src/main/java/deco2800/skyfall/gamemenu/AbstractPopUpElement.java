@@ -2,6 +2,7 @@ package deco2800.skyfall.gamemenu;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -21,6 +22,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
     protected Table baseTable;
     private ImageButton exitButton;
     private boolean isVisible = false;
+    private SoundManager sm;
 
     /**
      * Constructor
@@ -36,6 +38,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
         super(stage, textureNames, tm);
         this.exitButton = exitButton;
         this.gameMenuManager = gameMenuManager;
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
         if (exitButton != null) {
             exitButton.addListener(new ClickListener() {
                 @Override
@@ -54,7 +57,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
             exitButton.setVisible(false);
         }
         // Play menu sound when the player click exit button
-        SoundManager.playSound("menu");
+        sm.playSound("menu");
         isVisible = false;
         gameMenuManager.getMainCharacter().resetVelocity();
         if (baseTable != null) {
@@ -89,7 +92,7 @@ public class AbstractPopUpElement extends AbstractUIElement {
             exitButton.top();
         }
         // Play menu sound when the player open the menu
-        SoundManager.playSound("menu");
+        sm.playSound("menu");
         gameMenuManager.getMainCharacter().resetVelocity();
         if (baseTable != null) {
             baseTable.setZIndex(30);

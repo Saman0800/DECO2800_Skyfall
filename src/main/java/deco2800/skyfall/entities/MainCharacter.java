@@ -93,6 +93,7 @@ public class MainCharacter extends Peon
     private static MainCharacter mainCharacterInstance = null;
     private boolean residualFromPopUp = false;
 
+    private SoundManager sm;
     private FeedbackManager fm;
 
     /**
@@ -394,7 +395,8 @@ public class MainCharacter extends Peon
         // Sets up the main character
         setUpCharacter();
 
-        fm = GameManager.get().getManager(FeedbackManager.class);
+        fm  =  GameManager.get().getManager(FeedbackManager.class);
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
     }
 
     /**
@@ -623,19 +625,19 @@ public class MainCharacter extends Peon
         // Play weapon attackEntity sound
         switch ((equippedItem).getName()) {
         case SWORD:
-            SoundManager.playSound(SWORD);
+            sm.playSound(SWORD);
             break;
         case SPEAR:
-            SoundManager.playSound(SPEAR);
+            sm.playSound(SPEAR);
             break;
         case BOW:
-            SoundManager.playSound(BOWATTACK);
+            sm.playSound(BOWATTACK);
             break;
         case AXE:
-            SoundManager.playSound(AXEATTACK);
+            sm.playSound(AXEATTACK);
             break;
         default:
-            SoundManager.playSound(HURT_SOUND_NAME);
+            sm.playSound(HURT_SOUND_NAME);
             break;
         }
 
@@ -762,7 +764,7 @@ public class MainCharacter extends Peon
             } else {
                 hurtTime = 0;
                 recoverTime = 0;
-                SoundManager.playSound(HURT_SOUND_NAME);
+                sm.playSound(HURT_SOUND_NAME);
 
                 if (hurtTime >= 400) {
                     setRecovering(true);
@@ -838,7 +840,7 @@ public class MainCharacter extends Peon
      * any actions in game anymore. Once game is retried, quests are reset.
      */
     public void kill() {
-        SoundManager.playSound(DIED_SOUND_NAME);
+        sm.playSound(DIED_SOUND_NAME);
         setCurrentState(AnimationRole.DEAD);
         deadTime = 0;
         setDead(true);
@@ -1081,7 +1083,7 @@ public class MainCharacter extends Peon
             }
             this.updatePosition();
         } else {
-            SoundManager.stopSound(WALK_NORMAL);
+            sm.stopSound(WALK_NORMAL);
             getBody().setLinearVelocity(0f, 0f);
             residualFromPopUp = true;
         }
@@ -1156,8 +1158,8 @@ public class MainCharacter extends Peon
             maxSpeed *= 2.f;
             // Add running sound when push shift
             if (pushKey) {
-                SoundManager.pauseSound(WALK_NORMAL);
-                SoundManager.loopSound(RUNNING);
+                sm.pauseSound(WALK_NORMAL);
+                sm.loopSound(RUNNING);
             }
             break;
         case Input.Keys.SPACE:
@@ -1338,11 +1340,11 @@ public class MainCharacter extends Peon
             isSprinting = false;
             maxSpeed /= 2.f;
             // Remove running sound when release shift
-            SoundManager.stopSound(RUNNING);
-            SoundManager.resumeSound(WALK_NORMAL);
+            sm.stopSound(RUNNING);
+            sm.resumeSound(WALK_NORMAL);
             break;
         case Input.Keys.SPACE:
-            SoundManager.stopSound(WALK_NORMAL);
+            sm.stopSound(WALK_NORMAL);
             break;
         default:
             break;
@@ -1711,25 +1713,25 @@ public class MainCharacter extends Peon
             if (isOnVehicle) {
                 // Change sound when get on the bike
                 if (vehicleType.equals("bike")) {
-                    SoundManager.stopSound(WALK_NORMAL);
-                    SoundManager.loopSound(DRIVEBIKE);
+                    sm.stopSound(WALK_NORMAL);
+                    sm.loopSound(DRIVEBIKE);
                 }
                 // Change sound when get on the sand car
                 if (vehicleType.equals(SAND_CAR)) {
-                    SoundManager.stopSound(WALK_NORMAL);
-                    SoundManager.loopSound(DRIVESANDCAR);
+                    sm.stopSound(WALK_NORMAL);
+                    sm.loopSound(DRIVESANDCAR);
                 }
             } else {
-                SoundManager.loopSound(WALK_NORMAL);
+                sm.loopSound(WALK_NORMAL);
             }
         }
 
         if (isMoving && vel == 0) {
             // Runs when the player stops moving
             isMoving = false;
-            SoundManager.stopSound(WALK_NORMAL);
-            SoundManager.stopSound(DRIVEBIKE);
-            SoundManager.stopSound(DRIVESANDCAR);
+            sm.stopSound(WALK_NORMAL);
+            sm.stopSound(DRIVEBIKE);
+            sm.stopSound(DRIVESANDCAR);
         }
     }
 
@@ -1821,7 +1823,7 @@ public class MainCharacter extends Peon
     /***
      * Checks if the player has sufficient resources , used in building a new item,
      * returns true if the player has sufficient resources , false otherwise.
-     * 
+     *
      * @param newItem the new Item that the player wants to create
      */
     public boolean checkRequiredResources(Blueprint newItem) {
@@ -1845,7 +1847,7 @@ public class MainCharacter extends Peon
 
     /***
      * Reduces the required resources form the player , used in item building
-     * 
+     *
      * @param newItem the new Item that the player wants to create
      */
     public void deductRequiredResources(Blueprint newItem) {

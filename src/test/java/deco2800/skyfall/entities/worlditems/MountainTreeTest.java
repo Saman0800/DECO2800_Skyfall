@@ -85,16 +85,6 @@ public class MountainTreeTest {
         assertEquals(testTree.hashCode(), testTreeEq.hashCode());
     }
 
-    @Test
-    public void harvestTest() {
-
-        Tile testTile = new Tile(null, 0.5f, 0.5f);
-
-        testTree = new MountainTree(testTile, false);
-        int woodDropped = testTree.harvest(testTile).size();
-
-        assertTrue((woodDropped >= 1) && (woodDropped <= 16));
-    }
 
     @Test
     public void newInstanceTest() {
