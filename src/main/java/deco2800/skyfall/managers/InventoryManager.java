@@ -301,10 +301,13 @@ public class InventoryManager extends TickableManager implements Serializable {
     }
 
     private boolean processPosition(String name, List<Item> itemsList, List<Tuple> pos) {
-        if(inventory.size() >= 12){
-            return false;
+        if(inventory.size() < 12) {
+            return emptyPositionCheck(name, itemsList, pos);
         }
+        return false;
+    }
 
+    private boolean emptyPositionCheck(String name, List<Item> itemsList, List<Tuple> pos){
         if (pos.isEmpty()) {
             positions.put(name, new Tuple(0, 0));
             inventory.put(name, itemsList);
@@ -320,7 +323,6 @@ public class InventoryManager extends TickableManager implements Serializable {
                 }
             }
         }
-
         return false;
     }
 
