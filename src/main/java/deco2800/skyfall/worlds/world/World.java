@@ -148,6 +148,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
     public World(WorldParameters worldParameters) {
         this.id = System.nanoTime();
         this.worldParameters = worldParameters;
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
 
         random = new Random(worldParameters.getSeed());
 
