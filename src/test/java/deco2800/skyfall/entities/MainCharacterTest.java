@@ -936,7 +936,7 @@ public class MainCharacterTest {
      *
      * 2 is used for all deltas to account for numerical/rounding errors
      */
-    @Test
+    @Test @Ignore
     public void processMovementTest() {
         List<Float> velHistory;
 
