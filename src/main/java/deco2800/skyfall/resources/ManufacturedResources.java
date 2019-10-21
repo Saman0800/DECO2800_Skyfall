@@ -3,7 +3,6 @@ package deco2800.skyfall.resources;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,11 +34,6 @@ public abstract class ManufacturedResources extends AbstractEntity implements It
     private int durability;
 
     protected String description;
-
-    public ManufacturedResources(MainCharacter owner) {
-        this();
-        this.owner = owner;
-    }
 
     public ManufacturedResources() {
         this.subtype = "Manufactured Resource";

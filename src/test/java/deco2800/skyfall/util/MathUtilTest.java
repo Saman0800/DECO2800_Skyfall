@@ -1,9 +1,9 @@
 package deco2800.skyfall.util;
 
-import org.junit.Test;
-
 import static deco2800.skyfall.util.MathUtil.clamp;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class MathUtilTest {
     @Test

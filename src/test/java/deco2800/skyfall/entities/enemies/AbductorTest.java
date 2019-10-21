@@ -1,9 +1,8 @@
 package deco2800.skyfall.entities.enemies;
 
-import deco2800.skyfall.worlds.world.WorldDirector;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class AbductorTest {
     Abductor abductor1 = new Abductor(4, 9, 1f,"Forest");

@@ -1,6 +1,6 @@
 package deco2800.skyfall.resources;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * An interface representing a blueprint which would be required to create

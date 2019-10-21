@@ -1,29 +1,28 @@
 package deco2800.skyfall.graphics;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyFloat;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.utils.Array;
 import deco2800.skyfall.graphics.types.Vec2;
 import deco2800.skyfall.graphics.types.Vec3;
+import java.util.Random;
+import java.util.Vector;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
-
-import java.nio.IntBuffer;
-import java.util.Random;
-import java.util.Vector;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 /**Tests the shader wrapper*/
 public class ShaderWrapperTest {

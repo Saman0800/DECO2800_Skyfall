@@ -2,16 +2,13 @@ package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-
 import deco2800.skyfall.renderers.PotateCamera;
 import deco2800.skyfall.worlds.world.World;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GameManager {
     // debug values stored here

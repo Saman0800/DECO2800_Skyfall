@@ -73,10 +73,6 @@ public class GoldStatusBar extends AbstractUIElement {
         }
     }
 
-    public void setAddingToPouch(boolean addingToPouch) {
-        this.addingToPouch = addingToPouch;
-    }
-
     public void updateLabel() {
         int total = gmm.getMainCharacter().getGoldPouchTotalValue();
         goldLabel.setText(" " + total + " G   ");

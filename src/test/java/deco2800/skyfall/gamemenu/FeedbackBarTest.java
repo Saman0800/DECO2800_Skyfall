@@ -1,5 +1,15 @@
 package deco2800.skyfall.gamemenu;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -14,9 +24,6 @@ import deco2800.skyfall.managers.TextureManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class FeedbackBarTest extends BaseGDXTest {
 

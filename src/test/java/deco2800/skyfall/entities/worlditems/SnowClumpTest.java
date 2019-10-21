@@ -1,10 +1,10 @@
 package deco2800.skyfall.entities.worlditems;
 
+import static org.junit.Assert.assertEquals;
+
 import deco2800.skyfall.worlds.Tile;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class SnowClumpTest {
     private SnowClump snowClump;

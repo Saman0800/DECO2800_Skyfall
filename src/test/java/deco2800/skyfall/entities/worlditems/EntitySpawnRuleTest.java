@@ -1,14 +1,16 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-import deco2800.skyfall.worlds.Tile;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import deco2800.skyfall.entities.StaticEntity;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
 import java.util.Random;
 import java.util.function.Function;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class EntitySpawnRuleTest {
 

@@ -6,14 +6,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
 import deco2800.skyfall.entities.SaveableEntity;
 import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.types.Vec2;
@@ -22,6 +14,13 @@ import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class })

@@ -1,8 +1,10 @@
 package deco2800.skyfall.managers;
 
 import deco2800.skyfall.entities.weapons.Weapon;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WeaponManager extends TickableManager {
 

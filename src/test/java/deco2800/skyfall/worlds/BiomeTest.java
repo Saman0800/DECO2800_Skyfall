@@ -1,12 +1,13 @@
 package deco2800.skyfall.worlds;
 
-import deco2800.skyfall.worlds.biomes.*;
-import org.junit.Test;
-
-import java.util.Random;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import deco2800.skyfall.worlds.biomes.AbstractBiome;
+import deco2800.skyfall.worlds.biomes.ForestBiome;
+import deco2800.skyfall.worlds.biomes.LakeBiome;
+import java.util.Random;
+import org.junit.Test;
 
 public class BiomeTest {
         @Test

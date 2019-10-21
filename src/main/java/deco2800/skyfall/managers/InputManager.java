@@ -1,10 +1,14 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.InputProcessor;
-
-import deco2800.skyfall.observers.*;
+import deco2800.skyfall.observers.KeyDownObserver;
+import deco2800.skyfall.observers.KeyUpObserver;
+import deco2800.skyfall.observers.MouseMovedObserver;
+import deco2800.skyfall.observers.ScrollObserver;
+import deco2800.skyfall.observers.TouchDownObserver;
+import deco2800.skyfall.observers.TouchDraggedObserver;
+import deco2800.skyfall.observers.TouchUpObserver;
 import deco2800.skyfall.util.Vector2;
-
 import java.util.ArrayList;
 
 /**

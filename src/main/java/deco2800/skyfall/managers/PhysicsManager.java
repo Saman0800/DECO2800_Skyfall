@@ -1,7 +1,11 @@
 package deco2800.skyfall.managers;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.World;
 import deco2800.skyfall.entities.AbstractEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,9 +1,15 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.weapons.*;
+import deco2800.skyfall.entities.weapons.Axe;
+import deco2800.skyfall.entities.weapons.Bow;
+import deco2800.skyfall.entities.weapons.Spear;
+import deco2800.skyfall.entities.weapons.Sword;
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.worlds.Tile;
-
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class WeaponManagerTest {
     // WeaponManager being used for testing

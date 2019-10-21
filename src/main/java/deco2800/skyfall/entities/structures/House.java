@@ -5,11 +5,10 @@ import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class House extends AbstractBuilding {
 

@@ -1,9 +1,10 @@
 package deco2800.skyfall.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class Vector2Test {
     private Vector2 vec = null;

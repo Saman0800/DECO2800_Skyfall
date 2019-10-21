@@ -1,16 +1,16 @@
 package deco2800.skyfall.buildings;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-
-import deco2800.skyfall.util.WorldUtil;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.util.Collider;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.world.World;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *

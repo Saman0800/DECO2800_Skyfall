@@ -1,13 +1,25 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.enemies.Enemy;
-import deco2800.skyfall.entities.weapons.*;
-import deco2800.skyfall.resources.items.*;
+import deco2800.skyfall.entities.weapons.Axe;
+import deco2800.skyfall.entities.weapons.Bow;
+import deco2800.skyfall.entities.weapons.Spear;
+import deco2800.skyfall.entities.weapons.Sword;
+import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.resources.items.AloeVera;
+import deco2800.skyfall.resources.items.Apple;
+import deco2800.skyfall.resources.items.Berry;
+import deco2800.skyfall.resources.items.Metal;
+import deco2800.skyfall.resources.items.Sand;
 import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.resources.items.Vine;
+import deco2800.skyfall.resources.items.Wood;
 import deco2800.skyfall.worlds.Tile;
-
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class StatisticsManagerTest {
 

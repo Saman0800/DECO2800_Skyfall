@@ -2,8 +2,11 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.LootRarity;
-import deco2800.skyfall.resources.items.*;
-
+import deco2800.skyfall.resources.items.AloeVera;
+import deco2800.skyfall.resources.items.Apple;
+import deco2800.skyfall.resources.items.Berry;
+import deco2800.skyfall.resources.items.Metal;
+import deco2800.skyfall.resources.items.Sand;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

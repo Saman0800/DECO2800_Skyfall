@@ -1,6 +1,9 @@
 package deco2800.skyfall.entities.vehicle;
 
-import com.badlogic.gdx.audio.Sound;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
@@ -13,10 +16,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 
 public class SandCarTest {

@@ -1,9 +1,9 @@
 package deco2800.skyfall.managers;
 
-import deco2800.skyfall.entities.*;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.enemies.Enemy;
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StatisticsManager  extends TickableManager {
 

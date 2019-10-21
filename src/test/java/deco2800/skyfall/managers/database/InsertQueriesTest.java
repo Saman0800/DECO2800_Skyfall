@@ -1,6 +1,8 @@
 package deco2800.skyfall.managers.database;
 
-import deco2800.skyfall.entities.MainCharacter;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import deco2800.skyfall.entities.MainCharacter.MainCharacterMemento;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.saving.Save;
@@ -9,22 +11,17 @@ import deco2800.skyfall.worlds.biomes.AbstractBiome.AbstractBiomeMemento;
 import deco2800.skyfall.worlds.generation.VoronoiEdge.VoronoiEdgeMemento;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode.WorldGenNodeMemento;
 import deco2800.skyfall.worlds.world.Chunk.ChunkMemento;
-import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.World.WorldMemento;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.flywaydb.core.Flyway;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import static org.junit.Assert.*;
 
 public class InsertQueriesTest {
 

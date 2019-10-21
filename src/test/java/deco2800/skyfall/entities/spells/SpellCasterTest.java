@@ -1,16 +1,16 @@
 package deco2800.skyfall.entities.spells;
 
-import com.badlogic.gdx.Input;
-import deco2800.skyfall.entities.MainCharacter;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.mock;
+
+import com.badlogic.gdx.Input;
+import deco2800.skyfall.entities.MainCharacter;
+import org.junit.Before;
+import org.junit.Test;
 
 public class SpellCasterTest {
 

@@ -4,11 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import deco2800.skyfall.buildings.AbstractPortal;
 import deco2800.skyfall.buildings.ForestPortal;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ForestPortalTest {
 

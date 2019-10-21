@@ -55,15 +55,6 @@ public class SkyfallGame extends Game {
 	}
 
 	/**
-	 * Gets the file handle to the save location.
-	 *
-	 * @return the file handle to the save location
-	 */
-	public FileHandle getSaveRootHandle() {
-		return saveRootHandle;
-	}
-
-	/**
 	 * Gets the main menu screen for this game.
 	 *
 	 * @return the main menu screen for this game

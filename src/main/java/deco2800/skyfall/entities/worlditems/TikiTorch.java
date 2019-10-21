@@ -2,13 +2,12 @@ package deco2800.skyfall.entities.worlditems;
 
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.graphics.HasPointLight;
+import deco2800.skyfall.graphics.PointLight;
 import deco2800.skyfall.graphics.types.Vec2;
+import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.managers.EnvironmentManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.graphics.types.*;
-import deco2800.skyfall.graphics.*;
-
 import java.util.Random;
 
 public class TikiTorch extends StaticEntity implements HasPointLight {

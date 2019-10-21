@@ -1,17 +1,16 @@
 package deco2800.skyfall.resources.items;
 
 import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.worlditems.*;
+import deco2800.skyfall.entities.worlditems.AbstractTree;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.ManufacturedResources;
 import deco2800.skyfall.util.HexVector;
+import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
 
 /***
  * A Hatchet item. Hatchet is a manufacturd resource. It can harvest a tree.

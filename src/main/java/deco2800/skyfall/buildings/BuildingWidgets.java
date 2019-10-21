@@ -7,22 +7,23 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-
 import com.badlogic.gdx.utils.Timer;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InventoryManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
-
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * A BuildingWidgets is a UI widgets for existing building entities, and
@@ -381,21 +382,6 @@ public class BuildingWidgets {
             }
         };
         destroyBtn.addListener(destroyListener);
-    }
-
-    /**
-     * Sets up a widget with specific information of a selected building and its
-     * position, then showing it.
-     *
-     * @param building a building is selected on the world
-     */
-    private void setWidgets(BuildingEntity building) {
-        label.setText(building.getObjectName() + " Lv" + building.getBuildingLevel());
-        setMenu(building);
-        setHealthBar(building);
-        setUpgradeBtn(building);
-        setInteractBtn(building);
-        setDestroyBtn(building);
     }
 
 }

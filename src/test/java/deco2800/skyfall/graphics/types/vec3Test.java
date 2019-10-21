@@ -1,10 +1,11 @@
 package deco2800.skyfall.graphics.types;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import deco2800.skyfall.util.Array2D;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
 
 public class vec3Test {
     @Test

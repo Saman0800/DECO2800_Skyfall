@@ -3,9 +3,12 @@ package deco2800.skyfall.managers;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.pets.AbstractPet;
 import deco2800.skyfall.resources.Item;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.*;
 
 public class PetsManager extends AbstractManager {
     //use map to store Pets Key is the name of pet

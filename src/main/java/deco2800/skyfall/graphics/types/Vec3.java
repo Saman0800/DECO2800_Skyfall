@@ -1,8 +1,8 @@
 package deco2800.skyfall.graphics.types;
 
-import java.util.Objects;
-
 import static deco2800.skyfall.util.MathUtil.clamp;
+
+import java.util.Objects;
 
 /**
  * An implementation of vec3 more convenient than array When referring to colour

@@ -1,12 +1,5 @@
 package deco2800.skyfall.managers.database;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import deco2800.skyfall.entities.MainCharacter.MainCharacterMemento;
 import deco2800.skyfall.entities.SaveableEntity.SaveableEntityMemento;
 import deco2800.skyfall.saving.Save.SaveMemento;
@@ -15,6 +8,12 @@ import deco2800.skyfall.worlds.generation.VoronoiEdge.VoronoiEdgeMemento;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode.WorldGenNodeMemento;
 import deco2800.skyfall.worlds.world.Chunk.ChunkMemento;
 import deco2800.skyfall.worlds.world.World.WorldMemento;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * Used to insert data into the database

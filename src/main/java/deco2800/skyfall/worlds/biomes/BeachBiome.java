@@ -2,7 +2,6 @@ package deco2800.skyfall.worlds.biomes;
 
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-
 import java.util.Random;
 
 public class BeachBiome extends AbstractBiome {

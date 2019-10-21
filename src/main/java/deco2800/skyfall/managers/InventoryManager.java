@@ -1,15 +1,5 @@
 package deco2800.skyfall.managers;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
@@ -21,6 +11,14 @@ import deco2800.skyfall.resources.items.Stone;
 import deco2800.skyfall.resources.items.Wood;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InventoryManager extends TickableManager implements Serializable {
 

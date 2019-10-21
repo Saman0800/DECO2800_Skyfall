@@ -3,25 +3,24 @@ package deco2800.skyfall.managers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.observers.DayNightObserver;
 import deco2800.skyfall.observers.SeasonObserver;
 import deco2800.skyfall.observers.TimeObserver;
-import java.util.ArrayList;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.world.World;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
-
-import static org.mockito.Mockito.*;
 
 public class EnvironmentManagerTest {
 

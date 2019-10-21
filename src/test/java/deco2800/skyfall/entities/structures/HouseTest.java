@@ -1,14 +1,14 @@
 package deco2800.skyfall.entities.structures;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mock;
 
 public class HouseTest {
 

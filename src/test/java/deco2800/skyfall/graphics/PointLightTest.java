@@ -1,10 +1,10 @@
 package deco2800.skyfall.graphics;
 
+import static org.junit.Assert.assertEquals;
+
 import deco2800.skyfall.graphics.types.Vec2;
 import deco2800.skyfall.graphics.types.Vec3;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class PointLightTest {
     @Test

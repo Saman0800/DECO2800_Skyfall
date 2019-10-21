@@ -1,8 +1,9 @@
 package deco2800.skyfall.entities;
 
 import deco2800.skyfall.Tickable;
-import deco2800.skyfall.managers.*;
-import deco2800.skyfall.tasks.*;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.TaskPool;
+import deco2800.skyfall.tasks.AbstractTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

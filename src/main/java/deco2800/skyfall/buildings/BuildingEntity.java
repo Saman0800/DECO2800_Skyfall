@@ -2,14 +2,9 @@ package deco2800.skyfall.buildings;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
-
-import deco2800.skyfall.entities.*;
-import org.javatuples.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.entities.ICombatEntity;
+import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.entities.SaveableEntity;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.InventoryManager;
@@ -18,10 +13,10 @@ import deco2800.skyfall.util.Collider;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.world.World;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A BuildingEntity is an base class for all building entity subclass, including

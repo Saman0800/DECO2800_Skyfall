@@ -18,8 +18,4 @@ public abstract class AbstractManager {
         return x + y;
     }
 
-    public int useAmToAdd(){
-        return am.add(1, 1);
-    }
-
 }

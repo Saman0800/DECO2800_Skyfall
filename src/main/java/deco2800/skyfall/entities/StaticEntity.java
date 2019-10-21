@@ -1,23 +1,19 @@
 package deco2800.skyfall.entities;
 
-import java.util.HashMap;
-
-import java.util.Map;
-import java.util.Set;
-import org.slf4j.Logger;
-import java.util.Map.Entry;
-import java.util.Collections;
-
-import deco2800.skyfall.worlds.world.Chunk;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-
-import org.slf4j.LoggerFactory;
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.util.WorldUtil;
 import com.badlogic.gdx.graphics.Texture;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TextureManager;
+import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.util.WorldUtil;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.Chunk;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StaticEntity extends SaveableEntity implements NewInstance<StaticEntity> {
     private final transient Logger log = LoggerFactory.getLogger(StaticEntity.class);

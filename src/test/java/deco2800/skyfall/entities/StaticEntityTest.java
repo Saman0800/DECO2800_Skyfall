@@ -1,17 +1,33 @@
 package deco2800.skyfall.entities;
 
-import deco2800.skyfall.managers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.InputManager;
 import deco2800.skyfall.managers.OnScreenMessageManager;
+import deco2800.skyfall.managers.PhysicsManager;
 import deco2800.skyfall.managers.database.DataBaseConnector;
-import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.util.HexVector;
+import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,19 +36,6 @@ import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, MainCharacter.class, WorldBuilder.class, WorldDirector.class, DatabaseManager.class,

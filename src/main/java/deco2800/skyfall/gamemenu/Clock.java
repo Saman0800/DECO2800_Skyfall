@@ -1,10 +1,12 @@
 package deco2800.skyfall.gamemenu;
+
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.EnvironmentManager;
+import deco2800.skyfall.managers.GameMenuManager;
 
 public class Clock extends AbstractUIElement{
     private final GameMenuManager gmm;

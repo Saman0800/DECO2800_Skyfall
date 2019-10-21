@@ -1,8 +1,10 @@
 package deco2800.skyfall.util.lightinghelpers;
 
-import java.util.*;
-
 import deco2800.skyfall.managers.EnvironmentManager;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
 
 public class LinearSpectralValue extends SpectralValue {
 

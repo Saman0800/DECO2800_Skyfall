@@ -1,15 +1,14 @@
 package deco2800.skyfall.saving;
 
-import deco2800.skyfall.worlds.Tile;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.biomes.RiverBiome;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
-import org.junit.Test;
-
 import java.util.Random;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class SaveableTest {
 

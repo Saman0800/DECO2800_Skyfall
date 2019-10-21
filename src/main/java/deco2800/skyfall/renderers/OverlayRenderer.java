@@ -10,7 +10,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import deco2800.skyfall.graphics.ShaderWrapper;
 import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.gui.GuiMaster;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.EnvironmentManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.OnScreenMessageManager;
+import deco2800.skyfall.managers.PathFindingService;
+import deco2800.skyfall.managers.StatisticsManager;
 import deco2800.skyfall.util.WorldUtil;
 
 /**

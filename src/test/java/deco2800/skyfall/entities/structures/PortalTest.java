@@ -1,6 +1,17 @@
 package deco2800.skyfall.entities.structures;
 
-import deco2800.skyfall.buildings.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
+
+import deco2800.skyfall.buildings.AbstractPortal;
+import deco2800.skyfall.buildings.DesertPortal;
+import deco2800.skyfall.buildings.ForestPortal;
+import deco2800.skyfall.buildings.MountainPortal;
+import deco2800.skyfall.buildings.VolcanoPortal;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.managers.GameManager;
@@ -18,11 +29,6 @@ import org.junit.runner.RunWith;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ WorldBuilder.class, WorldDirector.class, DatabaseManager.class, DataBaseConnector.class,

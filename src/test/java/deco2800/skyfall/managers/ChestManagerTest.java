@@ -2,11 +2,10 @@ package deco2800.skyfall.managers;
 
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.resources.LootRarity;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.List;
 import java.util.Map;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ChestManagerTest {
 

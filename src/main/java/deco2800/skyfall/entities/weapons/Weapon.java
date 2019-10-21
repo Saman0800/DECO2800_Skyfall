@@ -1,16 +1,14 @@
 package deco2800.skyfall.entities.weapons;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.resources.Blueprint;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
+import java.util.HashMap;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Weapon to be used by the Main Character and stored as an inventory item

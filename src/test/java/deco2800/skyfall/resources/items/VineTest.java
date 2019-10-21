@@ -1,9 +1,10 @@
 package deco2800.skyfall.resources.items;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class VineTest {
 

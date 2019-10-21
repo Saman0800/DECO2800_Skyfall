@@ -1,22 +1,5 @@
 package deco2800.skyfall.managers.database;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.derby.jdbc.EmbeddedDriver;
-import org.flywaydb.core.Flyway;
-
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.MainCharacter.MainCharacterMemento;
@@ -47,7 +30,6 @@ import deco2800.skyfall.entities.worlditems.TreeStump;
 import deco2800.skyfall.entities.worlditems.VolcanicRock;
 import deco2800.skyfall.entities.worlditems.VolcanicShrub;
 import deco2800.skyfall.entities.worlditems.VolcanicTree;
-import deco2800.skyfall.managers.DatabaseManager;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.saving.DatabaseException;
 import deco2800.skyfall.saving.LoadException;
@@ -75,6 +57,21 @@ import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.Chunk.ChunkMemento;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.World.WorldMemento;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.derby.jdbc.EmbeddedDriver;
+import org.flywaydb.core.Flyway;
 
 public class DataBaseConnector {
 
@@ -864,26 +861,6 @@ public class DataBaseConnector {
 
         } catch (Exception e) {
             throw new RunTimeLoadException("Failed to load save information: " + e.getClass().getCanonicalName(), e);
-        }
-    }
-
-    private void saveTable(String tableName) {
-        try {
-            try (PreparedStatement ps = DatabaseManager.get().getDataBaseConnector().getConnection()
-                    .prepareStatement("CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE(?, ?, ?, ?, ?, ?, ?)")) {
-                ps.setString(1, null);
-                ps.setString(2, tableName);
-                ps.setString(3, String.format("src/test/java/deco2800/skyfall/managers/database/PrebuiltData/%s.dat",
-                        tableName));
-                ps.setString(4, ",");
-                ps.setString(5, "\"");
-                ps.setString(6, "UTF-8");
-                ps.setString(7, String.format("src/test/java/deco2800/skyfall/managers/database/PrebuiltData/%sLOB.dat",
-                        tableName));
-                ps.execute();
-            }
-        } catch (SQLException e) {
-            throw new RunTimeSaveException("Failed to save table : " + tableName, e);
         }
     }
 

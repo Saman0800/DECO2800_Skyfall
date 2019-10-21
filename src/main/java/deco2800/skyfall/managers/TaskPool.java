@@ -1,15 +1,14 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.AgentEntity;
+import deco2800.skyfall.tasks.AbstractTask;
+import deco2800.skyfall.tasks.MovementTask;
+import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.world.World;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-
-import deco2800.skyfall.entities.AgentEntity;
-import deco2800.skyfall.tasks.AbstractTask;
-import deco2800.skyfall.tasks.MovementTask;
-import deco2800.skyfall.worlds.world.World;
-import deco2800.skyfall.worlds.Tile;
 
 public class TaskPool extends AbstractManager {
 

@@ -2,7 +2,6 @@ package deco2800.skyfall.entities.weapons;
 
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

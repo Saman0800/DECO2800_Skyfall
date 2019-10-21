@@ -1,19 +1,18 @@
 package deco2800.skyfall.entities.enemies;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import deco2800.skyfall.Tickable;
-import deco2800.skyfall.entities.Peon;
-import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.ICombatEntity;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.animation.AnimationRole;
-import deco2800.skyfall.animation.AnimationLinker;
-
+import deco2800.skyfall.entities.Peon;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.SoundManager;
 import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An instance to abstract the basic variables and methods of an enemy.

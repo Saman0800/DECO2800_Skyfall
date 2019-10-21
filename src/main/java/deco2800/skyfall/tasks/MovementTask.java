@@ -5,7 +5,6 @@ import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.PathFindingService;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-
 import java.util.List;
 
 public class MovementTask extends AbstractTask{

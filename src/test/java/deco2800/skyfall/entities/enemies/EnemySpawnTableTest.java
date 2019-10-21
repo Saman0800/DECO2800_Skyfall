@@ -10,22 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
 import com.badlogic.gdx.graphics.OrthographicCamera;
-
-import org.javatuples.Pair;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.AgentEntity;
 import deco2800.skyfall.entities.MainCharacter;
@@ -37,6 +22,18 @@ import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import org.javatuples.Pair;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ World.class, AbstractEntity.class, MainCharacter.class, WorldUtil.class, GameManager.class })

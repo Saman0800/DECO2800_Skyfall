@@ -17,7 +17,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.TextureManager;
-
 import java.util.ArrayList;
 import java.util.List;
 

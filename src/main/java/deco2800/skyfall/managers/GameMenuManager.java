@@ -3,18 +3,41 @@ package deco2800.skyfall.managers;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import deco2800.skyfall.SkyfallGame;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.gamemenu.*;
-import deco2800.skyfall.gamemenu.popupmenu.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import deco2800.skyfall.gamemenu.AbstractPopUpElement;
+import deco2800.skyfall.gamemenu.AbstractUIElement;
+import deco2800.skyfall.gamemenu.Clock;
+import deco2800.skyfall.gamemenu.FeedbackBar;
+import deco2800.skyfall.gamemenu.GameMenuBar2;
+import deco2800.skyfall.gamemenu.GoldStatusBar;
+import deco2800.skyfall.gamemenu.HeadsUpDisplay;
+import deco2800.skyfall.gamemenu.HealthCircle;
+import deco2800.skyfall.gamemenu.ManaCircle;
+import deco2800.skyfall.gamemenu.popupmenu.BlueprintShopTable;
+import deco2800.skyfall.gamemenu.popupmenu.BuildWorldProgressPopup;
+import deco2800.skyfall.gamemenu.popupmenu.BuildingTable;
+import deco2800.skyfall.gamemenu.popupmenu.ChestTable;
+import deco2800.skyfall.gamemenu.popupmenu.CollectCreateTable;
+import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
+import deco2800.skyfall.gamemenu.popupmenu.EndGameTable;
+import deco2800.skyfall.gamemenu.popupmenu.GameOverTable;
+import deco2800.skyfall.gamemenu.popupmenu.HelpTable;
+import deco2800.skyfall.gamemenu.popupmenu.InventoryTable;
+import deco2800.skyfall.gamemenu.popupmenu.PauseTable;
+import deco2800.skyfall.gamemenu.popupmenu.ProgressTable;
+import deco2800.skyfall.gamemenu.popupmenu.TeleportTable;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages the menu bar during the game

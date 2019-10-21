@@ -1,12 +1,14 @@
 package deco2800.skyfall.resources;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.resources.items.*;
+import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.PickAxe;
 import deco2800.skyfall.util.HexVector;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class ManufacturedResourcesTest {
     private ManufacturedResources hatchet;

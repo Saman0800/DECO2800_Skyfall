@@ -1,19 +1,19 @@
 package deco2800.skyfall.entities.worlditems;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+
+import deco2800.skyfall.entities.SaveableEntity;
+import deco2800.skyfall.graphics.PointLight;
+import deco2800.skyfall.graphics.types.Vec2;
+import deco2800.skyfall.graphics.types.Vec3;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.entities.SaveableEntity;
-import deco2800.skyfall.graphics.types.*;
-
+import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-
-import java.util.Random;
-
-import deco2800.skyfall.graphics.*;
-
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 public class ForestMushroomTest {
 

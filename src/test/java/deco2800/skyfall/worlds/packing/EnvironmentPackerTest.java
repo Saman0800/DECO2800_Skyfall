@@ -1,12 +1,16 @@
 package deco2800.skyfall.worlds.packing;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
 import deco2800.skyfall.worlds.world.World;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

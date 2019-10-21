@@ -1,19 +1,27 @@
 package deco2800.skyfall.managers;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import deco2800.skyfall.gamemenu.AbstractPopUpElement;
 import deco2800.skyfall.gamemenu.AbstractUIElement;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
 
 
 public class GameMenuManagerTest {

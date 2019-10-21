@@ -3,7 +3,6 @@ package deco2800.skyfall.worlds.world;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.worlditems.EntitySpawnRule;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

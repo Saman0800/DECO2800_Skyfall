@@ -1,13 +1,13 @@
 package deco2800.skyfall.entities;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import deco2800.skyfall.entities.worlditems.HotSpring;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import deco2800.skyfall.entities.worlditems.HotSpring;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 // A test for hot spring class
 public class HotSpringTest {
     private HotSpring HotSpring;

@@ -1,18 +1,15 @@
 package deco2800.skyfall.worlds.generation;
 
-import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.worlds.generation.VoronoiEdge;
-import deco2800.skyfall.worlds.generation.WorldGenException;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import static org.junit.Assert.*;
 
 public class VoronoiEdgeTest {
 

@@ -1,11 +1,10 @@
 package deco2800.skyfall.buildings;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
-
-import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ForestPortalTest {
 

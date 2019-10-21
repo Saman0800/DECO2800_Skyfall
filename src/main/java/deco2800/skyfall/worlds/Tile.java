@@ -12,12 +12,13 @@ import deco2800.skyfall.worlds.biomes.RiverBiome;
 import deco2800.skyfall.worlds.generation.VoronoiEdge;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
-import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
-import org.javatuples.Pair;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 public class Tile {
     private static int nextID = 0;

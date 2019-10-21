@@ -2,12 +2,11 @@ package deco2800.skyfall.resources;
 
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.worlds.Tile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**

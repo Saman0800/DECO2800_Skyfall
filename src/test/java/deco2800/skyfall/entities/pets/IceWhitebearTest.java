@@ -1,16 +1,11 @@
 package deco2800.skyfall.entities.pets;
 
-import deco2800.skyfall.entities.AbstractEntity;
+import static org.junit.Assert.assertEquals;
+
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.worlds.Tile;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
-
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 public class IceWhitebearTest {
     private IceWhitebear iceWhitebear;

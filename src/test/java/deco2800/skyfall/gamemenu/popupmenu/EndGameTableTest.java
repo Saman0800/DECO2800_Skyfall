@@ -1,20 +1,23 @@
 package deco2800.skyfall.gamemenu.popupmenu;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import deco2800.skyfall.BaseGDXTest;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.QuestManager;
 import deco2800.skyfall.managers.TextureManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
 
 public class EndGameTableTest extends BaseGDXTest {
     private Stage stage;

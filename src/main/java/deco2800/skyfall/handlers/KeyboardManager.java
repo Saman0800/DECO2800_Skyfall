@@ -4,7 +4,6 @@ import com.badlogic.gdx.InputProcessor;
 import deco2800.skyfall.managers.TickableManager;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyTypedObserver;
-
 import java.util.ArrayList;
 import java.util.List;
 
