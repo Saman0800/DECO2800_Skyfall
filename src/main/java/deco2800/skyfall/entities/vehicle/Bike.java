@@ -14,23 +14,24 @@ public class Bike extends AbstractVehicle {
 
     public Bike(float col, float row, MainCharacter mc) {
         super(col, row, "bike");
-        this.setTexture(TEXTURENAME);
         this.setObjectName(TEXTURENAME);
-        this.setHeight(1);
         this.setHealth(10);
-        this.setSpeed(0.00f);
         this.mc = mc;
+        this.setSpeed(0.00f);
+        this.setHeight(1);
+        this.setTexture(TEXTURENAME);
         this.configureAnimations();
         this.setDirectionTextures();
     }
 
-    public String getBiome() {
-        return BIOME;
-    }
 
     @Override
     public String getName() {
         return Bike.TEXTURENAME;
+    }
+
+    public String getBiome() {
+        return BIOME;
     }
 
     @Override
