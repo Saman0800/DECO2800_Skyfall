@@ -11,6 +11,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manages the sounds for the game.
+ */
 public class SoundManager extends AbstractManager {
 
     /* Initialize a map to store all sound effects */
@@ -31,9 +34,13 @@ public class SoundManager extends AbstractManager {
     /* Boolean to state whether the sound manager is paused or not */
     private static boolean paused = false;
 
+    /* Defines how quickly the music fades in/out */
     private static float fadeConstant = 0.1f;
 
+    /* Sound effects volume for the game */
     private static float gameSoundVolume = 1f;
+
+    /* Music volume for the game */
     private static float gameMusicVolume = 1f;
 
 
@@ -41,8 +48,6 @@ public class SoundManager extends AbstractManager {
      * Initialize SoundManager by adding different sounds in a map
      */
     public SoundManager() {
-
-
         LOGGER.info("soundManager song list");
 
         try {
@@ -156,7 +161,6 @@ public class SoundManager extends AbstractManager {
             soundMap.put("running", Gdx.audio.newSound
                     (Gdx.files.internal(path + "run.wav")));
 
-            // make into for-loop for nicer code :)
             musicMap.put("forest_day", Gdx.audio.newMusic
                     (Gdx.files.internal(path + "forest_day.mp3")));
             musicMap.put("forest_night", Gdx.audio.newMusic
@@ -191,12 +195,17 @@ public class SoundManager extends AbstractManager {
         }
     }
 
+    /**
+     * Constructor used for testing only
+     *
+     * @param test Whether or not the class is used for testing
+     */
     public SoundManager(boolean test) {
 
     }
 
     /**
-     * Check whether this sound is sored in the map
+     * Check whether this sound is stored in the map
      *
      * @param soundName Name/Key of the sound in the soundMap.
      * @return true if it does, otherwise, false.
@@ -205,6 +214,12 @@ public class SoundManager extends AbstractManager {
         return soundMap.containsKey(soundName);
     }
 
+    /**
+     * Check whether this music is stored in the map
+     *
+     * @param musicName Name/Key of the music in the musicMap.
+     * @return true if it does, otherwise, false.
+     */
     public boolean musicInMap(String musicName) {
         return musicMap.containsKey(musicName);
     }
@@ -220,9 +235,7 @@ public class SoundManager extends AbstractManager {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
-
                 sound.play(gameSoundVolume);
-
                 return true;
             } else if (musicMap.containsKey(soundName)) {
                 Music music = musicMap.get(soundName);
@@ -247,9 +260,7 @@ public class SoundManager extends AbstractManager {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
-
                 sound.loop(gameSoundVolume);
-
                 // Add to the sounds which are being looped
                 soundLoops.put(soundName, soundMap.get(soundName));
             } else if (musicMap.containsKey(soundName)) {
@@ -262,6 +273,11 @@ public class SoundManager extends AbstractManager {
         }
     }
 
+    /**
+     * Fades in the music at a rate determined by fadeConstant.
+     *
+     * @param soundName the sound to be faded in
+     */
     public void fadeInPlay(String soundName) {
         Music music = musicMap.get(soundName);
         music.play();
@@ -280,6 +296,11 @@ public class SoundManager extends AbstractManager {
         }, 0.3f, 0.01f);
     }
 
+    /**
+     * Fades out the music at a rate determined by fadeConstant.
+     *
+     * @param soundName the sound to be faded out
+     */
     public void fadeOutStop(String soundName) {
         Music music = musicMap.get(soundName);
         Timer.schedule(new Timer.Task() {
@@ -374,12 +395,15 @@ public class SoundManager extends AbstractManager {
     }
 
     /**
-     * Return the selected sound for corresponding action
+     * Return the selected sound
      */
     public Sound getTheSound(String soundName) {
         return soundMap.get(soundName);
     }
 
+    /**
+     * Return the selected music
+     */
     public Music getTheMusic(String musicName) {
         return musicMap.get(musicName);
     }
@@ -387,44 +411,93 @@ public class SoundManager extends AbstractManager {
     /**
      * Returns the map of sounds
      *
-     * @return soundMap<Sound, String>
+     * @return soundMap<String, Sound>
      */
     public Map<String, Sound> getSoundMap() {
         return Collections.unmodifiableMap(soundMap);
     }
 
+    /**
+     * Returns the map of music
+     *
+     * @return musicMap<String, Music>
+     */
     public Map<String, Music> getMusicMap() {
         return Collections.unmodifiableMap(musicMap);
     }
 
+    /**
+     * Sets the toggle to be paused so that other managers know
+     *
+     * @param paused True if paused, false otherwise
+     */
     public void setPaused(boolean paused) {
         SoundManager.paused = paused;
     }
 
+    /**
+     * Sets the sound volume of the game
+     *
+     * @param volume the volume to be set to
+     */
     public void setSoundVolume(float volume) {
         // needs to be between 0 and 1
         gameSoundVolume = volume / 100;
     }
 
+    /**
+     * Sets the music volume of the game
+     *
+     * @param volume the volume to be set to
+     */
     public void setMusicVolume(float volume) {
         // needs to be between 0 and 1
         gameMusicVolume = volume / 100;
         updateVolume();
     }
 
+    /**
+     * Getter for the sound volume of the game
+     *
+     * @return the sound volume
+     */
     public float getSoundVolume() {
         return gameSoundVolume;
     }
 
+    /**
+     * Getter for the music volume of the game
+     *
+     * @return the music volume
+     */
+    public float getMusicVolume() {
+        return gameMusicVolume;
+    }
+
+    /**
+     * Gets the music currently playing
+     *
+     * @return
+     */
     public String getPlaying() {
         return playing;
     }
 
+    /**
+     * Updates the volume of the currently playing music (called by menu's
+     * elsewhere)
+     *
+     */
     public void updateVolume() {
         Music bgm = getTheMusic(playing);
         bgm.setVolume(gameMusicVolume);
     }
 
+    /**
+     * Disposes of the sound/music object so that no memory leaks are created
+     *
+     * @param soundName the string mapping to the object to dispose of
+     */
     public void dispose(String soundName) {
         if (soundLoops.containsKey(soundName)) {
             Sound sound = soundMap.get(soundName);
@@ -435,6 +508,5 @@ public class SoundManager extends AbstractManager {
             music.dispose();
         }
     }
-
 
 }
