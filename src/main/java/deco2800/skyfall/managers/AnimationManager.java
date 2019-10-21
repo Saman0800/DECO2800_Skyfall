@@ -44,8 +44,25 @@ public class AnimationManager extends AbstractManager {
                 "mario_left", 100, 138, DEFAULT_FRAME_RATE);
 
         // Add bike animation
+        this.generateAnimationObject("bikeN","resources/Bike_Front_Back_Animation/Bike_Back/back.atlas",0.05f);
+        this.generateAnimationObject("bikeS","resources/Bike_Front_Back_Animation/Bike_Front/front.atlas",0.05f);
         this.generateAnimationObject("bikeW","resources/Bike_Left_Animation/left.atlas",0.05f);
         this.generateAnimationObject("bikeE","resources/Bike_Right_Animation/right.atlas",0.05f);
+        this.generateAnimationObject("bikeSE","resources/BIke_Left_Front_Ani/LF.atlas",0.05f);
+        this.generateAnimationObject("bikeSW","resources/BIke_Right_Front_Ani/RF.atlas",0.05f);
+        this.generateAnimationObject("bikeNE","resources/BIke_Right_Back_Ani/RB.atlas",0.05f);
+        this.generateAnimationObject("bikeNW","resources/BIke_Left_Back_Ani/LB.atlas",0.05f);
+
+
+        // Add sand car animation
+        this.generateAnimationObject("sandcarN","resources/Sand_Car_Aimation/sand_car_back/Back.atlas",0.05f);
+        this.generateAnimationObject("sandcarS","resources/Sand_Car_Aimation/sand_car_front/Front.atlas",0.05f);
+        this.generateAnimationObject("sandcarW","resources/Sand_Car_Aimation/sand_car_left/west.atlas",0.05f);
+        this.generateAnimationObject("sandcarE","resources/Sand_Car_Aimation/sand_car_right/east.atlas",0.05f);
+        this.generateAnimationObject("sandcarNE","resources/Sand_Car_Aimation/sand_car_back_right/NE.atlas",0.05f);
+        this.generateAnimationObject("sandcarNW","resources/Sand_Car_Aimation/sand_car_back_left/NW.atlas",0.05f);
+        this.generateAnimationObject("sandcarSW","resources/Sand_Car_Aimation/sand_car_front_left/SW.atlas",0.05f);
+        this.generateAnimationObject("sandcarSE","resources/Sand_Car_Aimation/sand_car_front_right/SE.atlas",0.05f);
 
         this.generateAnimationObject("whitebearNE","resources/whitebearright/whitebearright.atlas",0.05f);
         this.generateAnimationObject("whitebearN","resources/whitebearback/whitebearback.atlas",0.05f);

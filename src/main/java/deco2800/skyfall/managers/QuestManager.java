@@ -3,6 +3,8 @@ package deco2800.skyfall.managers;
 import deco2800.skyfall.buildings.*;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
+import deco2800.skyfall.resources.items.Hatchet;
+import deco2800.skyfall.resources.items.PickAxe;
 
 import java.util.*;
 
@@ -69,13 +71,21 @@ public class QuestManager extends TickableManager {
      * Constructor, sets up beginning of game goals
      */
     public QuestManager() {
-        this.questLevel = 1;
         questSuccess = false;
         buildingsTotal = new ArrayList<>();
         levelOneBuildings.add(BuildingType.CASTLE);
         levelTwoBuildings.add(BuildingType.CASTLE);
         levelTwoBuildings.add(BuildingType.CABIN);
+        levelThreeBuildings.add(BuildingType.CASTLE);
+        levelThreeBuildings.add(BuildingType.CABIN);
+        levelThreeBuildings.add(BuildingType.WATCHTOWER);
         player = MainCharacter.getInstance();
+        try {
+            questLevel = player.getSave().getGameStage();
+        } catch (NullPointerException npe) {
+            questLevel = 0;
+        }
+
         setMilestones();
     }
 
@@ -86,32 +96,32 @@ public class QuestManager extends TickableManager {
         //inventory numbers need to be reset for player testing and actual game release
         //reduced for ease of testing in game
         switch (questLevel) {
-            case 1 :
-                setGoldTotal(10);
-                setWoodTotal(10);
-                setStoneTotal(10);
+            case 0 :
+                setGoldTotal(100);
+                setWoodTotal(25);
+                setStoneTotal(25);
                 setMetalTotal(10);
                 setBuildingsTotal(levelOneBuildings);
-                setWeaponTotal(SWORD, 2);
-                setWeaponTotal("bow", 0);
-                setWeaponTotal(SPEAR, 0);
-                setWeaponTotal("axe", 0);
-                break;
-            case 2 :
-                setGoldTotal(20);
-                setWoodTotal(20);
-                setStoneTotal(20);
-                setMetalTotal(20);
-                setBuildingsTotal(levelTwoBuildings);
                 setWeaponTotal(SWORD, 3);
                 setWeaponTotal("bow", 3);
                 setWeaponTotal(SPEAR, 0);
                 setWeaponTotal("axe", 0);
                 break;
-            case 3 :
-                setGoldTotal(30);
-                setWoodTotal(30);
-                setStoneTotal(30);
+            case 1 :
+                setGoldTotal(150);
+                setWoodTotal(50);
+                setStoneTotal(50);
+                setMetalTotal(20);
+                setBuildingsTotal(levelTwoBuildings);
+                setWeaponTotal(SWORD, 3);
+                setWeaponTotal("bow", 3);
+                setWeaponTotal(SPEAR, 4);
+                setWeaponTotal("axe", 0);
+                break;
+            case 2 :
+                setGoldTotal(200);
+                setWoodTotal(75);
+                setStoneTotal(75);
                 setMetalTotal(30);
                 setBuildingsTotal(levelThreeBuildings);
                 setWeaponTotal(SWORD, 4);
@@ -120,6 +130,9 @@ public class QuestManager extends TickableManager {
                 setWeaponTotal("axe", 4);
                 break;
             default :
+                if (questLevel >= 3) {
+                    setupEndGameScreen();
+                }
                 break;
         }
     }
@@ -367,6 +380,8 @@ public class QuestManager extends TickableManager {
                 && checkWeapons("axe") && checkWeapons("bow"))
                 || (questSuccess) ) {
             questSuccess = true;
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackBarUpdate(true);
+            GameManager.get().getManager(FeedbackManager.class).setFeedbackText("All quest items collected!");
             // Other quest success stuff here, or quest success method
         }
     }
@@ -452,6 +467,9 @@ public class QuestManager extends TickableManager {
         int currentLevel = this.getQuestLevel();
         this.setQuestLevel(currentLevel);
 
+        // Set health to 50
+        this.getPlayer().setHealth(50);
+
         // Get amount of building items in inventory
         int currentMetal = player.getInventoryManager()
                 .getAmount(METAL);
@@ -464,15 +482,25 @@ public class QuestManager extends TickableManager {
 
         // Reset the inventory
         buildingsNum = 0;
+        buildingsPlaced.clear();
         questSuccess = false;
         getPlayer().removeAllGold();
         getPlayer().getInventoryManager().dropMultiple(METAL, currentMetal);
         getPlayer().getInventoryManager().dropMultiple(STONE, currentStone);
         getPlayer().getInventoryManager().dropMultiple("Wood", currentWood);
-        getPlayer().getInventoryManager().dropAll(SWORD);
-        getPlayer().getInventoryManager().dropAll(SPEAR);
-        getPlayer().getInventoryManager().dropAll("axe");
-        getPlayer().getInventoryManager().dropAll("bow");
+
+        if(getPlayer().getInventoryManager().getAmount(SWORD) > 0){
+            getPlayer().getInventoryManager().remove(SWORD);
+        }else if(getPlayer().getInventoryManager().getAmount(SPEAR) > 0){
+            getPlayer().getInventoryManager().remove(SPEAR);
+        }else if(getPlayer().getInventoryManager().getAmount("axe") > 0){
+            getPlayer().getInventoryManager().remove("axe");
+        }else if(getPlayer().getInventoryManager().getAmount("bow") > 0) {
+            getPlayer().getInventoryManager().remove("bow");
+        }
+
+        getPlayer().getInventoryManager().add(new PickAxe());
+        getPlayer().getInventoryManager().add(new Hatchet());
     }
 
 
@@ -493,7 +521,24 @@ public class QuestManager extends TickableManager {
         return false;
     }
 
+    /**
+     * Weapons currently held by the player
+     * @return The number of weapons
+     */
     public int weaponsNum() {
         return ((axeTotal > 0) ? 1 : 0) + ((swordTotal > 0) ? 1 : 0) + ((spearTotal > 0) ? 1 : 0) + ((bowTotal > 0) ? 1 : 0);
+    }
+
+    /**
+     * Set up the game over screen.
+     */
+    public void setupEndGameScreen() {
+        // If the gameMenuManager does not equal null, create the game over screen
+        // The GUI PopUp for the character
+        GameMenuManager gameMenuManager = GameManager.getManagerFromInstance(GameMenuManager.class);
+        if (gameMenuManager != null) {
+            gameMenuManager.hideOpened();
+            gameMenuManager.setPopUp("endGameTable");
+        }
     }
 }

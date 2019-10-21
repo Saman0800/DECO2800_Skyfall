@@ -16,7 +16,6 @@ import deco2800.skyfall.util.Collider;
  *
  */
 public class BuildingEntityTest {
-
     private World world;
     private float tileSize;
 
@@ -80,230 +79,10 @@ public class BuildingEntityTest {
     }
 
     @Test
-    public void resetID() {
-    }
-
-    @Test
-    public void getNextID() {
-    }
-
-    @Test
-    public void setBody() {
-    }
-
-    @Test
-    public void setFixture() {
-    }
-
-    @Test
-    public void setColRenderLength() {
-    }
-
-    @Test
-    public void setRowRenderLength() {
-    }
-
-    @Test
-    public void setCollidable() {
-    }
-
-    @Test
-    public void getCollidable() {
-    }
-
-    @Test
-    public void getCol() {
-    }
-
-    @Test
-    public void getRow() {
-    }
-
-    @Test
-    public void getHeight() {
-    }
-
-    @Test
-    public void setCol() {
-    }
-
-    @Test
-    public void setRow() {
-    }
-
-    @Test
-    public void setPosition() {
-    }
-
-    @Test
-    public void setHeight() {
-    }
-
-    @Test
-    public void setPosition1() {
-    }
-
-    @Test
-    public void getColRenderWidth() {
-    }
-
-    @Test
-    public void getRowRenderWidth() {
-    }
-
-    @Test
-    public void setRenderOrder() {
-    }
-
-    @Test
-    public void getRenderOrder() {
-    }
-
-    @Test
-    public void compareTo() {
-    }
-
-    @Test
-    public void getColRenderLength() {
-    }
-
-    @Test
-    public void getRowRenderLength() {
-    }
-
-    @Test
-    public void getTexture() {
-    }
-
-    @Test
-    public void setTexture() {
-    }
-
-    @Test
-    public void getModulatingColor() {
-    }
-
-    @Test
-    public void setModulatingColor() {
-    }
-
-    @Test
-    public void setModulatingColor1() {
-    }
-
-    @Test
-    public void equals1() {
-    }
-
-    @Test
-    public void hashCode1() {
-    }
-
-    @Test
-    public void distance() {
-    }
-
-    @Test
-    public void getPosition() {
-    }
-
-    @Test
-    public void setObjectName() {
-    }
-
-    @Test
-    public void getObjectName() {
-    }
-
-    @Test
-    public void getEntityID() {
-    }
-
-    @Test
-    public void setEntityID() {
-    }
-
-    @Test
-    public void dispose() {
-    }
-
-    @Test
-    public void getToBeRun() {
-    }
-
-    @Test
-    public void initialiseBox2D() {
-    }
-
-    @Test
-    public void defineFixture() {
-    }
-
-    @Test
-    public void defineFixture1() {
-    }
-
-    @Test
-    public void changeCollideability() {
-    }
-
-    @Test
-    public void handleCollision() {
-    }
-
-    @Test
-    public void setGetToBeRunToNull() {
-    }
-
-    @Test
-    public void getCurrentDirection() {
-    }
-
-    @Test
-    public void getCurrentState() {
-    }
-
-    @Test
-    public void setCurrentDirection() {
-    }
-
-    @Test
-    public void setCurrentState() {
-    }
-
-    @Test
-    public void addAnimations() {
-    }
-
-    @Test
-    public void getDefaultTexture() {
-    }
-
-    @Test
-    public void getScale() {
-    }
-
-    @Test
-    public void getBody() {
-    }
-
-    @Test
-    public void between() {
-    }
-
-    @Test
     public void takeDamage() {
         BuildingEntity building = new BuildingEntity(0, 0, 2, BuildingType.CABIN);
         building.takeDamage(3);
         assertEquals(building.getHealth(), -3);
-    }
-
-    @Test
-    public void dealDamage() {
-    }
-
-    @Test
-    public void canDealDamage() {
     }
 
     @Test
@@ -332,8 +111,6 @@ public class BuildingEntityTest {
         building = new BuildingEntity(0, 0, 2, BuildingType.STORAGE_UNIT);
         result = building.getDamage();
         assertEquals(result, 0);
-
-
     }
 
     @Test

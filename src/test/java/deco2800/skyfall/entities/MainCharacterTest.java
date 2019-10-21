@@ -7,16 +7,15 @@ import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.enemies.Scout;
 import deco2800.skyfall.entities.spells.Spell;
 import deco2800.skyfall.entities.spells.SpellType;
+import deco2800.skyfall.entities.weapons.Bow;
 import deco2800.skyfall.entities.weapons.EmptyItem;
+import deco2800.skyfall.entities.weapons.Spear;
 import deco2800.skyfall.entities.weapons.Sword;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
 import deco2800.skyfall.resources.GoldPiece;
 import deco2800.skyfall.resources.Item;
-import deco2800.skyfall.resources.items.AloeVera;
-import deco2800.skyfall.resources.items.Apple;
-import deco2800.skyfall.resources.items.Berry;
-import deco2800.skyfall.resources.items.Stone;
+import deco2800.skyfall.resources.items.*;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.Chunk;
@@ -44,6 +43,7 @@ import static org.powermock.api.mockito.PowerMockito.*;
 public class MainCharacterTest {
 
     private MainCharacter testCharacter;
+
     private Tile testTile;
     private GoldPiece testGoldPiece;
     private InventoryManager inventoryManager;
@@ -104,7 +104,7 @@ public class MainCharacterTest {
 
     @After
     /**
-     * Sets up all variables to be null after esting
+     * Sets up all variables to be null after testing
      */
     public void tearDown() {
         // testCharacter = null;
@@ -478,9 +478,6 @@ public class MainCharacterTest {
 
         // ensure all the pieces have been added
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(180));
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(5), 4);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(10), 1);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(50), 3);
 
         // remove a piece of gold from the pouch
         testCharacter.removeGold(5);
@@ -489,16 +486,12 @@ public class MainCharacterTest {
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(175));
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(5), 3);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(10), 1);
-        Assert.assertEquals((int)testCharacter.getGoldPouch().get(50), 3);
 
         // remove a piece of gold from the pouch which is the last piece
         testCharacter.removeGold(10);
 
         // ensure that the necessary adjustments have been made
         Assert.assertTrue(testCharacter.getGoldPouchTotalValue().equals(165));
-        Assert.assertFalse(testCharacter.getGoldPouch().containsKey(10));
 
 
     }
@@ -605,22 +598,70 @@ public class MainCharacterTest {
     }
 
     @Test
-    public void createItemTest() {
-        // int i;
-        // testCharacter.getBlueprintsLearned().add("Hatchet");
-        //
-        // for (i = 0; i < 25; i++) {
-        // testCharacter.getInventoryManager().inventoryAdd(new Wood());
-        // testCharacter.getInventoryManager().inventoryAdd(new Stone());
-        // testCharacter.getInventoryManager().inventoryAdd(new Metal());
-        // }
-        //
-        // int currentHatchetAmount =
-        // testCharacter.getInventoryManager().getAmount("Hatchet");
-        // testCharacter.createItem(new Hatchet());
-        // Assert.assertEquals(currentHatchetAmount+1,
-        // testCharacter.getInventoryManager().getAmount("Hatchet"));
+    public void checkRequiredResourcesTest() {
+        mockGM.setWorld(w);
+        w.addEntity(testCharacter);
+        testCharacter.setCol(1f);
+        testCharacter.setRow(1f);
+
+        int i;
+
+        Assert.assertFalse(testCharacter.checkRequiredResources(new Bow()));
+
+        for (i = 0; i < 140; i++) {
+            testCharacter.getInventoryManager().add(new Wood());
+            testCharacter.getInventoryManager().add(new Stone());
+            testCharacter.getInventoryManager().add(new Metal());
+        }
+
+        Assert.assertTrue(testCharacter.checkRequiredResources(new Bow()));
     }
+
+    @Test
+    public void createItemTest() {
+
+        mockGM.setWorld(w);
+        w.addEntity(testCharacter);
+        testCharacter.setCol(1f);
+        testCharacter.setRow(1f);
+
+        int m;
+
+        for (m = 0; m < 140; m++) {
+        testCharacter.getInventoryManager().add(new Wood());
+        testCharacter.getInventoryManager().add(new Stone());
+        testCharacter.getInventoryManager().add(new Metal());
+        }
+
+        System.out.println(testCharacter.getInventoryManager().toString());
+        testCharacter.createItem(new Hatchet());
+        testCharacter.createItem(new PickAxe());
+        testCharacter.createItem(new Sword());
+        testCharacter.createItem(new Spear());
+        testCharacter.createItem(new Bow());
+
+        System.out.println(testCharacter.getInventoryManager().toString());
+
+        Assert.assertEquals(2,
+        testCharacter.getInventoryManager().getAmount("Hatchet"));
+
+        Assert.assertEquals(2,
+                testCharacter.getInventoryManager().getAmount("Pick Axe"));
+
+        Assert.assertEquals(1,
+                testCharacter.getInventoryManager().getAmount("sword"));
+
+        Assert.assertEquals(1,
+                testCharacter.getInventoryManager().getAmount("spear"));
+
+        Assert.assertEquals(1,
+                testCharacter.getInventoryManager().getAmount("bow"));
+
+
+        System.out.println(testCharacter.getInventoryManager().toString());
+
+    }
+
 
     @Test
     public void manaTest() {
@@ -653,12 +694,15 @@ public class MainCharacterTest {
         Apple apple = new Apple();
         Berry berry = new Berry();
 
+        testCharacter.getInventoryManager().add(alo);
+        testCharacter.getInventoryManager().add(apple);
+        testCharacter.getInventoryManager().add(berry);
+
         testCharacter.changeHealth(-8);
 
         int currentHealth = testCharacter.getHealth();
 
         // Check that health increases by 2
-        testCharacter.pickUpInventory(alo);
         testCharacter.setEquippedItem(alo);
         testCharacter.useEquipped();
         Assert.assertEquals(currentHealth + 2, testCharacter.getHealth());
@@ -845,5 +889,6 @@ public class MainCharacterTest {
     @After
     public void cleanup() {
         testCharacter = null;
+
     }
 }

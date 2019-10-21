@@ -1,6 +1,5 @@
 package deco2800.skyfall.buildings;
 
-import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.resources.Blueprint;
 
 public class MountainPortal extends AbstractPortal implements Blueprint {
@@ -13,7 +12,7 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
      * @param renderOrder the height position on the world
      */
     public MountainPortal(float col, float row, int renderOrder) {
-        super(col, row, renderOrder);
+        super(col, row, renderOrder, 100, 40, 30);
         this.setTexture("portal_mountain");
         this.setNext("volcanic_mountains");
         this.entityType = "MountainPortal";
@@ -22,8 +21,5 @@ public class MountainPortal extends AbstractPortal implements Blueprint {
         blueprintLearned = false;
     }
 
-    public void unlocknext(MainCharacter character) {
-        super.unlocknext(character, getNext());
-    }
 
 }

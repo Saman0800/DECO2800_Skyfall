@@ -1,0 +1,38 @@
+
+SW.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+sand_car_front_left_with_player
+  rotate: false
+  xy: 0, 1148
+  size: 1854, 1146
+  orig: 1854, 1146
+  offset: 0, 0
+  index: -1
+sand_car_front_left_with_player1
+  rotate: false
+  xy: 0, 0
+  size: 1854, 1146
+  orig: 1854, 1146
+  offset: 0, 0
+  index: -1
+
+SW2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+sand_car_front_left_with_player2
+  rotate: false
+  xy: 0, 1148
+  size: 1854, 1146
+  orig: 1854, 1146
+  offset: 0, 0
+  index: -1
+sand_car_front_left_with_player3
+  rotate: false
+  xy: 0, 0
+  size: 1854, 1146
+  orig: 1854, 1146
+  offset: 0, 0
+  index: -1

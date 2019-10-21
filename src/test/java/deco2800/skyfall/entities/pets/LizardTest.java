@@ -29,7 +29,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ GameManager.class, DatabaseManager.class, MainCharacter.class, WorldBuilder.class, WorldDirector.class,
-                  DatabaseManager.class, DataBaseConnector.class })
+        DatabaseManager.class, DataBaseConnector.class })
 public class LizardTest {
 
     private World w = null;
@@ -51,8 +51,8 @@ public class LizardTest {
         when(connector.loadChunk(any(World.class), anyInt(), anyInt())).then(
                 (Answer<Chunk>) invocation -> {
                     Chunk chunk = new Chunk(invocation.getArgumentAt(0, World.class),
-                                            invocation.getArgumentAt(1, Integer.class),
-                                            invocation.getArgumentAt(2, Integer.class));
+                            invocation.getArgumentAt(1, Integer.class),
+                            invocation.getArgumentAt(2, Integer.class));
                     chunk.generateEntities();
                     return chunk;
                 });
@@ -99,7 +99,7 @@ public class LizardTest {
         Assert.assertEquals(lizard.getIsOutSide(), true);
     }
 
-/*    *//**
+    /*    *//**
      * To test the pet will find the nearby gold
      *//*
     @Test

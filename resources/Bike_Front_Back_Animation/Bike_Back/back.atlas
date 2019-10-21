@@ -1,0 +1,40 @@
+
+back.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+movement-back-2
+  rotate: false
+  xy: 0, 1157
+  size: 662, 1156
+  orig: 662, 1156
+  offset: 0, 0
+  index: -1
+movement-back-1
+  rotate: false
+  xy: 0, 0
+  size: 661, 1155
+  orig: 661, 1155
+  offset: 0, 0
+  index: -1
+movement-back-3
+  rotate: false
+  xy: 664, 1158
+  size: 661, 1155
+  orig: 661, 1155
+  offset: 0, 0
+  index: -1
+movement-back-4
+  rotate: false
+  xy: 1327, 1158
+  size: 661, 1155
+  orig: 661, 1155
+  offset: 0, 0
+  index: -1
+movement-back-5
+  rotate: false
+  xy: 663, 0
+  size: 661, 1155
+  orig: 661, 1155
+  offset: 0, 0
+  index: -1

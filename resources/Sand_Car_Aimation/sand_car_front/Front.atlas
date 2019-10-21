@@ -1,0 +1,19 @@
+
+Front.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+sand_car_front_with_player
+  rotate: false
+  xy: 0, 1146
+  size: 1853, 1145
+  orig: 1853, 1145
+  offset: 0, 0
+  index: -1
+sand_car_front_with_player2
+  rotate: false
+  xy: 0, 0
+  size: 1854, 1144
+  orig: 1854, 1144
+  offset: 0, 0
+  index: -1
