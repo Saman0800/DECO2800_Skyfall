@@ -200,8 +200,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         GameManager.getManagerFromInstance(InputManager.class).addTouchDownListener(this);
     }
 
-
-
     /**
      * Generates the tiles and biomes in a world
      *
@@ -246,7 +244,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                 worldParameters);
         biomeGenerator.generateBiomes();
 
-        if(dummyBoolean) {
+        if (dummyBoolean) {
             throw new DeadEndGenerationException("Unable to generation more notes");
         }
 
@@ -447,10 +445,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         loadedChunks.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey))
                 .flatMap(entry -> entry.getValue().getTiles().stream()
                         .sorted(Comparator.comparing(tile -> new Pair<>(tile.getCol(), tile.getRow()))))
-                .forEachOrdered(tile ->
-                    string.append(String.format("%f, %f, %s, %s", tile.getCol(), tile.getRow(),
-                            tile.getBiome().getBiomeName(), tile.getTextureName()) + '\n'
-                    ));
+                .forEachOrdered(tile -> string.append(String.format("%f, %f, %s, %s", tile.getCol(), tile.getRow(),
+                        tile.getBiome().getBiomeName(), tile.getTextureName()) + '\n'));
         return string.toString();
     }
 
@@ -528,7 +524,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
     /**
      * Handles a entity
-     * @param tile The tile the entity is one
+     * 
+     * @param tile   The tile the entity is one
      * @param entity The entity
      */
     private void handleEntity(Tile tile, AbstractEntity entity) {
@@ -579,6 +576,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
     /**
      * Handles a building entities
+     * 
      * @param entity The entity to be handled
      */
     private void handleBuildingEntity(BuildingEntity entity) {
@@ -586,45 +584,36 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         switch (e.getBuildingType()) {
         case FORESTPORTAL:
             ForestPortal forestPortal = new ForestPortal(0, 0, 0);
-            updateTeleportTable("FOREST",
-                    forestPortal.getNext().toUpperCase(),
-                    this.save, forestPortal, gmm);
+            updateTeleportTable("FOREST", forestPortal.getNext().toUpperCase(), this.save, forestPortal, gmm);
             break;
         case MOUNTAINPORTAL:
             MountainPortal mountainPortal = new MountainPortal(0, 0, 0);
-            updateTeleportTable("MOUNTAIN",
-                    mountainPortal.getNext().toUpperCase(),
-                    this.save, mountainPortal, gmm);
+            updateTeleportTable("MOUNTAIN", mountainPortal.getNext().toUpperCase(), this.save, mountainPortal, gmm);
             break;
         case DESERTPORTAL:
             DesertPortal desertPortal = new DesertPortal(0, 0, 0);
-            updateTeleportTable("DESERT",
-                    desertPortal.getNext().toUpperCase(),
-                    this.save, desertPortal, gmm);
+            updateTeleportTable("DESERT", desertPortal.getNext().toUpperCase(), this.save, desertPortal, gmm);
             break;
         case VOLCANOPORTAL:
             VolcanoPortal volcanoPortal = new VolcanoPortal(0, 0, 0);
-            updateTeleportTable("VOLCANO",
-                    volcanoPortal.getNext().toUpperCase(),
-                    this.save, volcanoPortal, gmm);
+            updateTeleportTable("VOLCANO", volcanoPortal.getNext().toUpperCase(), this.save, volcanoPortal, gmm);
             break;
         default:
             break;
         }
     }
 
-
     /**
      * Updates the teleport table with the relevant informatio0n
+     * 
      * @param updateLocation The current location
-     * @param teleportTo the location to be teleported to
-     * @param save the current game save
-     * @param portal the abstract portal class used
-     * @param gmm game menu manager.
+     * @param teleportTo     the location to be teleported to
+     * @param save           the current game save
+     * @param portal         the abstract portal class used
+     * @param gmm            game menu manager.
      */
-    public void updateTeleportTable(String updateLocation,
-                                    String teleportTo, Save save,
-                                    AbstractPortal portal, GameMenuManager gmm) {
+    public void updateTeleportTable(String updateLocation, String teleportTo, Save save, AbstractPortal portal,
+            GameMenuManager gmm) {
         TeleportTable teleportTable = (TeleportTable) gmm.getPopUp("teleportTable");
         teleportTable.updateLocation(updateLocation);
         teleportTable.setSave(save);
@@ -791,7 +780,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         this.worldParameters.setWorldSize(worldMemento.worldSize);
     }
 
-    public static class WorldMemento implements AbstractMemento , Serializable {
+    public static class WorldMemento implements AbstractMemento, Serializable {
         private long worldID;
         private int nodeSpacing;
         private double riverWidth;

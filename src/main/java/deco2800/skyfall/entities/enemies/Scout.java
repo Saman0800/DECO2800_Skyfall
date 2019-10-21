@@ -1,7 +1,5 @@
 package deco2800.skyfall.entities.enemies;
 
-
-
 /**
  * An instance of a Scout (easy level) enemy.
  */

@@ -1,10 +1,15 @@
 package deco2800.skyfall.entities.vehicle;
 
+import deco2800.skyfall.animation.AnimationLinker;
+import deco2800.skyfall.animation.AnimationRole;
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.util.HexVector;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -19,6 +24,7 @@ public class SandCarTest {
 
     @Before
     public void setup() throws Exception {
+        mc = MainCharacter.getInstance();
         sandCar = new SandCar(5f,4f, mc);
     }
 
@@ -74,6 +80,43 @@ public class SandCarTest {
     @Test
     public void testIsOnUse() {
         Assert.assertEquals(sandCar.isOnUse(), false);
+    }
+
+    /**
+     * Test the animation is correct
+     */
+    @Test
+    public void testAnimations() {
+        mc.setCurrentState(AnimationRole.VEHICLE_MOVE);
+        mc.setCurrentDirection(Direction.NORTH);
+        AnimationLinker linked = mc.getToBeRun();
+        Assert.assertEquals(linked.getAnimationName(), "sandcarN");
+        Assert.assertEquals(linked.getType(), AnimationRole.VEHICLE_MOVE);
+    }
+
+    /**
+     * Test the direction texture for vehicle
+     */
+    @Test
+    public void testDirectionTexture() {
+        mc.vehicleTexture("sand_car");
+        mc.setCurrentDirection(Direction.NORTH);
+        Assert.assertEquals(mc.getDefaultTexture(), "sand_car_NORTH");
+        mc.setCurrentDirection(Direction.WEST);
+        Assert.assertEquals(mc.getDefaultTexture(), "sand_car_WEST");
+    }
+
+    /**
+     * Test the sound for vehicle, when vehicle stop the sound stop
+     * and when vehicle moving the sound play.
+     */
+    @Test
+    @Ignore
+    public void testSandCarSound(){
+        isOnUse = false;
+        Assert.assertFalse(SoundManager.stopSound("sand_car_animation"));
+        mc.resetVelocity();
+        Assert.assertFalse(SoundManager.playSound("sand_car_animation"));
     }
 
     /**
