@@ -3,10 +3,7 @@ package deco2800.skyfall.entities.worlditems;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.entities.AbstractEntity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class DesertCacti extends StaticEntity implements Tickable {
