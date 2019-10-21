@@ -79,21 +79,20 @@ public class QuestManager extends TickableManager {
         levelThreeBuildings.add(BuildingType.CASTLE);
         levelThreeBuildings.add(BuildingType.CABIN);
         levelThreeBuildings.add(BuildingType.WATCHTOWER);
-
+        player = MainCharacter.getInstance();
         try {
             questLevel = player.getSave().getGameStage();
         } catch (NullPointerException npe) {
             questLevel = 0;
         }
 
-        player = MainCharacter.getInstance();
         setMilestones();
     }
 
     /**
      * Sets goals to be achieved at each level
      */
-    private void setMilestones() {
+    public void setMilestones() {
         //inventory numbers need to be reset for player testing and actual game release
         //reduced for ease of testing in game
         switch (questLevel) {

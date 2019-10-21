@@ -61,6 +61,17 @@ public class QuestManagerTest {
     }
 
     @Test
+    public void setMilestonesLevel3Test() {
+        manager.setQuestLevel(3);
+        assertEquals(3, manager.getQuestLevel());
+        manager.setMilestones();
+        assertTrue(manager.getGoldTotal() > 0);
+        assertTrue(manager.getMetalTotal() > 0);
+        assertTrue(manager.getStoneTotal() > 0);
+        assertTrue(manager.getWoodTotal() > 0);
+    }
+
+    @Test
     public void level2GoldTotalTest() {
         manager.setQuestLevel(2);
         manager.setGoldTotal(100);
@@ -261,5 +272,13 @@ public class QuestManagerTest {
 
         assertFalse(manager.checkGold());
     }
+
+    @Test
+    public void nextQuestTest() {
+        manager.setQuestLevel(0);
+        manager.nextQuest();
+        assertEquals(1, manager.getQuestLevel());
+    }
+
 
 }
