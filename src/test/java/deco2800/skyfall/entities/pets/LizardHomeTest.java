@@ -97,16 +97,4 @@ public class LizardHomeTest {
         Assert.assertEquals(lizardHome.getHealth(),9);
     }
 
-    /**
-     * harvest the lizard home and get lizard
-     */
-    @Test
-    public void harvest() {
-        // Populate world with tiles
-        Tile tile1 = w.getTile(0.0f, 0.0f);
-        lizardHome.setHealth(0);
-        List<AbstractEntity> drops = lizardHome.harvest(tile1);
-        Assert.assertEquals(drops.get(0) instanceof Lizard,true);
-
-    }
 }

@@ -538,10 +538,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
             return;
         }
 
-        if (entity instanceof Harvestable) {
-            entityToBeDeleted = entity;
-
-        } else if (entity instanceof Weapon) {
+        if (entity instanceof Weapon) {
             MainCharacter mc = gmm.getMainCharacter();
             if (tile.getCoordinates().distance(mc.getPosition()) <= 2) {
                 entityToBeDeleted = entity;
