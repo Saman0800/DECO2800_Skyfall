@@ -299,21 +299,24 @@ public class InventoryManager extends TickableManager implements Serializable {
     }
 
     private boolean processPosition(String name, List<Item> itemsList, List<Tuple> pos) {
-        if (pos.isEmpty()) {
-            positions.put(name, new Tuple(0, 0));
-            inventory.put(name, itemsList);
-            return true;
-        } else {
-            for (int i = 0; i < ROWS; i++) {
-                for (int j = 0; j < COLS; j++) {
-                    if (!pos.contains(new Tuple(j, i))) {
-                        positions.put(name, new Tuple(j, i));
-                        inventory.put(name, itemsList);
-                        return true;
+        if(inventory.size() < 12){
+            if (pos.isEmpty()) {
+                positions.put(name, new Tuple(0, 0));
+                inventory.put(name, itemsList);
+                return true;
+            } else {
+                for (int i = 0; i < ROWS; i++) {
+                    for (int j = 0; j < COLS; j++) {
+                        if (!pos.contains(new Tuple(j, i))) {
+                            positions.put(name, new Tuple(j, i));
+                            inventory.put(name, itemsList);
+                            return true;
+                        }
                     }
                 }
             }
         }
+
         return false;
     }
 
