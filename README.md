@@ -7,7 +7,7 @@ Skyfall consists of procedurally generated planets with an assortment of unique 
 ### Buttons
 **F12** - Show/hide debug information
 
-**F11** - Show/hide tile coordinates
+**F11** - Show/hide tile coordinates 
 
 **F10** - Show/hide entity paths
 
