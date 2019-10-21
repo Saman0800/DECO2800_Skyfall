@@ -3,19 +3,12 @@ package deco2800.skyfall.entities.worlditems;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.worlds.Tile;
-import deco2800.skyfall.entities.AbstractEntity;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class DesertCacti extends StaticEntity implements Tickable {
     private int woodAmount; // amount of wood that each tree has
 
     private static int nextImage = 1;
     protected static final String ENTITY_ID_STRING = "desert_cacti";
-
-    private static Random random = new Random();
 
     public DesertCacti(SaveableEntityMemento memento) {
         super(memento);
@@ -96,11 +89,5 @@ public class DesertCacti extends StaticEntity implements Tickable {
         return woodAmount;
     }
 
-    /***
-     * A method to decrease wood.
-     */
-    public void decreaseWoodAmount() {
-        woodAmount--;
-    }
 
 }

@@ -20,7 +20,6 @@ public class GameManager {
     private int tilesRendered;
     private int tilesCount;
 
-
     private static final Logger LOGGER = LoggerFactory.getLogger(GameManager.class);
 
     private static GameManager instance = null;
@@ -190,6 +189,7 @@ public class GameManager {
     public void toggleShowPath() {
         this.showPath = !showPath;
     }
+
 
     /**
      * Returns true if this is a tutorial world.
