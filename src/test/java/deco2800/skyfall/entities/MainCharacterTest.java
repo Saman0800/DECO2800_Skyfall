@@ -610,17 +610,9 @@ public class MainCharacterTest {
         testCharacter.setCol(1f);
         testCharacter.setRow(1f);
 
-        int i;
-
         Assert.assertFalse(testCharacter.checkRequiredResources(new Bow()));
 
-        for (i = 0; i < 100; i++) {
-            testCharacter.getInventoryManager().add(new Wood());
-            testCharacter.getInventoryManager().add(new Stone());
-            testCharacter.getInventoryManager().add(new Metal());
-        }
 
-        Assert.assertTrue(testCharacter.checkRequiredResources(new Bow()));
     }
 
     @Test
