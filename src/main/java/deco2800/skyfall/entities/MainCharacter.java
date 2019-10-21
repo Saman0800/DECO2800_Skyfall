@@ -2063,25 +2063,17 @@ public class MainCharacter extends Peon
                 setCurrentState(AnimationRole.STILL);
             } else if (isHurt) {
                 setCurrentState(AnimationRole.HURT);
+            } else if (getVelocity().get(2) == 0f) {
+                setCurrentState(AnimationRole.NULL);
             } else {
-                if (getVelocity().get(2) == 0f) {
-                    setCurrentState(AnimationRole.NULL);
-                } else {
-                    setCurrentState(AnimationRole.MOVE);
-                }
+                setCurrentState(AnimationRole.MOVE);
             }
+        } else if (getVelocity().get(2) == 0f && (vehicleType.equals("bike") || vehicleType.equals(SAND_CAR))) {
+            setCurrentState(AnimationRole.NULL);
         } else if (vehicleType.equals("bike")) {
-            if (getVelocity().get(2) == 0f) {
-                setCurrentState(AnimationRole.NULL);
-            } else {
-                setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
-            }
+            setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
         } else if (vehicleType.equals(SAND_CAR)) {
-            if (getVelocity().get(2) == 0f) {
-                setCurrentState(AnimationRole.NULL);
-            } else {
-                setCurrentState(AnimationRole.VEHICLE_MOVE);
-            }
+            setCurrentState(AnimationRole.VEHICLE_MOVE);
         }
     }
 
