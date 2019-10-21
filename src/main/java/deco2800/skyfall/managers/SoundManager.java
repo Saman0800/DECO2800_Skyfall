@@ -191,6 +191,10 @@ public class SoundManager extends AbstractManager {
         }
     }
 
+    public SoundManager(boolean test) {
+
+    }
+
     /**
      * Check whether this sound is sored in the map
      *
@@ -212,7 +216,7 @@ public class SoundManager extends AbstractManager {
      * @param soundName Sound identifier/key
      * @return true if sound is played
      */
-    public static boolean playSound(String soundName) {
+    public boolean playSound(String soundName) {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
@@ -239,7 +243,7 @@ public class SoundManager extends AbstractManager {
      *
      * @param soundName Sound identifier/key
      */
-    public static void loopSound(String soundName) {
+    public void loopSound(String soundName) {
         if (!paused) {
             if (soundMap.containsKey(soundName)) {
                 Sound sound = soundMap.get(soundName);
@@ -258,7 +262,7 @@ public class SoundManager extends AbstractManager {
         }
     }
 
-    public static void fadeInPlay(String soundName) {
+    public void fadeInPlay(String soundName) {
         Music music = musicMap.get(soundName);
         music.play();
         music.setVolume(0f);
@@ -276,7 +280,7 @@ public class SoundManager extends AbstractManager {
         }, 0.3f, 0.01f);
     }
 
-    public static void fadeOutStop(String soundName) {
+    public void fadeOutStop(String soundName) {
         Music music = musicMap.get(soundName);
         Timer.schedule(new Timer.Task() {
             @Override
@@ -297,7 +301,7 @@ public class SoundManager extends AbstractManager {
      * @param soundName Sound identifier/key
      * @return true if the sound was successfully stopped, false otherwise
      */
-    public static boolean stopSound(String soundName) {
+    public boolean stopSound(String soundName) {
         if (soundMap.containsKey(soundName)) {
             Sound sound = soundMap.get(soundName);
             soundLoops.remove(soundName);
@@ -319,7 +323,7 @@ public class SoundManager extends AbstractManager {
      * @param soundName Sound identifier/key
      * @return true if sound is paused
      */
-    public static boolean pauseSound(String soundName) {
+    public boolean pauseSound(String soundName) {
         if (soundLoops.containsKey(soundName)) {
             // Access the originally placed sound
             Sound sound = soundMap.get(soundName);
@@ -340,7 +344,7 @@ public class SoundManager extends AbstractManager {
      * @param soundName Sound identifier/key
      * @return true if sound is resumed
      */
-    public static boolean resumeSound(String soundName) {
+    public boolean resumeSound(String soundName) {
         if (!paused) {
             if (soundLoops.containsKey(soundName)) {
                 // Access the originally placed sound
@@ -364,7 +368,7 @@ public class SoundManager extends AbstractManager {
      * @param soundName name of the sound in soundMap.
      * @return true if it does, otherwise return false.
      */
-    public static boolean checkLoop(String soundName) {
+    public boolean checkLoop(String soundName) {
         return soundMap.containsKey(soundName)
                 || musicMap.containsKey(soundName);
     }
@@ -372,11 +376,11 @@ public class SoundManager extends AbstractManager {
     /**
      * Return the selected sound for corresponding action
      */
-    public static Sound getTheSound(String soundName) {
+    public Sound getTheSound(String soundName) {
         return soundMap.get(soundName);
     }
 
-    public static Music getTheMusic(String musicName) {
+    public Music getTheMusic(String musicName) {
         return musicMap.get(musicName);
     }
 
@@ -385,43 +389,43 @@ public class SoundManager extends AbstractManager {
      *
      * @return soundMap<Sound, String>
      */
-    public static Map<String, Sound> getSoundMap() {
+    public Map<String, Sound> getSoundMap() {
         return Collections.unmodifiableMap(soundMap);
     }
 
-    public static Map<String, Music> getMusicMap() {
+    public Map<String, Music> getMusicMap() {
         return Collections.unmodifiableMap(musicMap);
     }
 
-    public static void setPaused(boolean paused) {
+    public void setPaused(boolean paused) {
         SoundManager.paused = paused;
     }
 
-    public static void setSoundVolume(float volume) {
+    public void setSoundVolume(float volume) {
         // needs to be between 0 and 1
         gameSoundVolume = volume / 100;
     }
 
-    public static void setMusicVolume(float volume) {
+    public void setMusicVolume(float volume) {
         // needs to be between 0 and 1
         gameMusicVolume = volume / 100;
         updateVolume();
     }
 
-    public static float getSoundVolume() {
+    public float getSoundVolume() {
         return gameSoundVolume;
     }
 
-    public static String getPlaying() {
+    public String getPlaying() {
         return playing;
     }
 
-    public static void updateVolume() {
+    public void updateVolume() {
         Music bgm = getTheMusic(playing);
         bgm.setVolume(gameMusicVolume);
     }
 
-    public static void dispose(String soundName) {
+    public void dispose(String soundName) {
         if (soundLoops.containsKey(soundName)) {
             Sound sound = soundMap.get(soundName);
             sound.dispose();

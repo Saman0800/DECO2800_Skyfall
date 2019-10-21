@@ -99,6 +99,8 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
 
     private boolean dummyBoolean = false;
 
+    private SoundManager sm;
+
     /**
      * The constructor used to create a simple dummey world, used for displaying
      * world information on the home screen
@@ -109,6 +111,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
     public World(long worldId, Save save) {
         this.save = save;
         this.id = worldId;
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
     }
 
     /**
@@ -126,6 +129,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
         EntitySpawnRule.setNoiseSeed(this.worldParameters.getSeed());
         initialiseFrictionmap();
         staticEntityNoise = new NoiseGenerator((new Random(this.worldParameters.getSeed())).nextLong(), 3, 4, 1.3);
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
     }
 
     private Map<AbstractBiome, List<EntitySpawnRule>> generateStartEntitiesInternal() {
@@ -543,7 +547,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
             MainCharacter mc = gmm.getMainCharacter();
             if (tile.getCoordinates().distance(mc.getPosition()) <= 2) {
                 entityToBeDeleted = entity;
-                SoundManager.playSound(PICK_UP_SOUND);
+                sm.playSound(PICK_UP_SOUND);
                 gmm.getInventory().add((Item) entity);
             }
         } else if (entity instanceof Chest) {
@@ -564,7 +568,7 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                 String amt = entity.getTexture().replace("goldPiece", "");
                 int numericalAmt = Integer.parseInt(amt);
                 mc.addGold(numericalAmt, 1);
-                SoundManager.playSound(GOLD_SOUND_EFFECT);
+                sm.playSound(GOLD_SOUND_EFFECT);
                 // remove the gold piece instance from the world
                 entityToBeDeleted = entity;
             }

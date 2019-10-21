@@ -20,6 +20,7 @@ public class BikeTest {
     private Bike bike;
     private MainCharacter mainCharacter;
     private boolean isOnVehicle;
+    private SoundManager sm;
 
     @Before
     public void setup() throws Exception {
@@ -120,9 +121,9 @@ public class BikeTest {
     @Test
     public void testBikeSound(){
         isOnVehicle = false;
-        Assert.assertFalse(SoundManager.stopSound("bike_animation"));
+        Assert.assertFalse(sm.stopSound("bike_animation"));
         mainCharacter.resetVelocity();
-        Assert.assertFalse(SoundManager.playSound("bike_animation"));
+        Assert.assertFalse(sm.playSound("bike_animation"));
     }
 
     /**

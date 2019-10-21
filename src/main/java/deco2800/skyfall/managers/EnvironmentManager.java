@@ -54,6 +54,8 @@ public class EnvironmentManager extends TickableManager {
     // Current season
     private String season;
 
+    private SoundManager sm;
+
     /**
      * Constructor for setting up the environment
      */
@@ -69,6 +71,8 @@ public class EnvironmentManager extends TickableManager {
         currentMillis = System.currentTimeMillis();
         season = "";
         biome = "forest";
+
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
     }
 
     /**
@@ -448,9 +452,9 @@ public class EnvironmentManager extends TickableManager {
             // Stop current music
             try {
                 if (!currentFile.equals("")) {
-                    SoundManager.fadeOutStop(currentFile);
+                    sm.fadeOutStop(currentFile);
                 } else {
-                    SoundManager.stopSound(currentFile);
+                    sm.stopSound(currentFile);
                 }
             } catch (Exception e) {
                 /* Exception caught, if any */
@@ -462,7 +466,7 @@ public class EnvironmentManager extends TickableManager {
 
             // Play BGM
             try {
-                SoundManager.fadeInPlay(currentFile);
+                sm.fadeInPlay(currentFile);
             } catch (Exception e) {
                 /* Exception caught, if any */
             }
