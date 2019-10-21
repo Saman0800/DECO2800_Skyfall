@@ -402,7 +402,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      *
      * @param walkingSpeed the enemy's walking speed.
      */
-    private void setWalkingSpeed(float walkingSpeed) {
+    public void setWalkingSpeed(float walkingSpeed) {
         this.walkingSpeed = walkingSpeed;
     }
 
@@ -411,7 +411,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      *
      * @return the walking speed of this enemy.
      */
-    private float getWalkingSpeed() {
+    public float getWalkingSpeed() {
         return this.walkingSpeed;
     }
 
@@ -461,6 +461,14 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      */
     public String getAttackSound() {
         return this.attackingSound;
+    }
+
+    /**
+     * Gets the amount of damage for the enemy
+     * @return strength of the enemy
+     */
+    public int getStrength() {
+        return strength;
     }
 
     /**
