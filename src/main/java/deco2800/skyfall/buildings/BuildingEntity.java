@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.google.gson.annotations.Expose;
 
 import deco2800.skyfall.entities.*;
+import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -569,12 +570,12 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
             projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
                     new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
                             position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
-                    equippedItem.getName().equals("bow") ? 10 : 0, 40);
+                    new Pair<>(equippedItem.getName().equals("bow") ? 10f : 0f, 40));
         else
             projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
                     new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
                             position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
-                    0, 40);
+                    new Pair<>(0f, 40));
 
         // Add the projectile entity to the game world.
         GameManager.get().getWorld().addEntity(projectile);
