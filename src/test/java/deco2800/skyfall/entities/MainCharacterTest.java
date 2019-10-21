@@ -934,7 +934,7 @@ public class MainCharacterTest {
      *
      * During testing +0.1 needs to be added to the max speed due to rounding/numerical errors
      *
-     * 0.3 is used for all deltas to account for numerical/rounding errors
+     * 2 is used for all deltas to account for numerical/rounding errors
      */
     @Test
     public void processMovementTest() {
@@ -946,9 +946,9 @@ public class MainCharacterTest {
             testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
         }
         velHistory = testCharacter.getVelocity();
-        assertEquals(0, velHistory.get(0), 0.3);
-        assertEquals(0, velHistory.get(1), 0.3);
-        assertEquals(0, velHistory.get(2), 0.3);
+        assertEquals(0, velHistory.get(0), 2);
+        assertEquals(0, velHistory.get(1), 2);
+        assertEquals(0, velHistory.get(2), 2);
         assertEquals("East", testCharacter.getPlayerDirectionCardinal());
 
         // North-West movement
@@ -973,7 +973,7 @@ public class MainCharacterTest {
             testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
         }
         velHistory = testCharacter.getVelocity();
-        assertEquals(0, velHistory.get(0), 0.3);
+        assertEquals(0, velHistory.get(0), 2);
         assertTrue(velHistory.get(1) > 0);
         assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("North", testCharacter.getPlayerDirectionCardinal());
@@ -1002,7 +1002,7 @@ public class MainCharacterTest {
         }
         velHistory = testCharacter.getVelocity();
         assertTrue(velHistory.get(0) > 0);
-        assertEquals(0, velHistory.get(1), 0.3);
+        assertEquals(0, velHistory.get(1), 2);
         assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("East", testCharacter.getPlayerDirectionCardinal());
         testCharacter.notifyKeyUp(Input.Keys.D);
@@ -1029,7 +1029,7 @@ public class MainCharacterTest {
             testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
         }
         velHistory = testCharacter.getVelocity();
-        assertEquals(0, velHistory.get(0), 0.3);
+        assertEquals(0, velHistory.get(0), 2);
         assertTrue(velHistory.get(1) < 0);
         assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
         assertEquals("South", testCharacter.getPlayerDirectionCardinal());
@@ -1069,9 +1069,9 @@ public class MainCharacterTest {
             testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
         }
         velHistory = testCharacter.getVelocity();
-        assertEquals(0, velHistory.get(0), 0.3);
-        assertEquals(0, velHistory.get(1), 0.3);
-        assertEquals(0, velHistory.get(2), 0.3);
+        assertEquals(0, velHistory.get(0), 2);
+        assertEquals(0, velHistory.get(1), 2);
+        assertEquals(0, velHistory.get(2), 2);
     }
 
     @After
