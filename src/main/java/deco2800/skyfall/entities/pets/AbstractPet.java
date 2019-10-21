@@ -32,12 +32,6 @@ public abstract class AbstractPet extends Peon implements ICombatEntity, Item {
         this.setHeight(1);
     }
 
-    public AbstractPet(float row, float col, String texturename, int health) {
-        super(row, col, 0.2f, texturename, health);
-        this.setTexture(texturename);
-
-    }
-
     /**
      * Get the health of pet
      *

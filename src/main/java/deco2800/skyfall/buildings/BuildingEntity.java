@@ -269,40 +269,10 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
     }
 
     /**
-     * Set the resources needed to build a building entity.
-     *
-     * @param resource resource name
-     * @param cost     number of the resource cost
-     */
-    public void addBuildCost(String resource, int cost) {
-        if (buildCost == null) {
-            buildCost = new TreeMap<>();
-        }
-        if (!resource.equals("") && cost != 0) {
-            buildCost.put(resource, cost);
-        }
-    }
-
-    /**
      * @return - cost of building the building
      */
     public Map<String, Integer> getCost() {
         return buildCost;
-    }
-
-    /**
-     * Adds a texture to the buildings list of textures.
-     *
-     * @param name    the name of the texture
-     * @param texture the texture
-     */
-    public void addTexture(String name, String texture) {
-        if (name == null) {
-            buildingTextures = new HashMap<>();
-        }
-        if (!texture.equals("")) {
-            buildingTextures.put(name, texture);
-        }
     }
 
     /**
@@ -408,20 +378,6 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
     }
 
     /**
-     * Updates the health of a Building
-     *
-     * @param amount - Amount of heath to update
-     */
-    public void updateHealth(int amount) {
-        if (amount < 0 && (currentHealth + amount) > 0) {
-            currentHealth += amount;
-        }
-        if (amount >= 1 && currentHealth < maxHealth) {
-            currentHealth += amount;
-        }
-    }
-
-    /**
      * Get the current health of a building entity.
      *
      * @return current building health
@@ -460,35 +416,9 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
         return this.buildingType.getRequiredMetal();
     }
 
-    /**
-     * Returns a map of the name of the required resource and the required number of
-     * each resource to create the item.
-     *
-     * @return a hashamp of the required resources and their number.
-     */
-    // @Override
-    public Map<String, Integer> getAllRequirements() {
-
-        buildCost.put("Wood", this.buildingType.getRequiredWood());
-        buildCost.put("Stone", this.buildingType.getRequiredStone());
-        buildCost.put("Metal", this.buildingType.getRequiredMetal());
-        return buildCost;
-    }
-
     // @Override
     public String getName() {
         return this.buildingType.getName();
-    }
-
-    /**
-     * Returns the number of metal required for the item.
-     *
-     * @return The name of the item
-     */
-    // @Override
-    public boolean isBlueprintLearned() {
-        // do nothing
-        return true;
     }
 
     public void cabinInteract() {
@@ -537,49 +467,10 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
     }
 
     /**
-     * Add item into inventory of the building
-     *
-     * @param item the item added into inventory of the building
-     * @return true if added successfully, otherwise false
-     */
-    public boolean AddInventory(Item item) {
-        return this.inventoryManager.add(item);
-    }
-
-    /**
      * @param item
      */
     public void quickAccessRemove(Item item) {
         this.inventoryManager.quickAccessRemove(item.getName());
-    }
-
-    /**
-     * Fire a projectile in the position that the mouse is in.
-     *
-     * @param enemyPosition The position of the enemy.
-     */
-    protected void fireProjectile(HexVector enemyPosition) {
-        HexVector unitDirection = enemyPosition.subtract(this.getPosition()).normalized();
-
-        setCurrentState(AnimationRole.ATTACK);
-
-        // Make projectile move toward the angle
-        // Spawn projectile in front of character
-        Projectile projectile;
-        if (this.itemSlotSelected == 1)
-            projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
-                    new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                            position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
-                    new Pair<>(equippedItem.getName().equals("bow") ? 10f : 0f, 40));
-        else
-            projectile = new Projectile(enemyPosition, ((Weapon) equippedItem).getTexture("attack"), "hitbox",
-                    new HexVector(position.getCol() + 0.5f + 1.5f * unitDirection.getCol(),
-                            position.getRow() + 0.5f + 1.5f * unitDirection.getRow()), ((Weapon) equippedItem).getDamage(), 1,
-                    new Pair<>(0f, 40));
-
-        // Add the projectile entity to the game world.
-        GameManager.get().getWorld().addEntity(projectile);
-
     }
 
 }

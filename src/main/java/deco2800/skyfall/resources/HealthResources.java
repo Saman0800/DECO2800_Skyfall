@@ -3,7 +3,6 @@ package deco2800.skyfall.resources;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
 
 
 public abstract class HealthResources extends AbstractEntity implements Item {
@@ -54,25 +53,6 @@ public abstract class HealthResources extends AbstractEntity implements Item {
         //Do we need a new type like FoodResources? and hasFoodEffect may false
         // in here as medicine may not affect the food fullness
 
-    }
-
-    /**
-     * Creates a new Health Resource with the given name
-     *
-     * @param name     the identifying name of the Health Resource
-     * @param position the tile which the item has been placed on
-     */
-
-    public HealthResources(String name, Tile position) {
-        this.name = name;
-        carryable = true;
-        subtype = "Health Resource";
-        hasHealingPower = true;
-        exchangeable = true;
-        equippable = false;
-        this.location = position.getCoordinates();
-        description = "This item increases or decreases a player's health.";
-        healthValue = 10;
     }
 
     /**

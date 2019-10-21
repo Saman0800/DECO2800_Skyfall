@@ -2,7 +2,6 @@ package deco2800.skyfall.resources;
 
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.worlds.Tile;
 import java.io.Serializable;
 
 /**
@@ -44,20 +43,6 @@ public abstract class NaturalResources extends AbstractEntity implements Item, S
         this.exchangeable = true;
         this.equippable = false;
         description = "These items exist naturally in the world.";
-    }
-
-    /**
-     * Creates a new Natural Resource with the given position
-     * 
-     * @param position the tile which the item has been placed on
-     */
-    public NaturalResources(Tile position) {
-        this.name = null;
-        this.carryable = true;
-        this.subtype = "Natural Resource";
-        this.position = position.getCoordinates();
-        this.exchangeable = true;
-        this.equippable = false;
     }
 
     /**

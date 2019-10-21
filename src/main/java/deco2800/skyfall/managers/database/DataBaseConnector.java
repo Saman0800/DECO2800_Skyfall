@@ -887,17 +887,6 @@ public class DataBaseConnector {
         }
     }
 
-    public void saveAllTables() {
-        saveTable("SAVES");
-        saveTable("MAIN_CHARACTER");
-        saveTable("WORLDS");
-        saveTable("BIOMES");
-        saveTable("NODES");
-        saveTable("EDGES");
-        saveTable("CHUNKS");
-        saveTable("ENTITIES");
-    }
-
     public void loadAllTables() {
         loadTable("SAVES", 1);
         loadTable("MAIN_CHARACTER", 2);

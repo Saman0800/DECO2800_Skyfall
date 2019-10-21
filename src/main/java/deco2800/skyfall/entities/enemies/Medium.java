@@ -22,16 +22,4 @@ public class Medium extends Enemy {
         this.setValues(scaling, 100, 10, 8, 5f, 7f);
     }
 
-    /**
-     * Constructor of Scout enemy, used for testing
-     *
-     * @param col     the x-coordinate of the enemy.
-     * @param row     the y-coordinate of the enemy.
-     * @param scaling the scaling factor of the enemy's stats.
-     */
-    public Medium(float col, float row, float scaling) {
-        super(col, row);
-
-        this.setValues(scaling, 100, 1, 1, 0.06f, 0.04f);
-    }
 }
