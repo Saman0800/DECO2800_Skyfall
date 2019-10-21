@@ -2,6 +2,7 @@ package deco2800.skyfall.mainmenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -41,6 +42,8 @@ public class MainMenuScreen implements Screen {
 
     private Window startGameWindow;
 
+    private Music music;
+
     /**
      * The constructor of the MainMenuScreen
      *
@@ -49,6 +52,10 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(final SkyfallGame game) {
         this.game = game;
         stage = new Stage(new ExtendViewport(MIN_WIDTH, MIN_HEIGHT), game.getBatch());
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("resources/sounds/menu_bgm.mp3"));
+        music.play();
+        music.setLooping(true);
 
         Skin skin = GameManager.get().getSkin();
 
@@ -141,6 +148,7 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 String seedString = seedInput.getText();
                 long seed = calculateSeed(seedString);
+                music.stop();
                 game.setScreen(new GameScreen(game, seed, true));
             }
         });
@@ -213,6 +221,7 @@ public class MainMenuScreen implements Screen {
             loadSaveButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
+                    music.stop();
                     game.setScreen(new GameScreen(game, saveID));
                 }
             });
