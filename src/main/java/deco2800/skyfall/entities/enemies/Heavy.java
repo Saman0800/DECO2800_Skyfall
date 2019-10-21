@@ -1,7 +1,6 @@
 package deco2800.skyfall.entities.enemies;
 
 
-
 /**
  * An instance of a Heavy (hard level) enemy.
  */

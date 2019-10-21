@@ -1,14 +1,12 @@
 package deco2800.skyfall.entities;
 
-import com.badlogic.gdx.math.Vector2;
-import deco2800.skyfall.util.HexVector;
-import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.managers.GameManager;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
-
+import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.enemies.Enemy;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.util.HexVector;
 
 /**
  * An entity that is shot from a weapon. It travels in a straight direction from
@@ -21,7 +19,7 @@ public class Projectile extends AgentEntity implements Animatable {
     /**
      * How many game ticks a projectile will survive for before being removed.
      */
-    public int lifespan = 40;
+    private int lifespan = 40;
 
     /**
      * The amount of damage this projectile deals.
