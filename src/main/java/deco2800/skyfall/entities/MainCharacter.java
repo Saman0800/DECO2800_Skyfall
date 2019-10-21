@@ -668,11 +668,6 @@ public class MainCharacter extends Peon
         }
     }
 
-
-    public float getMaxSpeed(){
-        return this.maxSpeed;
-    }
-
     /**
      * Lets the player exit the vehicle by setting their speed back to default and
      * changing the texture. Also changing swimming to false in case they were in a
