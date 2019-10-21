@@ -79,14 +79,13 @@ public class QuestManager extends TickableManager {
         levelThreeBuildings.add(BuildingType.CASTLE);
         levelThreeBuildings.add(BuildingType.CABIN);
         levelThreeBuildings.add(BuildingType.WATCHTOWER);
-
+        player = MainCharacter.getInstance();
         try {
             questLevel = player.getSave().getGameStage();
         } catch (NullPointerException npe) {
             questLevel = 0;
         }
 
-        player = MainCharacter.getInstance();
         setMilestones();
     }
 
@@ -522,6 +521,10 @@ public class QuestManager extends TickableManager {
         return false;
     }
 
+    /**
+     * Weapons currently held by the player
+     * @return The number of weapons
+     */
     public int weaponsNum() {
         return ((axeTotal > 0) ? 1 : 0) + ((swordTotal > 0) ? 1 : 0) + ((spearTotal > 0) ? 1 : 0) + ((bowTotal > 0) ? 1 : 0);
     }

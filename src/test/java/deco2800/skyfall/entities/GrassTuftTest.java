@@ -24,7 +24,7 @@ public class GrassTuftTest {
 
     @Test
     public void constructorTest() {
-        assertEquals(grassTuft.getTexture(), "grass_tuft");
+        assertEquals("grass_tuft", grassTuft.getTexture());
     }
 
     @Test
