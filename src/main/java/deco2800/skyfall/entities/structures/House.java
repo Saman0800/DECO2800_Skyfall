@@ -47,37 +47,11 @@ public class House extends AbstractBuilding {
         }
     }
 
-    public House(float x, float y, int renderOrder) {
-        super(x, y);
-        this.setTexture(texture);
-
-        this.setObjectName(ENTITY_ID_STRING);
-        this.renderOrder = renderOrder;
-        this.currentHealth = maxHealth;
-
-        //Call Construction Permissions here
-
-        children = new HashMap<>();
-        coords = new HexVector(x, y);
-        children.put(coords, texture);
-        if (!WorldUtil.validColRow(coords)) {
-            log.debug(coords + "%s Is Invalid:");
-            return;
-        }
-    }
-
     /**
      * Will link to Construction Manager Permissions but for now will be true
      */
     public boolean permissions() {
         return true;
-    }
-
-    /**
-     * Will place the building in the world
-     */
-    public void placeBuilding() {
-        //next sprint
     }
 
     /**

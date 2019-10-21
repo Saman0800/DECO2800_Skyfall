@@ -45,12 +45,6 @@ public class BodyEditorLoader {
         model = readJson(file.readString());
     }
 
-    public BodyEditorLoader(String str) {
-        if (str == null)
-            throw new NullPointerException("str is null");
-        model = readJson(str);
-    }
-
     // -------------------------------------------------------------------------
     // Public API
     // -------------------------------------------------------------------------
@@ -115,17 +109,6 @@ public class BodyEditorLoader {
 
             free(center);
         }
-    }
-
-    /**
-     * Gets the image path attached to the given name.
-     */
-    public String getImagePath(String name) {
-        RigidBodyModel rbModel = model.rigidBodies.get(name);
-        if (rbModel == null)
-            throw new BodyEditorLoaderException("Name '" + name + "' was not found.");
-
-        return rbModel.imagePath;
     }
 
     /**

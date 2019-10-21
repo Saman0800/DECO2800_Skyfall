@@ -49,10 +49,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
     private float colRenderLength;
     private float rowRenderLength;
 
-    public void setBody(Body body) {
-        this.body = body;
-    }
-
     public void setFixture(Fixture fixture) {
         this.fixture = fixture;
     }
@@ -275,14 +271,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
         setHeight(height);
     }
 
-    public float getColRenderWidth() {
-        return colRenderLength;
-    }
-
-    public float getRowRenderWidth() {
-        return rowRenderLength;
-    }
-
     public void setRenderOrder(int newLevel) {
         this.renderOrder = newLevel;
     }
@@ -346,20 +334,6 @@ public abstract class AbstractEntity implements Comparable<AbstractEntity>, Rend
      */
     public void setModulatingColor(Color color) {
         this.modulatingColor = color.clamp();
-    }
-
-    /**
-     * An overload to setModulatingColor Sets the new modulating colour for this
-     * entity This will be in the form (0-1, 0-1, 0-1, 0-1, 0-1) correspoding to (r,
-     * g, b, a) the new modulation colour will be clamped into a valid range
-     * 
-     * @param r component of new color
-     * @param g component of new color
-     * @param b component of new color
-     * @param a component of new color, remember the engine only supports 1 or 0
-     */
-    public void setModulatingColor(float r, float g, float b, float a) {
-        setModulatingColor(new Color(r, g, b, a));
     }
 
     @Override

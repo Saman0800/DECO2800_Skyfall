@@ -411,18 +411,6 @@ public class World implements TouchDownObserver, Saveable<World.WorldMemento> {
                 mc.getRow() + LOADED_RADIUS);
     }
 
-    public void deleteEntity(int entityID) {
-        for (AbstractEntity e : this.getEntities()) {
-            if (e.getEntityID() == entityID) {
-                e.dispose();
-            }
-        }
-    }
-
-    public void queueEntitiesForDelete(List<AbstractEntity> entities) {
-        entitiesToDelete.addAll(entities);
-    }
-
     /**
      * Adds a biome to a world
      *

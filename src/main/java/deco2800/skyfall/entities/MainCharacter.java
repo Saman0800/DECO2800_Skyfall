@@ -1,25 +1,5 @@
 package deco2800.skyfall.entities;
 
-import static deco2800.skyfall.buildings.BuildingType.CABIN;
-import static deco2800.skyfall.buildings.BuildingType.CASTLE;
-import static deco2800.skyfall.buildings.BuildingType.DESERTPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.FENCE;
-import static deco2800.skyfall.buildings.BuildingType.FORESTPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.MOUNTAINPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.SAFEHOUSE;
-import static deco2800.skyfall.buildings.BuildingType.STORAGE_UNIT;
-import static deco2800.skyfall.buildings.BuildingType.TOWNCENTRE;
-import static deco2800.skyfall.buildings.BuildingType.VOLCANOPORTAL;
-import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
@@ -47,21 +27,10 @@ import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
-import deco2800.skyfall.entities.weapons.Bow;
-import deco2800.skyfall.entities.weapons.EmptyItem;
-import deco2800.skyfall.entities.weapons.Spear;
-import deco2800.skyfall.entities.weapons.Sword;
-import deco2800.skyfall.entities.weapons.Weapon;
+import deco2800.skyfall.entities.weapons.*;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
-import deco2800.skyfall.managers.FeedbackManager;
-import deco2800.skyfall.managers.GameManager;
-import deco2800.skyfall.managers.GameMenuManager;
-import deco2800.skyfall.managers.InputManager;
-import deco2800.skyfall.managers.InventoryManager;
-import deco2800.skyfall.managers.PetsManager;
-import deco2800.skyfall.managers.QuestManager;
-import deco2800.skyfall.managers.SoundManager;
+import deco2800.skyfall.managers.*;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -76,6 +45,14 @@ import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static deco2800.skyfall.buildings.BuildingType.*;
 
 /**
  * Main character in the game
@@ -697,19 +674,7 @@ public class MainCharacter extends Peon
     }
 
 
-    public float getMaxSpeed(){
-        return this.maxSpeed;
-    }
 
-    /**
-     * Lets the player exit the vehicle by setting their speed back to default and
-     * changing the texture. Also changing swimming to false in case they were in a
-     * boat
-     */
-    public void exitVehicle() {
-        setAcceleration(0.01f);
-        setMaxSpeed(0.4f);
-    }
 
     public void pickUpInventory(Item item) {
         this.inventories.add(item);
@@ -1494,7 +1459,7 @@ public class MainCharacter extends Peon
      * Process the movement of the player Only called if the player can move onto
      * the next tile
      */
-    private void processMovement() {
+    public void processMovement() {
         // Gets the players current position
         float xVel = getBody().getLinearVelocity().x;
         float yVel = getBody().getLinearVelocity().y;
@@ -1595,7 +1560,7 @@ public class MainCharacter extends Peon
      *
      * @return new texture to use
      */
-    private String getPlayerDirectionCardinal() {
+    public String getPlayerDirectionCardinal() {
         double playerDirectionAngle = getPlayerDirectionAngle();
         int playerDirectionIndex = Math.floorMod((int) Math.floor((playerDirectionAngle + 90.0) / 45), 8);
 
@@ -1645,6 +1610,15 @@ public class MainCharacter extends Peon
      */
     private void setMaxSpeed(float newMaxSpeed) {
         this.maxSpeed = newMaxSpeed;
+    }
+
+    /**
+     * Gets the max speed of the player
+     *
+     * @return the max speed of the player
+     */
+    public float getMaxSpeed(){
+        return this.maxSpeed;
     }
 
     /**

@@ -25,18 +25,17 @@ import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.junit.Assert;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import static deco2800.skyfall.buildings.BuildingType.*;
 import static org.junit.Assert.*;
@@ -900,10 +899,161 @@ public class MainCharacterTest {
         assertEquals(SpellType.TORNADO, testCharacter.spellSelected);
     }
 
+    /**
+     * Tests the processMovement method for main character and subsequently called methods
+     * Rapidly changing the player direction should trigger the preventSliding method allowing
+     * it to be tested
+     * <p>
+     * When process each movement direction 30 iterations are used so that movement can be processed
+     * for 1 second
+     * <p>
+     * The time step setting for processing movement are the same as in the actual game
+     *
+     * During testing +0.1 needs to be added to the max speed due to rounding/numerical errors
+     *
+     * 0.3 is used for all deltas to account for numerical/rounding errors
+     */
+    @Test
+    public void processMovementTest() {
+        List<Float> velHistory;
+
+        // Stationary
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertEquals(0, velHistory.get(0), 0.3);
+        assertEquals(0, velHistory.get(1), 0.3);
+        assertEquals(0, velHistory.get(2), 0.3);
+        assertEquals("East", testCharacter.getPlayerDirectionCardinal());
+
+        // North-West movement
+        testCharacter.notifyKeyDown(Input.Keys.W);
+        testCharacter.notifyKeyDown(Input.Keys.A);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) < 0);
+        assertTrue(velHistory.get(1) > 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
+        assertEquals("North-West", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.W);
+        testCharacter.notifyKeyUp(Input.Keys.A);
+
+        // North movement
+        testCharacter.notifyKeyDown(Input.Keys.W);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertEquals(0, velHistory.get(0), 0.3);
+        assertTrue(velHistory.get(1) > 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
+        assertEquals("North", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.W);
+
+        // South-West movement
+        testCharacter.notifyKeyDown(Input.Keys.S);
+        testCharacter.notifyKeyDown(Input.Keys.A);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) < 0);
+        assertTrue(velHistory.get(1) < 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
+        assertEquals("South-West", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.S);
+        testCharacter.notifyKeyUp(Input.Keys.A);
+
+        // East movement
+        testCharacter.notifyKeyDown(Input.Keys.D);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) > 0);
+        assertEquals(0, velHistory.get(1), 0.3);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
+        assertEquals("East", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.D);
+
+        // North-East movement
+        testCharacter.notifyKeyDown(Input.Keys.W);
+        testCharacter.notifyKeyDown(Input.Keys.D);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) > 0);
+        assertTrue(velHistory.get(1) > 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
+        assertEquals("North-East", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.W);
+        testCharacter.notifyKeyUp(Input.Keys.D);
+
+        // South movement
+        testCharacter.notifyKeyDown(Input.Keys.S);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertEquals(0, velHistory.get(0), 0.3);
+        assertTrue(velHistory.get(1) < 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
+        assertEquals("South", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.S);
+
+        // South-East movement
+        testCharacter.notifyKeyDown(Input.Keys.S);
+        testCharacter.notifyKeyDown(Input.Keys.D);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) > 0);
+        assertTrue(velHistory.get(1) < 0);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
+        assertEquals("South-East", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.S);
+        testCharacter.notifyKeyUp(Input.Keys.D);
+
+        // West movement
+        testCharacter.notifyKeyDown(Input.Keys.A);
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertTrue(velHistory.get(0) < 0);
+        assertEquals(0, velHistory.get(1), 0.3);
+        assertTrue(velHistory.get(2) > 0 && velHistory.get(2) <= testCharacter.getMaxSpeed() + 0.1);
+        assertEquals("West", testCharacter.getPlayerDirectionCardinal());
+        testCharacter.notifyKeyUp(Input.Keys.A);
+
+        // Stationary
+        for (int i = 0; i < 30; ++i) {
+            testCharacter.processMovement();
+            testCharacter.getBody().getWorld().step(1 / 30f, 6, 2);
+        }
+        velHistory = testCharacter.getVelocity();
+        assertEquals(0, velHistory.get(0), 0.3);
+        assertEquals(0, velHistory.get(1), 0.3);
+        assertEquals(0, velHistory.get(2), 0.3);
+    }
+
     @After
     public void cleanup() {
         testCharacter = null;
-
     }
 
     @Test

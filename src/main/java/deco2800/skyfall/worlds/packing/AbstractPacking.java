@@ -46,21 +46,6 @@ public abstract class AbstractPacking {
     }
 
     /**
-     * Get the biome type from a existing tile on the world.
-     * @param x tile's X position on the world
-     * @param y tile's Y position on the world
-     * @return existing biome type if success, otherwise null
-     */
-    public AbstractBiome getBiomeFromTile(float x, float y) {
-        HexVector tilePos = new HexVector(x, y);
-        Tile tile = world.getTile(tilePos);
-        if (tile != null) {
-            return tile.getBiome();
-        }
-        return null;
-    }
-
-    /**
      * Changes the biome type of an available tile on the world to an available
      * new biome type.
      * @param x tile's X position on the world

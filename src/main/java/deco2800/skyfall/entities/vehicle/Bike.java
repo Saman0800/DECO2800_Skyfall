@@ -24,11 +24,6 @@ public class Bike extends AbstractVehicle {
         this.setDirectionTextures();
     }
 
-    public boolean isOnUse() {
-        this.removeBike();
-        return this.isOnUse;
-    }
-
     public String getBiome() {
         return BIOME;
     }

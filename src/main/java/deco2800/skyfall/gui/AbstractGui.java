@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractGui {
-    protected boolean active = true;
 
     protected AbstractGui parent;
     protected List<AbstractGui> children = new ArrayList<>();
@@ -39,28 +38,8 @@ public abstract class AbstractGui {
         parent.children.add(this);
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public Vector2 getPos() {
-        return pos;
-    }
-
     public void setPos(Vector2 pos) {
         this.pos = pos;
-    }
-
-    public Vector2 getAbsolutePos() {
-        if (parent == null) {
-            return pos;
-        } else {
-            return parent.getAbsolutePos().add(pos);
-        }
     }
 
     public abstract void update(long timeDelta);
