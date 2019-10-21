@@ -1,5 +1,6 @@
 package deco2800.skyfall.entities;
 
+import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.pets.Tiger;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,12 +12,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TigerTest {
     Tiger tiger;
+    Tiger tiger1;
     MainCharacter mc;
 
     @Before
     public void setup(){
-        mc = new MainCharacter(2, 4, 0.3f, "fh", 20);
+        mc = new MainCharacter(0, 0, 0.3f, "fh", 20);
         tiger = new Tiger(3f,3f);
+        tiger1 = new Tiger(2f,4f,mc);
 
     }
 
@@ -27,9 +30,42 @@ public class TigerTest {
     public void positionTest(){
         assertThat("", tiger.getCol(), is(equalTo(3f)));
         assertThat("", tiger.getRow(), is(equalTo(3f)));
+        assertThat("", tiger1.getCol(), is(equalTo(2f)));
+        assertThat("", tiger1.getRow(), is(equalTo(4f)));
 
     }
 
+    /**
+     * get the type of pet
+     */
+    @Test
+    public void getPetType() {
+        Assert.assertEquals("tiger",tiger.getPetType());
+    }
+
+    /**
+     * test the moving
+     */
+    @Test
+    public void getMoving() {
+        Assert.assertFalse(tiger.getMoving());
+    }
+
+    /**
+     * test the injure
+     */
+    @Test
+    public void getInjure() {
+        Assert.assertFalse(tiger.getInjure());
+    }
+
+    /**
+     * test the moving direction
+     */
+    @Test
+    public void getMovingDirection() {
+        Assert.assertEquals(Direction.SOUTH,tiger.getMovingDirection());
+    }
     /**
      * To test the height of tiger
      */
