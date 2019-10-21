@@ -31,9 +31,6 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.junit.Assert;
-
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 import static deco2800.skyfall.buildings.BuildingType.*;

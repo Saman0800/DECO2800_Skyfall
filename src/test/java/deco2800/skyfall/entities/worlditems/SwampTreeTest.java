@@ -85,16 +85,6 @@ public class SwampTreeTest {
         assertEquals(testTree.hashCode(), testTreeEq.hashCode());
     }
 
-    @Test
-    public void harvestTest() {
-
-        Tile testTile = new Tile(null, 0.5f, 0.5f);
-
-        testTree = new SwampTree(testTile, false);
-        int woodDropped = testTree.harvest(testTile).size();
-
-        assertTrue("Unexpected harvest count of " + woodDropped, (woodDropped >= 1) && (woodDropped <= 16));
-    }
 
     @Test
     public void newInstanceTest() {
