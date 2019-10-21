@@ -2,6 +2,7 @@ package deco2800.skyfall.entities.spells;
 
 import deco2800.skyfall.entities.Projectile;
 import deco2800.skyfall.util.HexVector;
+import org.javatuples.Pair;
 
 public class Spell extends Projectile {
 
@@ -21,7 +22,7 @@ public class Spell extends Projectile {
      */
     public Spell(HexVector movementPosition, String textureName, String objectName,
                  HexVector startPosition, int damage, float speed, int range) {
-        super(movementPosition, textureName, objectName, startPosition, damage, speed, range, 40);
+        super(movementPosition, textureName, objectName, startPosition, damage, speed, new Pair<>((float) range, 40));
     }
 
     /**

@@ -7,6 +7,7 @@ import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.entities.enemies.Enemy;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.util.HexVector;
+import org.javatuples.Pair;
 
 /**
  * An entity that is shot from a weapon. It travels in a straight direction from
@@ -54,14 +55,14 @@ public class Projectile extends AgentEntity implements Animatable {
      */
 
     public Projectile(HexVector movementPosition, String textureName, String objectName,
-                      HexVector startPosition, int damage, float speed, float range, int lifespan) {
+                      HexVector startPosition, int damage, float speed, Pair<Float, Integer> rangeLifespan) {
         super(startPosition.getCol(), startPosition.getRow(), 3, speed);
 
         this.damage = damage;
         this.speed = speed;
         this.movementPosition = movementPosition;
-        this.range = range;
-        this.lifespan = lifespan;
+        this.range = rangeLifespan.getValue0();
+        this.lifespan = rangeLifespan.getValue1();
         this.textureName = textureName;
 
         this.setTexture(textureName);
