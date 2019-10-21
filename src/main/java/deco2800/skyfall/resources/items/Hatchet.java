@@ -24,6 +24,8 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
     //Used for farming sound
     private static final String CUT_TREE = "cut_tree";
 
+    private SoundManager sm;
+
     private void init() {
         this.name = "Hatchet";
         allRequirements = new HashMap<>();
@@ -32,6 +34,7 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
         allRequirements.put("Metal", 0);
         description = "hatchet";
         carryable = true;
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
     }
 
     /***
@@ -94,7 +97,7 @@ public class Hatchet extends ManufacturedResources implements Blueprint {
             GameManager.get().getWorld().removeEntity(treeToFarm);
 
         } else {
-            SoundManager.playSound(CUT_TREE);
+            sm.playSound(CUT_TREE);
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Wood());
             treeToFarm.decreaseWoodAmount();
 

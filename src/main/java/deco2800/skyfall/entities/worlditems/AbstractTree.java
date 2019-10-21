@@ -1,9 +1,6 @@
 package deco2800.skyfall.entities.worlditems;
 
-import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.StaticEntity;
-import deco2800.skyfall.entities.Harvestable;
-import deco2800.skyfall.entities.WoodCube;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.worlds.Tile;
@@ -11,12 +8,10 @@ import deco2800.skyfall.worlds.Tile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public abstract class AbstractTree extends StaticEntity implements Tickable, Harvestable {
+public abstract class AbstractTree extends StaticEntity implements Tickable {
 
     protected static final Logger LOG = LoggerFactory.getLogger(AbstractTree.class);
     protected int woodAmount; // amount of wood that each tree has
@@ -52,21 +47,6 @@ public abstract class AbstractTree extends StaticEntity implements Tickable, Har
         // Do nothing on tick
     }
 
-    @Override
-    public List<AbstractEntity> harvest(Tile tile) {
-        return harvest(tile, this.woodAmount);
-    }
-
-    public List<AbstractEntity> harvest(Tile tile, int maxWoodCount) {
-        Random random = new Random();
-        int dropCount = random.nextInt(maxWoodCount) + 1;
-        List<AbstractEntity> drops = new ArrayList<>();
-        for (int i = 0; i < dropCount; i++) {
-            drops.add(new WoodCube(getCol(), getRow()));
-        }
-
-        return drops;
-    }
 
     @Override
     public boolean equals(Object other) {

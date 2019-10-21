@@ -33,9 +33,8 @@ import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
+import org.junit.Assert;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -620,8 +619,6 @@ public class MainCharacterTest {
         w.addEntity(testCharacter);
         testCharacter.setCol(1f);
         testCharacter.setRow(1f);
-
-        int i;
 
         Assert.assertFalse(testCharacter.checkRequiredResources(new Bow()));
 

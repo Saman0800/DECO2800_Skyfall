@@ -26,6 +26,8 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
     //Used for farming sound
     private static final String COLLECT_STONE = "collect_stone";
 
+    private SoundManager sm;
+
     Random random = new Random();
 
     private void init() {
@@ -36,6 +38,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         allRequirements.put("Metal", 4);
         description = "This item can be constructed using stone and wood. " + "\n" + "It can farm stone from biomes.";
         carryable = true;
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
     }
 
     /***
@@ -70,7 +73,7 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
         }
 
         else {
-            SoundManager.playSound(COLLECT_STONE);
+            sm.playSound(COLLECT_STONE);
             GameManager.getManagerFromInstance(InventoryManager.class).add(new Stone());
             // lowering the possibility of gaining metal
 
