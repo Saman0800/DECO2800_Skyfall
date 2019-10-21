@@ -4,7 +4,6 @@ import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.MainCharacter;
 
-
 public class LizardHome extends AbstractPet implements Animatable {
     MainCharacter mc;
 
