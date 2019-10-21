@@ -18,17 +18,6 @@ public class GuiMaster {
 
     private GuiMaster() {}
 
-    /**
-     * Adds a gui element to the elements map and list
-     * (assumes the hash does not already exist)
-     * @param guiElement the element to add
-     */
-    private static <T extends AbstractGui> T add(T guiElement) {
-        guiElementsMap.put(guiElement.hash, guiElement);
-        guiElementsList.add(guiElement);
-
-        return guiElement;
-    }
 
     /**
      * Updates all elements currently in the elements list

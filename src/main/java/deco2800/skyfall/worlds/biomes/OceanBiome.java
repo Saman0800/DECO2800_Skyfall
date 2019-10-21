@@ -29,11 +29,6 @@ public class OceanBiome extends AbstractBiome {
         textureGenerator = new NoiseGenerator(memento.noiseGeneratorSeed, 5, 160, 0.9);
     }
 
-
-    private boolean tileIsBorder(Tile tile) {
-        return tile.getNeighbours().values().stream().anyMatch(neighbour -> neighbour.getBiome() != this);
-    }
-
     @Override
     public void setTileTexture(Tile tile) {
         tile.setTexture("ocean_1");
