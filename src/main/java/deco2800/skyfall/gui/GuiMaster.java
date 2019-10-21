@@ -14,10 +14,7 @@ public class GuiMaster {
     static Map<String, AbstractGui> guiElementsMap = new HashMap<>();
     static List<AbstractGui> guiElementsList = new LinkedList<>();
 
-
-
     private GuiMaster() {}
-
 
     /**
      * Updates all elements currently in the elements list

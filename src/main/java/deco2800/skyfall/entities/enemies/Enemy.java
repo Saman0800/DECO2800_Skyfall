@@ -208,7 +208,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      */
     @Override
     public int getDamage() {
-        return strength;
+        return getStrength();
     }
 
     /**
@@ -467,7 +467,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
      * @return strength of the enemy
      */
     public int getStrength() {
-        return getDamage();
+        return strength;
     }
 
     /**
