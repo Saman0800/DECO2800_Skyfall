@@ -96,15 +96,8 @@ public class MainCharacterTest {
         testGoldPiece = new GoldPiece(5);
 
         inventoryManager = GameManager.getManagerFromInstance(InventoryManager.class);
-        List<Item> items = inventoryManager
-                .getContents()
-                .values()
-                .stream()
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        for (Item item : items) {
-            inventoryManager.drop(item.getName());
-        }
+        // Reset the inventory contents.
+        inventoryManager.setContents(new HashMap<>(new InventoryManager().getContents()));
 
         WorldBuilder builder = new WorldBuilder();
         WorldDirector.constructTestWorld(builder, 0);
@@ -622,13 +615,13 @@ public class MainCharacterTest {
 
         Assert.assertFalse(testCharacter.checkRequiredResources(new Bow()));
 
-        // for (i = 0; i < 100; i++) {
-        //     testCharacter.getInventoryManager().add(new Wood());
-        //     testCharacter.getInventoryManager().add(new Stone());
-        //     testCharacter.getInventoryManager().add(new Metal());
-        // }
-//
-        // assertTrue(testCharacter.checkRequiredResources(new Bow()));
+        for (int i = 0; i < 100; i++) {
+            testCharacter.getInventoryManager().add(new Wood());
+            testCharacter.getInventoryManager().add(new Stone());
+            testCharacter.getInventoryManager().add(new Metal());
+        }
+
+        assertTrue(testCharacter.checkRequiredResources(new Bow()));
     }
 
     @Test
