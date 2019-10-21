@@ -18,7 +18,6 @@ public class SkyfallGame extends Game {
 	 */
 	private SpriteBatch batch;
 	public static final String SAVE_ROOT_DIR = "skyfall-saves";
-	private FileHandle saveRootHandle;
 	private MainMenuScreen mainMenuScreen;
 
 	/**

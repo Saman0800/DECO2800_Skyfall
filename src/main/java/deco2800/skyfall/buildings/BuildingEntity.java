@@ -52,14 +52,6 @@ public class BuildingEntity extends SaveableEntity implements ICombatEntity {
 
     private InventoryManager inventoryManager;
 
-    /**
-     * Item the Building is currently equipped with/holding.
-     */
-    private Item equippedItem;
-
-    // default value
-    private int itemSlotSelected = 0;
-
     @Override
     public void takeDamage(int damage) {
         this.health -= damage;

@@ -9,7 +9,6 @@ public class Bike extends AbstractVehicle {
     private static final transient String BIOME = "forest";
     
     private static final String TEXTURENAME = "bike";
-    private boolean isOnUse = false;
 
 
     public Bike(float col, float row, MainCharacter mc) {
