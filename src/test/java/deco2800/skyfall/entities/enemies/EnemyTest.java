@@ -155,7 +155,53 @@ public class EnemyTest {
 
     @Test
     public void setValues() {
-        // someone write this
+        float row = 30f;
+        float col = 30f;
+        float scale = 0.06f;
+        Enemy test = new Enemy(row, col, Enemy.EnemyType.HEAVY,
+                scale, biomeName, "enemyTexture");
+        float scaling = 1.5f;
+        int health = 10;
+        int damage = 5;
+        float range = 1.5f;
+        float wSpeed = 2.0f;
+        float cSpeed = 3.0f;
+        test.setValues(scaling, health, damage, range, wSpeed, cSpeed);
+        Assert.assertEquals(scaling * health, test.getMaxHealth(), 0.01);
+        Assert.assertEquals(scaling * health, test.getHealth(), 0.01);
+        Assert.assertEquals((int) (scaling * damage), test.getStrength(), 0.01);
+        Assert.assertEquals(scaling * range, test.getAttackRange(), 0.01);
+        Assert.assertEquals(scaling * wSpeed, test.getWalkingSpeed(), 0.01);
+        Assert.assertEquals(scaling * cSpeed, test.getChasingSpeed(), 0.01);
+
+        scale = (int) scale + 1;
+
+        Heavy heavy1 = new Heavy(row, col, scale, biomeName);
+        Heavy heavy2 = new Heavy(row, col, scale);
+        Assert.assertEquals(heavy1.getRow(), row, 0.01);
+        Assert.assertEquals(heavy1.getCol(), col, 0.01);
+        Assert.assertEquals(heavy1.getScale(), scale, 0.01);
+        Assert.assertEquals(heavy2.getRow(), row, 0.01);
+        Assert.assertEquals(heavy2.getCol(), col, 0.01);
+        Assert.assertEquals(heavy2.getScale(), scale, 0.01);
+
+        Medium medium1 = new Medium(row, col, scale, biomeName);
+        Medium medium2 = new Medium(row, col, scale);
+        Assert.assertEquals(medium1.getRow(), row, 0.01);
+        Assert.assertEquals(medium1.getCol(), col, 0.01);
+        Assert.assertEquals(medium1.getScale(), scale, 0.01);
+        Assert.assertEquals(medium2.getRow(), row, 0.01);
+        Assert.assertEquals(medium2.getCol(), col, 0.01);
+        Assert.assertEquals(medium2.getScale(), scale, 0.01);
+
+        Scout scout1 = new Scout(row, col, scale, biomeName);
+        Scout scout2 = new Scout(row, col, scale);
+        Assert.assertEquals(scout1.getRow(), row, 0.01);
+        Assert.assertEquals(scout1.getCol(), col, 0.01);
+        Assert.assertEquals(scout1.getScale(), scale, 0.01);
+        Assert.assertEquals(scout2.getRow(), row, 0.01);
+        Assert.assertEquals(scout2.getCol(), col, 0.01);
+        Assert.assertEquals(scout2.getScale(), scale, 0.01);
     }
 
     /**
