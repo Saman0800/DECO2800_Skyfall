@@ -25,6 +25,7 @@ public class GameMenuManager extends TickableManager {
     private Stage stage;
     private EnvironmentManager em;
     private InventoryManager inventory;
+    private FeedbackManager fm;
     private Skin skin;
     private SkyfallGame game;
 
@@ -60,6 +61,7 @@ public class GameMenuManager extends TickableManager {
         inventory = GameManager.get().getManager(InventoryManager.class);
         questManager = GameManager.get().getManager(QuestManager.class);
         em = GameManager.get().getManager(EnvironmentManager.class);
+        fm = GameManager.get().getManager(FeedbackManager.class);
         stage = null;
         skin = null;
         uiElements = new HashMap<>();
@@ -335,7 +337,8 @@ public class GameMenuManager extends TickableManager {
         hudElements.put("gameMenuBar2", new GameMenuBar2(stage, null, textureManager, skin, this));
         hudElements.put("clock" , new Clock(stage, skin, this, em));
 
-        hudElements.put("feedbackBar", new FeedbackBar(stage, null, textureManager, skin, this));
+        hudElements.put("feedbackBar", new FeedbackBar(stage, new ImageButton(generateTextureRegionDrawableObject(exitText)),
+                null, textureManager, skin, this, fm));
 
         uiElements.put("HUD", new HeadsUpDisplay(stage, null, textureManager, skin, this, hudElements, questManager));
 

@@ -213,17 +213,21 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bikeNORTH", new Texture("resources/Bike/back-side-player.png"));
             textureMap.put("bikeWEST", new Texture("resources/Bike/leftside-player.png"));
             textureMap.put("bikeEAST", new Texture("resources/Bike/rightside-player.png"));
+            textureMap.put("bikeNORTHEAST", new Texture("resources/Bike/bike RB1.png"));
+            textureMap.put("bikeNORTHWEST", new Texture("resources/Bike/bike LB1.png"));
+            textureMap.put("bikeSOUTHWEST", new Texture("resources/Bike/bike RF1.png"));
+            textureMap.put("bikeSOUTHEAST", new Texture("resources/Bike/bike LF1.png"));
 
             // Sand Car
             textureMap.put("sand_car", new Texture("resources/sand_car_image/sand_car_right.png"));
-            textureMap.put("sand_car_SOUTH", new Texture("resources/sand_car_image/sand_car_front_with_player.png"));
-            textureMap.put("sand_car_NORTH", new Texture("resources/sand_car_image/sand_car_back.png"));
-            textureMap.put("sand_car_WEST", new Texture("resources/sand_car_image/sand_car_left_with_player.png"));
-            textureMap.put("sand_car_EAST", new Texture("resources/sand_car_image/sand_car_right_with_player.png"));
-            textureMap.put("sand_car_SOUTHWEST", new Texture("resources/sand_car_image/sand_car_front_left_with_player.png"));
-            textureMap.put("sand_car_SOUTHEAST", new Texture("resources/sand_car_image/sand_car_front_right_with_player.png"));
-            textureMap.put("sand_car_NORTHEAST", new Texture("resources/sand_car_image/sand_car_back_right_with_player.png"));
-            textureMap.put("sand_car_NORTHWEST", new Texture("resources/sand_car_image/sand_car_back_left_with_player.png"));
+            textureMap.put("sand_car_SOUTH", new Texture("resources/resized_sand_car/sand_car_front_with_player.png"));
+            textureMap.put("sand_car_NORTH", new Texture("resources/resized_sand_car/sand_car_back.png"));
+            textureMap.put("sand_car_WEST", new Texture("resources/resized_sand_car/sand_car_left_with_player.png"));
+            textureMap.put("sand_car_EAST", new Texture("resources/resized_sand_car/sand_car_right_with_player.png"));
+            textureMap.put("sand_car_SOUTHWEST", new Texture("resources/resized_sand_car/sand_car_front_left_with_player.png"));
+            textureMap.put("sand_car_SOUTHEAST", new Texture("resources/resized_sand_car/sand_car_front_right_with_player.png"));
+            textureMap.put("sand_car_NORTHEAST", new Texture("resources/resized_sand_car/sand_car_back_right_with_player.png"));
+            textureMap.put("sand_car_NORTHWEST", new Texture("resources/resized_sand_car/sand_car_back_left_with_player.png"));
 
             textureMap.put("chestClosed", new Texture("resources/chest_icon.png"));
             textureMap.put("blueprintShop", new Texture("resources/shopkeeper.png"));
@@ -265,8 +269,7 @@ public class TextureManager extends AbstractManager {
             textureMap.put("tutorial_3", new Texture("resources/tutorial/tutorial_3.png"));
             textureMap.put("tutorial_4", new Texture("resources/tutorial/tutorial_4.png"));
             textureMap.put("tutorial_5", new Texture("resources/tutorial/tutorial_5.png"));
-            textureMap.put("next_back_button", new Texture("resources/tutorial/next_back_button.png"));
-            textureMap.put("home_button", new Texture("resources/tutorial/done.png"));
+            textureMap.put("home_button", new Texture("resources/tutorial/home_button.png"));
 
             // End Game Textures
             textureMap.put("continueGame", new Texture("resources/new_ui/endGameTable/continue.png"));
@@ -375,16 +378,6 @@ public class TextureManager extends AbstractManager {
             textureMap.put("help_page1", new Texture("resources/new_ui/helpTable/help_page1.png"));
             textureMap.put("help_page2", new Texture("resources/new_ui/helpTable/help_page2.png"));
             textureMap.put("help_page3", new Texture("resources/new_ui/helpTable/help_page3.png"));
-
-            // Clock/Season graphics
-            textureMap.put("dawn", new Texture("resources/clock/dawn_clock.png"));
-            textureMap.put("dusk", new Texture("resources/clock/dusk_clock.png"));
-            textureMap.put("day", new Texture("resources/clock/day_clock.png"));
-            textureMap.put("night", new Texture("resources/clock/night_clock.png"));
-            textureMap.put("summer", new Texture("resources/clock/summer.png"));
-            textureMap.put("winter", new Texture("resources/clock/winter.png"));
-            textureMap.put("spring", new Texture("resources/clock/spring.png"));
-            textureMap.put("autumn", new Texture("resources/clock/autumn.png"));
 
             textureMap.put("inventory_banner", new Texture("resources/inventory_banner.png"));
             textureMap.put("chest_banner", new Texture("resources/chest_banner.png"));

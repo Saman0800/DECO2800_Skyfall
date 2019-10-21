@@ -11,19 +11,17 @@ import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
 import deco2800.skyfall.worlds.world.WorldDirector;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
@@ -36,7 +34,7 @@ public class PortalTest {
 
     @Before
     public void setup() {
-        world = mock(World.class);
+        world = WorldDirector.constructTestWorld(new WorldBuilder(), 0).getWorld();
         save = mock(Save.class);
         save.setCurrentWorld(world);
         when(save.getCurrentWorld()).thenReturn(world);
@@ -95,5 +93,11 @@ public class PortalTest {
         assertEquals("desert", characterTile1.getBiome().getBiomeName());
         assertEquals(0, character.getCol(), 0);
         assertEquals(0, character.getRow(), 0);
+    }
+
+    @After
+    public void cleanup(){
+        world = null;
+        save = null;
     }
 }

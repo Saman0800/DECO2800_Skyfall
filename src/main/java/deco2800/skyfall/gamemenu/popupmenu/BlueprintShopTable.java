@@ -110,35 +110,7 @@ public class BlueprintShopTable extends AbstractPopUpElement {
 
                 cost.setSize(costWidth, 40);
             } else {
-                cost = new Label("$" + b.getCost(), skin, "white-label");
-                cost.setPosition(xpos + 80 + count * 130, ypos + 75);
-                cost.setName(b.getName());
-                cost.setFontScale((float)0.5);
-
-                int costWidth = 35;
-                if(b.getCost()>9){
-                    costWidth += 10;
-                }
-                if(b.getCost()>99){
-                    costWidth += 10;
-                }
-
-                cost.setSize(costWidth, 40);
-
-
-                icon.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        if (sm.getCharacter().getGoldPouchTotalValue() >= b.getCost()) {
-                            sm.getCharacter().removeGold(b.getCost());
-                            sm.getCharacter().addBlueprint(b);
-                            if (b instanceof ForestPortal || b instanceof DesertPortal || b instanceof MountainPortal) {
-                                ((TeleportTable) gameMenuManager.getPopUp("teleportTable")).setPurchased(b);
-                            }
-                        }
-                        updateBlueprintShopPanel();
-                    }
-                });
+                cost = handleNotBought(count, xpos, ypos, b, icon);
             }
             blueprintPanel.addActor(icon);
             blueprintPanel.addActor(cost);
@@ -150,6 +122,48 @@ public class BlueprintShopTable extends AbstractPopUpElement {
                 count = 0;
             }
         }
+    }
+
+    /**
+     * For when a blue print is not bought
+     * @param count The count of the blue print
+     * @param xpos The x position of the blue print
+     * @param ypos The y position of the blue print
+     * @param b The blue print
+     * @param icon The icon of the blue print
+     * @return Returns the label
+     */
+    private Label handleNotBought(float count, float xpos, float ypos, Blueprint b, ImageButton icon) {
+        Label cost;
+        cost = new Label("$" + b.getCost(), skin, "white-label");
+        cost.setPosition(xpos + 80 + count * 130, ypos + 75);
+        cost.setName(b.getName());
+        cost.setFontScale((float)0.5);
+
+        int costWidth = 35;
+        if(b.getCost()>9){
+            costWidth += 10;
+        }
+        if(b.getCost()>99){
+            costWidth += 10;
+        }
+
+        cost.setSize(costWidth, 40);
+
+        icon.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (sm.getCharacter().getGoldPouchTotalValue() >= b.getCost()) {
+                    sm.getCharacter().removeGold(b.getCost());
+                    sm.getCharacter().addBlueprint(b);
+                    if (b instanceof ForestPortal || b instanceof DesertPortal || b instanceof MountainPortal) {
+                        ((TeleportTable) gameMenuManager.getPopUp("teleportTable")).setPurchased(b);
+                    }
+                }
+                updateBlueprintShopPanel();
+            }
+        });
+        return cost;
     }
 
     /**

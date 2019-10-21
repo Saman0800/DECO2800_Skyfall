@@ -18,6 +18,7 @@ import deco2800.skyfall.entities.worlditems.HotSpring;
 import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.StatisticsManager;
+
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.biomes.DesertBiome;
 import deco2800.skyfall.worlds.biomes.ForestBiome;
@@ -26,6 +27,7 @@ import deco2800.skyfall.worlds.biomes.MountainBiome;
 import deco2800.skyfall.worlds.biomes.SnowyMountainsBiome;
 import deco2800.skyfall.worlds.biomes.SwampBiome;
 import deco2800.skyfall.worlds.biomes.VolcanicMountainsBiome;
+
 
 /**
  * Class that helps with creating worlds using WorldBuilders
@@ -129,8 +131,6 @@ public class WorldDirector {
         MainCharacter mainCharacter = setupBeachAndStats(builder, renderUI);
         builder.addEntity(new LizardHome(0, 2, mainCharacter));
         builder.addEntity(new IceWhitebear(-2, 0, mainCharacter));
-        builder.addEntity(new Bike(-10f, -2f, mainCharacter));
-        builder.addEntity(new SandCar(-20f, -2f, mainCharacter));
         builder.addEntity(new Scout(0, 2, 0.4f, WorldDirector.FOREST_STRING));
         builder.addEntity(new Medium(1, 2, 0.4f, WorldDirector.FOREST_STRING));
         builder.addEntity(new Heavy(7, 9, 0.2f, WorldDirector.FOREST_STRING));
@@ -162,46 +162,11 @@ public class WorldDirector {
             gmm.drawAllElements();
         }
 
+        builder.addEntity(new Bike(-10f, -2f, mainCharacter));
+        builder.addEntity(new SandCar(-20f, -2f, mainCharacter));
         builder.addEntity(mainCharacter);
 
         return mainCharacter;
-    }
-
-    /**
-     * Constructs a tutorial world
-     *
-     * @param builder The builder used to construct the world
-     */
-    public static WorldBuilder constructTutorialWorld(WorldBuilder builder, long seed) {
-        Random random = new Random(seed);
-
-        MainCharacter mainCharacter = MainCharacter.getInstance(0, 0, 0.05f, WorldDirector.MAIN_PIECE_STRING, 10);
-        mainCharacter.setCol(0);
-        mainCharacter.setRow(0);
-
-        builder.addEntity(mainCharacter);
-
-        builder.addEntity(new Scout(0, 2, 1f, WorldDirector.FOREST_STRING));
-        builder.addEntity(new Heavy(7, 9, 2f, WorldDirector.FOREST_STRING));
-
-        builder.addLake(5);
-        builder.addRiver();
-        builder.setRiverSize(5);
-        builder.setBeachSize(12);
-
-        builder.setNodeSpacing(15);
-        builder.setWorldSize(80);
-        builder.setType("tutorial");
-        builder.setSeed(2);
-        builder.setStaticEntities(true);
-        builder.addEntity(new Heavy(4, 1, 2f, WorldDirector.FOREST_STRING));
-
-        builder.addEntity(new Heavy(4, 1, 2f, WorldDirector.FOREST_STRING));
-        builder.addBiome(new ForestBiome(random), 20);
-        builder.addBiome(new DesertBiome(random), 20);
-        builder.addBiome(new MountainBiome(random), 20);
-
-        return builder;
     }
 
     /**
