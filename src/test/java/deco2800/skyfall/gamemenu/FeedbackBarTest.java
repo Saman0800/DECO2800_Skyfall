@@ -1,5 +1,6 @@
 package deco2800.skyfall.gamemenu;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -36,6 +37,12 @@ public class FeedbackBarTest extends BaseGDXTest {
         skin = spy(Skin.class);
         exit = mock(ImageButton.class);
 
+        Camera mockCam = mock(Camera.class);
+
+        when(gmm.getTopLeftX()).thenReturn(10f);
+        when(gmm.getBottomRightY()).thenReturn(100f);
+        when(stage.getCamera()).thenReturn(mockCam);
+
         Label.LabelStyle labelStyle = new Label.LabelStyle();
         labelStyle.font = new BitmapFont();
         skin.add("white-text", labelStyle);
@@ -68,6 +75,15 @@ public class FeedbackBarTest extends BaseGDXTest {
     public void updateTextTest() {
         fm.setFeedbackText("test");
         feedbackBar.updateText(fm.getFeedbackText());
+        assertFalse(fm.getFeedbackBarUpdate());
+    }
+
+    @Test
+    public void updateTest() {
+        fm.setFeedbackText("test");
+        fm.setFeedbackBarUpdate(true);
+        feedbackBar.update();
+        verify(stage).getCamera();
         assertFalse(fm.getFeedbackBarUpdate());
     }
 
