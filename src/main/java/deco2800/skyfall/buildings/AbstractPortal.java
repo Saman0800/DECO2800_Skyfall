@@ -36,6 +36,8 @@ public abstract class AbstractPortal extends SaveableEntity implements Blueprint
 
     private Map<String, Integer> buildCost;
 
+    private SoundManager sm;
+
     String currentBiome;
     String name;
     boolean blueprintLearned;
@@ -51,6 +53,8 @@ public abstract class AbstractPortal extends SaveableEntity implements Blueprint
                           int requiredMetal) {
         super(col, row, renderOrder);
         this.setObjectName(ENTITY_ID_STRING);
+
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
 
         buildCost = new HashMap<>();
         buildCost.put("Wood", requiredWood);
@@ -95,7 +99,7 @@ public abstract class AbstractPortal extends SaveableEntity implements Blueprint
      */
     public void teleport(Save save) {
         // Stop the music from the previous biome/world
-        SoundManager.stopSound(GameManager.get().getManager(EnvironmentManager.class).getFilename());
+        sm.stopSound(GameManager.get().getManager(EnvironmentManager.class).getFilename());
 
         // Create a random world
         MainCharacter character = save.getMainCharacter();

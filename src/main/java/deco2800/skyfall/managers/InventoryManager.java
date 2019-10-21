@@ -73,6 +73,8 @@ public class InventoryManager extends TickableManager implements Serializable {
         this.add(new PickAxe());
         this.quickAccessAdd("Hatchet");
         this.quickAccessAdd("Pick Axe");
+        fm.setFeedbackBarUpdate(true);
+        fm.setFeedbackText("Click 'HELP' if you get stuck");
     }
 
     public void initInventory(Map<String, List<Item>> inventory) {

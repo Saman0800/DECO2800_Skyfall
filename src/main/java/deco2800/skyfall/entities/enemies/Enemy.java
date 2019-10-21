@@ -30,6 +30,8 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     private float walkingSpeed;
     private float chasingSpeed;
 
+    private SoundManager sm;
+
     // Enemy target error
     private int targetError = -2 + new Random().nextInt(3);
 
@@ -84,6 +86,8 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
         this.setDirectionTextures();
         this.configureAnimations();
         this.configureSounds();
+
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
     }
 
     /**
@@ -95,6 +99,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     public Enemy(float col, float row) {
         this.setRow(row);
         this.setCol(col);
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
     }
 
     /**
@@ -184,7 +189,7 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
         setCurrentState(AnimationRole.ATTACK);
         mc.playerHurt(this.getDamage());
         mc.setRecovering(true);
-        SoundManager.playSound(attackingSound);
+        sm.playSound(attackingSound);
     }
 
     /**
@@ -558,10 +563,10 @@ public class Enemy extends Peon implements Animatable, ICombatEntity, Tickable {
     private void die() {
         if (isDead()) {
             if (getChaseSound() != null) {
-                SoundManager.stopSound(getChaseSound());
+                sm.stopSound(getChaseSound());
             }
             if (getDeadSound() != null) {
-                SoundManager.playSound(getDeadSound());
+                sm.playSound(getDeadSound());
 
                 this.setDead(true);
                 logger.info("Enemy destroyed.");

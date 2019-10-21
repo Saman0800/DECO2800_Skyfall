@@ -1,15 +1,9 @@
 package deco2800.skyfall.entities.pets;
 
 import deco2800.skyfall.animation.Animatable;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.worlds.Tile;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class IceWhitebear extends AbstractPet implements Animatable, Harvestable {
+public class IceWhitebear extends AbstractPet implements Animatable {
     MainCharacter mc;
 
     public IceWhitebear(float col, float row, MainCharacter mc) {
@@ -39,14 +33,5 @@ public class IceWhitebear extends AbstractPet implements Animatable, Harvestable
 
     public void destoryice() {
         this.setHealth(this.getHealth() - 1);
-    }
-
-    @Override
-    public List<AbstractEntity> harvest(Tile tile) {
-        List<AbstractEntity> abstractEntityList = new ArrayList<>();
-        Whitebear whitebear = new Whitebear(0, 0, mc);
-        whitebear.setDomesticated(false);
-        abstractEntityList.add(whitebear);
-        return abstractEntityList;
     }
 }

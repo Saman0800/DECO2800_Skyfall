@@ -2,15 +2,9 @@ package deco2800.skyfall.entities.pets;
 
 import deco2800.skyfall.animation.Animatable;
 import deco2800.skyfall.animation.Direction;
-import deco2800.skyfall.entities.AbstractEntity;
-import deco2800.skyfall.entities.Harvestable;
 import deco2800.skyfall.entities.MainCharacter;
-import deco2800.skyfall.worlds.Tile;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class LizardHome extends AbstractPet implements Animatable, Harvestable {
+public class LizardHome extends AbstractPet implements Animatable {
     MainCharacter mc;
 
     /**
@@ -61,18 +55,4 @@ public class LizardHome extends AbstractPet implements Animatable, Harvestable {
         this.setHealth(this.getHealth() - 1);
     }
 
-    /**
-     * when tree is harvested then drop a lizard
-     *
-     * @param tile The tile which was harvested.
-     * @return a pet
-     */
-    @Override
-    public List<AbstractEntity> harvest(Tile tile) {
-        List<AbstractEntity> abstractEntityList = new ArrayList<>();
-        Lizard lizard = new Lizard(0, 4, mc);
-        lizard.setDomesticated(false);
-        abstractEntityList.add(lizard);
-        return abstractEntityList;
-    }
 }

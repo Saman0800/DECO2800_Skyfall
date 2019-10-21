@@ -17,3 +17,7 @@ Skyfall consists of procedurally generated planets with an assortment of unique 
 
 ### Chat Commands
 `/duck` - Spawns 1000 peons
+
+`/set_time@HH@MM` - Sets time to HH:MM, where HH:MM is digital time
+
+`/enemy@{abductor, scout, medium, heavy}` - Spawns enemy at player location of type abductor/scout/medium/heavy

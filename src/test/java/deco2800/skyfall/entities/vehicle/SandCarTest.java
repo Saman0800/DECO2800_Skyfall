@@ -1,10 +1,12 @@
 package deco2800.skyfall.entities.vehicle;
 
+import com.badlogic.gdx.audio.Sound;
 import deco2800.skyfall.animation.AnimationLinker;
 import deco2800.skyfall.animation.AnimationRole;
 import deco2800.skyfall.animation.Direction;
 import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
+import deco2800.skyfall.managers.GameManager;
 import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.util.HexVector;
 import org.junit.Assert;
@@ -21,11 +23,13 @@ public class SandCarTest {
     private SandCar sandCar;
     private MainCharacter mc;
     private boolean isOnUse;
+    private SoundManager sm;
 
     @Before
     public void setup() throws Exception {
         mc = MainCharacter.getInstance();
         sandCar = new SandCar(5f,4f, mc);
+        sm = GameManager.getManagerFromInstance(SoundManager.class);
     }
 
     /**
@@ -114,9 +118,9 @@ public class SandCarTest {
     @Ignore
     public void testSandCarSound(){
         isOnUse = false;
-        Assert.assertFalse(SoundManager.stopSound("sand_car_animation"));
+        Assert.assertFalse(sm.stopSound("sand_car_animation"));
         mc.resetVelocity();
-        Assert.assertFalse(SoundManager.playSound("sand_car_animation"));
+        Assert.assertFalse(sm.playSound("sand_car_animation"));
     }
 
     /**

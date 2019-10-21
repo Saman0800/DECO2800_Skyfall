@@ -1,10 +1,8 @@
 package deco2800.skyfall.entities.pets;
 
-import deco2800.skyfall.entities.AbstractEntity;
 import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.managers.*;
 import deco2800.skyfall.managers.database.DataBaseConnector;
-import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.world.Chunk;
 import deco2800.skyfall.worlds.world.World;
 import deco2800.skyfall.worlds.world.WorldBuilder;
@@ -17,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.List;
 import java.util.Random;
 
 import static org.mockito.Matchers.any;
@@ -97,16 +93,4 @@ public class LizardHomeTest {
         Assert.assertEquals(lizardHome.getHealth(),9);
     }
 
-    /**
-     * harvest the lizard home and get lizard
-     */
-    @Test
-    public void harvest() {
-        // Populate world with tiles
-        Tile tile1 = w.getTile(0.0f, 0.0f);
-        lizardHome.setHealth(0);
-        List<AbstractEntity> drops = lizardHome.harvest(tile1);
-        Assert.assertEquals(drops.get(0) instanceof Lizard,true);
-
-    }
 }
