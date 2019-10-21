@@ -35,9 +35,6 @@ public class DesertEnvironmentTest {
         assertEquals(true,desertEnvironment.isObstructed());
         assertEquals("Desert_Environment", desertEnvironment.getObjectName());
         assertEquals("Desert_Environment", desertEnvironment.getEntityType());
-        String returnedTexture = desertEnvironment.getTexture();
-        assertTrue("" + returnedTexture + "is an unexpected texture name", returnedTexture.equals("DEnvironment1")
-                || returnedTexture.equals("DEnvironment2"));
     }
 
     /**
@@ -56,9 +53,6 @@ public class DesertEnvironmentTest {
         assertTrue(desertEnvironment.isObstructed());
         assertEquals("Desert_Environment", desertEnvironment.getObjectName());
         assertEquals("Desert_Environment", desertEnvironment.getEntityType());
-        String returnedTexture = desertEnvironment.getTexture();
-        assertTrue("" + returnedTexture + "is an unexpected texture name", returnedTexture.equals("DEnvironment1")
-                || returnedTexture.equals("DEnvironment2"));
     }
 
     /**
@@ -77,9 +71,6 @@ public class DesertEnvironmentTest {
         assertFalse(desertEnvironment.isObstructed());
         assertEquals("Desert_Environment", desertEnvironment.getObjectName());
         assertEquals("Desert_Environment", desertEnvironment.getEntityType());
-        String returnedTexture = desertEnvironment.getTexture();
-        assertTrue("" + returnedTexture + "is an unexpected texture name", returnedTexture.equals("DEnvironment1")
-                || returnedTexture.equals("DEnvironment2"));
     }
 
     /**
@@ -98,8 +89,5 @@ public class DesertEnvironmentTest {
         assertEquals(newInstanceRock.isObstructed(), desertEnvironment.isObstructed());
         assertEquals("Desert_Environment", newInstanceRock.getObjectName());
         assertEquals("Desert_Environment", newInstanceRock.getEntityType());
-        String returnedTexture = newInstanceRock.getTexture();
-        assertTrue("" + returnedTexture + "is an unexpected texture name", returnedTexture.equals("DEnvironment1")
-                || returnedTexture.equals("DEnvironment2"));
     }
 }
