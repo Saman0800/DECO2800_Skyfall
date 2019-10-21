@@ -7,8 +7,7 @@ import deco2800.skyfall.entities.Peon;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
 
-public abstract class AbstractVehicle extends Peon
-        implements ICombatEntity, Animatable, Item {
+public abstract class AbstractVehicle extends Peon implements ICombatEntity, Animatable, Item {
 
     private int health;
     private boolean isTaken;
@@ -45,7 +44,7 @@ public abstract class AbstractVehicle extends Peon
         this.health = health;
     }
 
-    public boolean underUsing(){
+    public boolean underUsing() {
         return isTaken;
     }
 
@@ -79,7 +78,6 @@ public abstract class AbstractVehicle extends Peon
     @Override
     public HexVector getCoords() {
         return this.position;
-        //return new HexVector(this.getCol(),this.getRow());
     }
 
     @Override
@@ -117,7 +115,6 @@ public abstract class AbstractVehicle extends Peon
     public boolean getHurt() {
         return isHurt;
     }
-
 
     public void setGetHurt(boolean isHurt) {
         this.isHurt = isHurt;

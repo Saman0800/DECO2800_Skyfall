@@ -1,10 +1,34 @@
 package deco2800.skyfall.entities;
 
+import static deco2800.skyfall.buildings.BuildingType.CABIN;
+import static deco2800.skyfall.buildings.BuildingType.CASTLE;
+import static deco2800.skyfall.buildings.BuildingType.DESERTPORTAL;
+import static deco2800.skyfall.buildings.BuildingType.FENCE;
+import static deco2800.skyfall.buildings.BuildingType.FORESTPORTAL;
+import static deco2800.skyfall.buildings.BuildingType.MOUNTAINPORTAL;
+import static deco2800.skyfall.buildings.BuildingType.SAFEHOUSE;
+import static deco2800.skyfall.buildings.BuildingType.STORAGE_UNIT;
+import static deco2800.skyfall.buildings.BuildingType.TOWNCENTRE;
+import static deco2800.skyfall.buildings.BuildingType.VOLCANOPORTAL;
+import static deco2800.skyfall.buildings.BuildingType.WATCHTOWER;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import deco2800.skyfall.GameScreen;
 import deco2800.skyfall.Tickable;
 import deco2800.skyfall.animation.Animatable;
@@ -22,10 +46,21 @@ import deco2800.skyfall.entities.spells.SpellType;
 import deco2800.skyfall.entities.vehicle.AbstractVehicle;
 import deco2800.skyfall.entities.vehicle.Bike;
 import deco2800.skyfall.entities.vehicle.SandCar;
-import deco2800.skyfall.entities.weapons.*;
+import deco2800.skyfall.entities.weapons.Bow;
+import deco2800.skyfall.entities.weapons.EmptyItem;
+import deco2800.skyfall.entities.weapons.Spear;
+import deco2800.skyfall.entities.weapons.Sword;
+import deco2800.skyfall.entities.weapons.Weapon;
 import deco2800.skyfall.gamemenu.HealthCircle;
 import deco2800.skyfall.gamemenu.popupmenu.ConstructionTable;
-import deco2800.skyfall.managers.*;
+import deco2800.skyfall.managers.FeedbackManager;
+import deco2800.skyfall.managers.GameManager;
+import deco2800.skyfall.managers.GameMenuManager;
+import deco2800.skyfall.managers.InputManager;
+import deco2800.skyfall.managers.InventoryManager;
+import deco2800.skyfall.managers.PetsManager;
+import deco2800.skyfall.managers.QuestManager;
+import deco2800.skyfall.managers.SoundManager;
 import deco2800.skyfall.observers.KeyDownObserver;
 import deco2800.skyfall.observers.KeyUpObserver;
 import deco2800.skyfall.observers.TouchDownObserver;
@@ -40,14 +75,6 @@ import deco2800.skyfall.saving.Save;
 import deco2800.skyfall.util.HexVector;
 import deco2800.skyfall.util.WorldUtil;
 import deco2800.skyfall.worlds.Tile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
-import java.util.*;
-import java.util.Map.Entry;
-
-import static deco2800.skyfall.buildings.BuildingType.*;
 
 /**
  * Main character in the game
@@ -142,7 +169,6 @@ public class MainCharacter extends Peon
     private List<Blueprint> blueprintsLearned;
     private PetsManager petsManager;
 
-
     /**
      * Gets the crafted buildings
      *
@@ -178,7 +204,6 @@ public class MainCharacter extends Peon
     public static final String DRIVEBIKE = "bike_animation";
     public static final String DRIVESANDCAR = "sand_car_animation";
     public static final String RUNNING = "running";
-
 
     // Level/point system for the Main Character to be recorded as game goes on
     private int level;
@@ -369,7 +394,7 @@ public class MainCharacter extends Peon
         // Sets up the main character
         setUpCharacter();
 
-        fm  =  GameManager.get().getManager(FeedbackManager.class);
+        fm = GameManager.get().getManager(FeedbackManager.class);
     }
 
     /**
@@ -1184,10 +1209,10 @@ public class MainCharacter extends Peon
             }
             if (vehicleType.equals(SAND_CAR)) {
                 defaultDirectionTextures = defaultMainCharacterTextureMap;
-                isOnVehicle=false;
+                isOnVehicle = false;
                 setAcceleration(25.f);
                 setMaxSpeed(13.f);
-                GameManager.get().getWorld().addEntity(new SandCar(this.getCol(),this.getRow(),this));
+                GameManager.get().getWorld().addEntity(new SandCar(this.getCol(), this.getRow(), this));
             }
         }
     }
@@ -1310,7 +1335,7 @@ public class MainCharacter extends Peon
         addGold(goldValue, count);
     }
 
-    public void addGold(Integer goldValue, Integer count ) {
+    public void addGold(Integer goldValue, Integer count) {
         // if this gold value already exists in the pouch
         if (goldPouch.containsKey(goldValue)) {
             // add this piece to the already existing list of pieces
@@ -1320,7 +1345,6 @@ public class MainCharacter extends Peon
         }
     }
 
-
     /**
      * Removes one instance of a gold piece in the pouch with a specific value.
      *
@@ -1329,7 +1353,7 @@ public class MainCharacter extends Peon
     public void removeGold(Integer goldValue) {
         int totalGold = getGoldPouchTotalValue();
 
-        if(getGoldPouchTotalValue() >= goldValue){
+        if (getGoldPouchTotalValue() >= goldValue) {
             totalGold -= goldValue;
 
             int goldCount = totalGold;
@@ -1351,8 +1375,7 @@ public class MainCharacter extends Peon
             goldPouch.put(10, req10);
             goldPouch.put(5, req5);
 
-
-        }else{
+        } else {
             logger.warn("Not enough gold!");
         }
     }
@@ -1654,7 +1677,7 @@ public class MainCharacter extends Peon
     }
 
     private void movementSound() {
-        if (!isMoving && vel != 0 ) {
+        if (!isMoving && vel != 0) {
             // Runs when the player starts moving
             isMoving = true;
             if (isOnVehicle) {
@@ -1664,7 +1687,7 @@ public class MainCharacter extends Peon
                     SoundManager.loopSound(DRIVEBIKE);
                 }
                 // Change sound when get on the sand car
-                if (vehicleType.equals("sand_car")) {
+                if (vehicleType.equals(SAND_CAR)) {
                     SoundManager.stopSound(WALK_NORMAL);
                     SoundManager.loopSound(DRIVESANDCAR);
                 }
@@ -1681,8 +1704,6 @@ public class MainCharacter extends Peon
             SoundManager.stopSound(DRIVESANDCAR);
         }
     }
-
-
 
     public void addBlueprint(Blueprint blueprint) {
         if (blueprint != null) {
@@ -1770,11 +1791,12 @@ public class MainCharacter extends Peon
     }
 
     /***
-     * Checks if the player has sufficient resources , used in building a new item, returns true if the player
-     * has sufficient resources , false otherwise.
+     * Checks if the player has sufficient resources , used in building a new item,
+     * returns true if the player has sufficient resources , false otherwise.
+     * 
      * @param newItem the new Item that the player wants to create
      */
-    public boolean checkRequiredResources(Blueprint newItem){
+    public boolean checkRequiredResources(Blueprint newItem) {
 
         if (newItem.getRequiredWood() > this.getInventoryManager().getAmount("Wood")) {
             logger.info("You don't haven enough wood");
@@ -1795,9 +1817,10 @@ public class MainCharacter extends Peon
 
     /***
      * Reduces the required resources form the player , used in item building
+     * 
      * @param newItem the new Item that the player wants to create
      */
-    public void deductRequiredResources(Blueprint newItem){
+    public void deductRequiredResources(Blueprint newItem) {
 
         this.getInventoryManager().dropMultiple("Metal", newItem.getRequiredMetal());
         this.getInventoryManager().dropMultiple("Stone", newItem.getRequiredStone());
@@ -1809,76 +1832,76 @@ public class MainCharacter extends Peon
      * are in the inventory. if yes, creates the item, adds it to the player's
      * inventory and deducts the required resource from inventory
      */
-    public void createItem (Blueprint newItem) {
-        if (checkRequiredResources(newItem)){
+    public void createItem(Blueprint newItem) {
+        if (checkRequiredResources(newItem)) {
             switch (newItem.getName()) {
 
-                case HATCHET:
-                    this.getInventoryManager().add(new Hatchet());
-                    break;
+            case HATCHET:
+                this.getInventoryManager().add(new Hatchet());
+                break;
 
-                case PICK_AXE:
-                    this.getInventoryManager().add(new PickAxe());
-                    break;
+            case PICK_AXE:
+                this.getInventoryManager().add(new PickAxe());
+                break;
 
-                case SWORD:
-                    this.getInventoryManager().add(new Sword());
-                    break;
+            case SWORD:
+                this.getInventoryManager().add(new Sword());
+                break;
 
-                case SPEAR:
-                    this.getInventoryManager().add(new Spear());
-                    break;
+            case SPEAR:
+                this.getInventoryManager().add(new Spear());
+                break;
 
-                case BOW:
-                    this.getInventoryManager().add(new Bow());
-                    break;
+            case BOW:
+                this.getInventoryManager().add(new Bow());
+                break;
 
-                case "Cabin":
-                    craftedBuildings.add(CABIN);
-                    break;
+            case "Cabin":
+                craftedBuildings.add(CABIN);
+                break;
 
-                case "StorageUnit":
-                    craftedBuildings.add(STORAGE_UNIT);
-                    break;
+            case "StorageUnit":
+                craftedBuildings.add(STORAGE_UNIT);
+                break;
 
-                case "TownCentre":
-                    craftedBuildings.add(TOWNCENTRE);
-                    break;
+            case "TownCentre":
+                craftedBuildings.add(TOWNCENTRE);
+                break;
 
-                case "Fence":
-                    craftedBuildings.add(FENCE);
-                    break;
+            case "Fence":
+                craftedBuildings.add(FENCE);
+                break;
 
-                case "SafeHouse":
-                    craftedBuildings.add(SAFEHOUSE);
-                    break;
+            case "SafeHouse":
+                craftedBuildings.add(SAFEHOUSE);
+                break;
 
-                case "WatchTower":
-                    craftedBuildings.add(WATCHTOWER);
-                    break;
+            case "WatchTower":
+                craftedBuildings.add(WATCHTOWER);
+                break;
 
-                case "Castle":
-                    craftedBuildings.add(CASTLE);
-                    break;
+            case "Castle":
+                craftedBuildings.add(CASTLE);
+                break;
 
-                case "forestPortal":
-                    craftedBuildings.add(FORESTPORTAL);
-                    break;
-                case "desertPortal":
-                    craftedBuildings.add(DESERTPORTAL);
-                    break;
-                case "mountainPortal":
-                    craftedBuildings.add(MOUNTAINPORTAL);
-                    break;
-                case "volcanoPortal":
-                    craftedBuildings.add(VOLCANOPORTAL);
-                    break;
+            case "forestPortal":
+                craftedBuildings.add(FORESTPORTAL);
+                break;
+            case "desertPortal":
+                craftedBuildings.add(DESERTPORTAL);
+                break;
+            case "mountainPortal":
+                craftedBuildings.add(MOUNTAINPORTAL);
+                break;
+            case "volcanoPortal":
+                craftedBuildings.add(VOLCANOPORTAL);
+                break;
 
-                default:
-                    logger.info("Invalid Item");
-                    break;
-                }
-                deductRequiredResources(newItem);
+            default:
+                logger.info("Invalid Item");
+                break;
+            }
+            deductRequiredResources(newItem);
         }
     }
 
@@ -1930,73 +1953,56 @@ public class MainCharacter extends Peon
 
         // Dead animation
         addAnimations(AnimationRole.STILL, Direction.DEFAULT,
-                new AnimationLinker("MainCharacter_Dead_E_Still",
-                        AnimationRole.STILL, Direction.DEFAULT, false, true));
+                new AnimationLinker("MainCharacter_Dead_E_Still", AnimationRole.STILL, Direction.DEFAULT, false, true));
 
         // Bike animation
         addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH,
-                new AnimationLinker("bikeN",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH, true, true));
+                new AnimationLinker("bikeN", AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH, true, true));
 
         addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH,
-                new AnimationLinker("bikeS",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH, true, true));
+                new AnimationLinker("bikeS", AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH, true, true));
 
         addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST,
-                new AnimationLinker("bikeW",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST, true, true));
+                new AnimationLinker("bikeW", AnimationRole.VEHICLE_BIKE_MOVE, Direction.WEST, true, true));
 
         addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST,
-                new AnimationLinker("bikeE",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST, true, true));
+                new AnimationLinker("bikeE", AnimationRole.VEHICLE_BIKE_MOVE, Direction.EAST, true, true));
 
         addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH_WEST,
-                new AnimationLinker("bikeNW",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH_WEST, true, true));
+                new AnimationLinker("bikeNW", AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH_WEST, true, true));
 
         addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH_EAST,
-                new AnimationLinker("bikeNE",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH_EAST, true, true));
+                new AnimationLinker("bikeNE", AnimationRole.VEHICLE_BIKE_MOVE, Direction.NORTH_EAST, true, true));
 
         addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH_WEST,
-                new AnimationLinker("bikeSW",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH_WEST, true, true));
+                new AnimationLinker("bikeSW", AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH_WEST, true, true));
 
         addAnimations(AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH_EAST,
-                new AnimationLinker("bikeSE",
-                        AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH_EAST, true, true));
+                new AnimationLinker("bikeSE", AnimationRole.VEHICLE_BIKE_MOVE, Direction.SOUTH_EAST, true, true));
 
         // Sand Car Animation
         addAnimations(AnimationRole.VEHICLE_MOVE, Direction.NORTH,
-                new AnimationLinker("sandcarN",
-                        AnimationRole.VEHICLE_MOVE, Direction.NORTH, true, true));
+                new AnimationLinker("sandcarN", AnimationRole.VEHICLE_MOVE, Direction.NORTH, true, true));
 
         addAnimations(AnimationRole.VEHICLE_MOVE, Direction.SOUTH,
-                new AnimationLinker("sandcarS",
-                        AnimationRole.VEHICLE_MOVE, Direction.SOUTH, true, true));
+                new AnimationLinker("sandcarS", AnimationRole.VEHICLE_MOVE, Direction.SOUTH, true, true));
         addAnimations(AnimationRole.VEHICLE_MOVE, Direction.WEST,
-                new AnimationLinker("sandcarW",
-                        AnimationRole.VEHICLE_MOVE, Direction.WEST, true, true));
+                new AnimationLinker("sandcarW", AnimationRole.VEHICLE_MOVE, Direction.WEST, true, true));
 
         addAnimations(AnimationRole.VEHICLE_MOVE, Direction.EAST,
-                new AnimationLinker("sandcarE",
-                        AnimationRole.VEHICLE_MOVE, Direction.EAST, true, true));
+                new AnimationLinker("sandcarE", AnimationRole.VEHICLE_MOVE, Direction.EAST, true, true));
 
         addAnimations(AnimationRole.VEHICLE_MOVE, Direction.NORTH_EAST,
-                new AnimationLinker("sandcarNE",
-                        AnimationRole.VEHICLE_MOVE, Direction.NORTH_EAST, true, true));
+                new AnimationLinker("sandcarNE", AnimationRole.VEHICLE_MOVE, Direction.NORTH_EAST, true, true));
 
         addAnimations(AnimationRole.VEHICLE_MOVE, Direction.NORTH_WEST,
-                new AnimationLinker("sandcarNW",
-                        AnimationRole.VEHICLE_MOVE, Direction.NORTH_WEST, true, true));
+                new AnimationLinker("sandcarNW", AnimationRole.VEHICLE_MOVE, Direction.NORTH_WEST, true, true));
 
         addAnimations(AnimationRole.VEHICLE_MOVE, Direction.SOUTH_WEST,
-                new AnimationLinker("sandcarSW",
-                        AnimationRole.VEHICLE_MOVE, Direction.SOUTH_WEST, true, true));
+                new AnimationLinker("sandcarSW", AnimationRole.VEHICLE_MOVE, Direction.SOUTH_WEST, true, true));
 
         addAnimations(AnimationRole.VEHICLE_MOVE, Direction.SOUTH_EAST,
-                new AnimationLinker("sandcarSE",
-                        AnimationRole.VEHICLE_MOVE, Direction.SOUTH_EAST, true, true));
+                new AnimationLinker("sandcarSE", AnimationRole.VEHICLE_MOVE, Direction.SOUTH_EAST, true, true));
     }
 
     private Map<Direction, String> defaultMainCharacterTextureMap = new EnumMap<>(Direction.class);
@@ -2039,7 +2045,6 @@ public class MainCharacter extends Peon
         defaultDirectionTextures = defaultMainCharacterTextureMap;
     }
 
-
     private boolean isOnVehicle = false;
 
     /**
@@ -2071,7 +2076,7 @@ public class MainCharacter extends Peon
             } else {
                 setCurrentState(AnimationRole.VEHICLE_BIKE_MOVE);
             }
-        } else if(vehicleType.equals("sand_car")){
+        } else if (vehicleType.equals(SAND_CAR)) {
             if (getVelocity().get(2) == 0f) {
                 setCurrentState(AnimationRole.NULL);
             } else {
@@ -2221,7 +2226,7 @@ public class MainCharacter extends Peon
         this.setHealth(memento.health);
     }
 
-    public static class MainCharacterMemento implements AbstractMemento , Serializable {
+    public static class MainCharacterMemento implements AbstractMemento, Serializable {
         private long mainCharacterID;
         private int level;
         private int foodLevel;
@@ -2246,7 +2251,7 @@ public class MainCharacter extends Peon
     /**
      * Gets the players camera lock status
      */
-    public Boolean getCameraStatus(){
+    public Boolean getCameraStatus() {
         return this.cameraLock;
     }
 }
