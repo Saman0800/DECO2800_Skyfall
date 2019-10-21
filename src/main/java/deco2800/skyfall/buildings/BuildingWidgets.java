@@ -383,4 +383,19 @@ public class BuildingWidgets {
         destroyBtn.addListener(destroyListener);
     }
 
+    /**
+     * Sets up a widget with specific information of a selected building and its
+     * position, then showing it.
+     *
+     * @param building a building is selected on the world
+     */
+    private void setWidgets(BuildingEntity building) {
+        label.setText(building.getObjectName() + " Lv" + building.getBuildingLevel());
+        setMenu(building);
+        setHealthBar(building);
+        setUpgradeBtn(building);
+        setInteractBtn(building);
+        setDestroyBtn(building);
+    }
+
 }
