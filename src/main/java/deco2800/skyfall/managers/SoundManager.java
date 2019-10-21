@@ -283,6 +283,7 @@ public class SoundManager extends AbstractManager {
         music.play();
         music.setVolume(0f);
         playing = soundName;
+        music.setLooping(true);
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
