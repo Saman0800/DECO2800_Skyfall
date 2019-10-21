@@ -177,31 +177,19 @@ public class EnemyTest {
         scale = (int) scale + 1;
 
         Heavy heavy1 = new Heavy(row, col, scale, biomeName);
-        Heavy heavy2 = new Heavy(row, col, scale);
         Assert.assertEquals(heavy1.getRow(), row, 0.01);
         Assert.assertEquals(heavy1.getCol(), col, 0.01);
         Assert.assertEquals(heavy1.getScale(), scale, 0.01);
-        Assert.assertEquals(heavy2.getRow(), row, 0.01);
-        Assert.assertEquals(heavy2.getCol(), col, 0.01);
-        Assert.assertEquals(heavy2.getScale(), scale, 0.01);
 
         Medium medium1 = new Medium(row, col, scale, biomeName);
-        Medium medium2 = new Medium(row, col, scale);
         Assert.assertEquals(medium1.getRow(), row, 0.01);
         Assert.assertEquals(medium1.getCol(), col, 0.01);
         Assert.assertEquals(medium1.getScale(), scale, 0.01);
-        Assert.assertEquals(medium2.getRow(), row, 0.01);
-        Assert.assertEquals(medium2.getCol(), col, 0.01);
-        Assert.assertEquals(medium2.getScale(), scale, 0.01);
 
         Scout scout1 = new Scout(row, col, scale, biomeName);
-        Scout scout2 = new Scout(row, col, scale);
         Assert.assertEquals(scout1.getRow(), row, 0.01);
         Assert.assertEquals(scout1.getCol(), col, 0.01);
         Assert.assertEquals(scout1.getScale(), scale, 0.01);
-        Assert.assertEquals(scout2.getRow(), row, 0.01);
-        Assert.assertEquals(scout2.getCol(), col, 0.01);
-        Assert.assertEquals(scout2.getScale(), scale, 0.01);
     }
 
     /**
