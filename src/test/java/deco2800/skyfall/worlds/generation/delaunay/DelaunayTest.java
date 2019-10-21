@@ -268,16 +268,16 @@ public class DelaunayTest {
         node2.addVertex(new double[] {2, -2});
         node3.addVertex(new double[] {-2, -2});
 
-        assertNull(WorldGenNode.sharedVertex(node1, node3, null));
-        assertNull(WorldGenNode.sharedVertex(node2, node3, null));
+        assertArrayEquals(new double[0], WorldGenNode.sharedVertex(node1, node3, null), 0);
+        assertArrayEquals(new double[0], WorldGenNode.sharedVertex(node2, node3, null), 0);
         double[] sharedVertex1 = WorldGenNode.sharedVertex(node1, node2, null);
-        assertNotNull(sharedVertex1);
+        assertNotEquals(0, sharedVertex1.length);
         double[] sharedVertex2 = WorldGenNode.sharedVertex(node1, node2, sharedVertex1);
-        assertNotNull(sharedVertex2);
+        assertNotEquals(0, sharedVertex2.length);
         assertFalse(Arrays.equals(sharedVertex1, sharedVertex2));
         double[] sharedVertex3 = WorldGenNode.sharedVertex(node1, node2, sharedVertex2);
-        assertNotNull(sharedVertex3);
-        assertTrue(Arrays.equals(sharedVertex3, sharedVertex1));
+        assertNotEquals(0, sharedVertex3.length);
+        assertArrayEquals(sharedVertex3, sharedVertex1, 0.0);
     }
 
     @Test

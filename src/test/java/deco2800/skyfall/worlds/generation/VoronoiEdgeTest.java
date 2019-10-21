@@ -68,8 +68,8 @@ public class VoronoiEdgeTest {
 
         VoronoiEdge.assignNeighbours(edges);
 
-        assertTrue(edge1.getVertexSharingEdges(point3).equals(new ArrayList<>()));
-        assertTrue(edge1.getVertexSharingEdges(new double[] {1, 1}).equals(new ArrayList<>()));
+        assertTrue(edge1.getVertexSharingEdges(point3).isEmpty());
+        assertTrue(edge1.getVertexSharingEdges(new double[] {1, 1}).isEmpty());
 
         assertEquals(2, edge2.getVertexSharingEdges(point3).size());
         assertEquals(2, edge3.getVertexSharingEdges(point3).size());
