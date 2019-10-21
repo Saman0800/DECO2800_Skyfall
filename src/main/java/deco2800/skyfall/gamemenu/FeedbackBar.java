@@ -11,6 +11,9 @@ import deco2800.skyfall.managers.FeedbackManager;
 import deco2800.skyfall.managers.GameMenuManager;
 import deco2800.skyfall.managers.TextureManager;
 
+/**
+ * Feedback bar UI element
+ */
 public class FeedbackBar extends AbstractUIElement {
 
     //Game menu manager
@@ -31,6 +34,17 @@ public class FeedbackBar extends AbstractUIElement {
     //Close button
     private ImageButton exitButton;
 
+    /**
+     * Constructor
+     *
+     * @param stage the stage
+     * @param exitButton close button
+     * @param textureNames textures
+     * @param tm Texture Manager
+     * @param skin the skin
+     * @param gmm Game Menu Manager
+     * @param fm Feedback Manager
+     */
     public FeedbackBar(Stage stage, ImageButton exitButton, String[] textureNames,
                        TextureManager tm, Skin skin, GameMenuManager gmm, FeedbackManager fm) {
         super(stage, textureNames, tm);
@@ -41,11 +55,18 @@ public class FeedbackBar extends AbstractUIElement {
         this.draw();
     }
 
+    /**
+     * Inherited from super class
+     * Sets position of bar in game window
+     */
     @Override
     public void updatePosition() {
         feedbackBarTable.setPosition(gmm.getTopLeftX() + stage.getCamera().viewportWidth / 5, gmm.getBottomRightY());
     }
 
+    /**
+     * Draws the bar and contained elements
+     */
     @Override
     public void draw() {
         feedbackBarTable = new Table();
@@ -66,20 +87,34 @@ public class FeedbackBar extends AbstractUIElement {
         stage.addActor(feedbackBarTable);
     }
 
+    /**
+     * Updates the text displayed in the bar
+     * @param text The new text to be displayed
+     */
     public void updateText(String text) {
         feedback.setText(text);
         showFeedbackBar();
         fm.setFeedbackBarUpdate(false);
     }
 
-    public void showFeedbackBar() {
+    /**
+     * Displays the bar
+     */
+    private void showFeedbackBar() {
         feedbackBarTable.setVisible(true);
     }
 
-    public void hideFeedbackBar() {
+    /**
+     * Hides the bar
+     */
+    private void hideFeedbackBar() {
         feedbackBarTable.setVisible(false);
     }
 
+    /**
+     * Called each game tick
+     * Checks if text needs updating
+     */
     @Override
     public void update() {
         super.update();
