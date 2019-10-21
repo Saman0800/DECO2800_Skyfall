@@ -29,6 +29,9 @@ public class PickAxe extends ManufacturedResources implements Item, Blueprint {
 
     Random random = new Random();
 
+    /**
+     * initialises the requirements
+     */
     private void init() {
         this.name = "Pick Axe";
         allRequirements = new HashMap<>();
