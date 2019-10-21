@@ -92,7 +92,7 @@ public class QuestManager extends TickableManager {
     /**
      * Sets goals to be achieved at each level
      */
-    public void setMilestones() {
+    private void setMilestones() {
         //inventory numbers need to be reset for player testing and actual game release
         //reduced for ease of testing in game
         switch (questLevel) {
@@ -521,6 +521,10 @@ public class QuestManager extends TickableManager {
         return false;
     }
 
+    /**
+     * Weapons currently held by the player
+     * @return The number of weapons
+     */
     public int weaponsNum() {
         return ((axeTotal > 0) ? 1 : 0) + ((swordTotal > 0) ? 1 : 0) + ((spearTotal > 0) ? 1 : 0) + ((bowTotal > 0) ? 1 : 0);
     }
