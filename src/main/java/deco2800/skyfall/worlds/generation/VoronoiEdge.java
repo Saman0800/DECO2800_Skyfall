@@ -3,12 +3,16 @@ package deco2800.skyfall.worlds.generation;
 import deco2800.skyfall.saving.AbstractMemento;
 import deco2800.skyfall.saving.Saveable;
 import deco2800.skyfall.worlds.Tile;
+import deco2800.skyfall.worlds.biomes.LakeBiome;
 import deco2800.skyfall.worlds.biomes.OceanBiome;
 import deco2800.skyfall.worlds.generation.delaunay.WorldGenNode;
 import deco2800.skyfall.worlds.world.World;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 /**
  * A class to represent an edge of a polygon in a Voronoi Diagram
@@ -74,7 +78,7 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
      * @param edge the edge to compare
      * @return true if the node is valid, false otherwise
      */
-    private static boolean validNeighbour (List<List<WorldGenNode>> previousNodes, VoronoiEdge edge) {
+    private static boolean isValidPathNeighbour(List<List<WorldGenNode>> previousNodes, VoronoiEdge edge) {
         // If the path is less than 2 edges long, the edge is valid
         if (previousNodes.size() < 2) {
             return true;
@@ -130,87 +134,113 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
         path.add(edge);
         previousNodes.add(edge.getEdgeNodes());
 
+        boolean validNeighbour = true;
+        List<VoronoiEdge> tempEdges = null;
         while (true) {
-            boolean validNeighbour = false;
-            // Get the edges that are adjacent via the other vertex
-            List<VoronoiEdge> tempEdges = new ArrayList<>(edge.getVertexSharingEdges(edge.otherVertex(vertex)));
-            while (!validNeighbour) {
-                // If none of the adjacent edges are valid to add, or valid to
-                // terminate the path
-                if (tempEdges.isEmpty()) {
-                    throw new DeadEndGenerationException("Unable to generate more nodes ");
-                }
-                // Get a random neighbour from tempEdges
-                VoronoiEdge neighbour = tempEdges.get(random.nextInt(tempEdges.size()));
-                validNeighbour = validNeighbour(previousNodes, neighbour);
-                if (!validNeighbour) {
-                    // Don't check the same edge again
-                    tempEdges.remove(neighbour);
-                    continue;
-                }
+            if (validNeighbour) {
+                // Get the edges that are adjacent via the other vertex
+                tempEdges = new ArrayList<>(edge.getVertexSharingEdges(edge.otherVertex(vertex)));
+            }
 
-                // Check if the path has reached a lake or ocean
-                if (path.size() == 1) {
-                    boolean endOfPath = true;
-                    for (WorldGenNode node : neighbour.endNodes) {
-                        if (node == null) {
-                            return path;
-                        }
-                        // Get the biome of the end node
-                        String biomeName = node.getBiome().getBiomeName();
-                        // If the path is already at the ocean
-                        if (biomeName.equals(OceanBiome.NAME)) {
-                            return path;
-                        }
+            // If none of the adjacent edges are valid to add, or valid to
+            // terminate the path
+            if (tempEdges.isEmpty()) {
+                throw new DeadEndGenerationException("Unable to generate more nodes ");
+            }
+            // Get a random neighbour from tempEdges
+            VoronoiEdge neighbour = tempEdges.get(random.nextInt(tempEdges.size()));
+            validNeighbour = isValidPathNeighbour(previousNodes, neighbour);
+            if (!validNeighbour) {
+                // Don't check the same edge again
+                tempEdges.remove(neighbour);
+                continue;
+            }
 
-                        // If either end node isn't a lake the path has not ended
-                        if (!biomeName.equals("lake")) {
-                            endOfPath = false;
-                        }
-                    }
-                    // If both of the end nodes are lakes, the path is already complete
-                    if (endOfPath) {
-                        return path;
-                    }
-                }
+            // Check if the path has reached a lake or ocean
+            if (pathHasReachedOcean(path, neighbour)) {
+                return path;
+            }
 
-                // Add the edge if it's valid
-                path.add(neighbour);
-                for (WorldGenNode node : neighbour.endNodes) {
-                    if (node == null) {
-                        return path;
-                    }
-                    String biomeName = node.getBiome().getBiomeName();
-                    // If the new edge ends with the ocean or a lake
-                    if (biomeName.equals(OceanBiome.NAME) || biomeName.equals("lake")) {
-                        return path;
-                    }
-                }
-                // Repeat for edge nodes as a fail-safe
-                for (WorldGenNode node : neighbour.edgeNodes) {
-                    if (node == null) {
-                        return path;
-                    }
-                    String biomeName = node.getBiome().getBiomeName();
-                    // If the new edge ends with the ocean or a lake
-                    if (biomeName.equals(OceanBiome.NAME) || biomeName.equals("lake")) {
-                        return path;
-                    }
-                }
+            // Add the edge if it's valid
+            if (pathEdgeIsValid(path, neighbour)) {
+                return path;
+            }
 
-                // Flag the while loop to end
-                validNeighbour = true;
-                // Move to the next edge
-                vertex = edge.otherVertex(vertex);
-                edge = neighbour;
+            // Move to the next edge
+            vertex = edge.otherVertex(vertex);
+            edge = neighbour;
 
-                // Update the list of previous nodes
-                if (previousNodes.size() == maxTimesOnNode) {
-                    previousNodes.remove(0);
-                }
-                previousNodes.add(edge.getEdgeNodes());
+            // Update the list of previous nodes
+            if (previousNodes.size() == maxTimesOnNode) {
+                previousNodes.remove(0);
+            }
+            previousNodes.add(edge.getEdgeNodes());
+        }
+    }
+
+    /**
+     * Returns whether the path edge is valid.
+     *
+     * @param path the current path
+     * @param neighbour the latest edge in the path
+     * @return whether the path edge is valid
+     */
+    private static boolean pathEdgeIsValid(List<VoronoiEdge> path, VoronoiEdge neighbour) {
+        path.add(neighbour);
+        for (WorldGenNode node : neighbour.endNodes) {
+            if (node == null) {
+                return true;
+            }
+            String biomeName = node.getBiome().getBiomeName();
+            // If the new edge ends with the ocean or a lake
+            if (biomeName.equals(OceanBiome.NAME) || biomeName.equals("lake")) {
+                return true;
             }
         }
+        // Repeat for edge nodes as a fail-safe
+        for (WorldGenNode node : neighbour.edgeNodes) {
+            if (node == null) {
+                return true;
+            }
+            String biomeName = node.getBiome().getBiomeName();
+            // If the new edge ends with the ocean or a lake
+            if (biomeName.equals(OceanBiome.NAME) || biomeName.equals("lake")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Calculates if the given path has reached the ocean.
+     *
+     * @param path the path to check
+     * @param neighbour the latest edge in the path
+     * @return whether the path has reached the ocean
+     */
+    private static boolean pathHasReachedOcean(List<VoronoiEdge> path, VoronoiEdge neighbour) {
+        if (path.size() == 1) {
+            boolean endOfPath = true;
+            for (WorldGenNode node : neighbour.endNodes) {
+                if (node == null) {
+                    return true;
+                }
+                // Get the biome of the end node
+                String biomeName = node.getBiome().getBiomeName();
+                // If the path is already at the ocean
+                if (biomeName.equals(OceanBiome.NAME)) {
+                    return true;
+                }
+
+                // If either end node isn't a lake the path has not ended
+                if (!biomeName.equals(LakeBiome.NAME)) {
+                    endOfPath = false;
+                }
+            }
+            // If both of the end nodes are lakes, the path is already complete
+            return endOfPath;
+        }
+        return false;
     }
 
     /**
@@ -237,28 +267,16 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
     public static void assignNeighbours(List<VoronoiEdge> edges) {
         // Loop through every edge
         for (int i = 0; i < edges.size(); i++) {
-
             // Assign the end nodes of the edge
             // Start by choosing an arbitrary edge node
-            WorldGenNode node = edges.get(i).getEdgeNodes().get(0);
+            VoronoiEdge edgeA = edges.get(i);
+            WorldGenNode node = edgeA.getEdgeNodes().get(0);
             for (WorldGenNode neighbour : node.getNeighbours()) {
-                // Don't add the other edge node as an end node
-                if (edges.get(i).getEdgeNodes().contains(neighbour)) {
-                    continue;
-                }
-
-                // Add the node as an end node if it shares a vertex with the edge
-                for (double[] nodeVertex : neighbour.getVertices()) {
-                    if (Arrays.equals(edges.get(i).getA(), nodeVertex) || Arrays.equals(edges.get(i).getB(), nodeVertex)) {
-                        edges.get(i).addEndNode(neighbour);
-                        break;
-                    }
-                }
+                conditionallyAddEndNode(edgeA, neighbour);
             }
 
             // Loop through each other edge
             for (int j = i + 1; j < edges.size(); j++) {
-                VoronoiEdge edgeA = edges.get(i);
                 VoronoiEdge edgeB = edges.get(j);
 
                 // Figure out which vertex the edges are adjacent by if any, and
@@ -276,6 +294,26 @@ public class VoronoiEdge implements Saveable<VoronoiEdge.VoronoiEdgeMemento> {
                     edgeA.addBNeighbour(edgeB);
                     edgeB.addBNeighbour(edgeA);
                 }
+            }
+        }
+    }
+
+    /**
+     * Adds a node as an end node only if it shares a vertex with the edge and is not already an edge node
+     * @param edgeA the edge to which to add the end node
+     * @param neighbour the prospective end node
+     */
+    private static void conditionallyAddEndNode(VoronoiEdge edgeA, WorldGenNode neighbour) {
+        // Don't add the other edge node as an end node
+        if (edgeA.getEdgeNodes().contains(neighbour)) {
+            return;
+        }
+
+        // Add the node as an end node if it shares a vertex with the edge
+        for (double[] nodeVertex : neighbour.getVertices()) {
+            if (Arrays.equals(edgeA.getA(), nodeVertex) || Arrays.equals(edgeA.getB(), nodeVertex)) {
+                edgeA.addEndNode(neighbour);
+                break;
             }
         }
     }

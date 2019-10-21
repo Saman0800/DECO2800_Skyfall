@@ -17,8 +17,6 @@ public abstract class AbstractVehicle extends Peon
 
     public AbstractVehicle(float col, float row, String texturename) {
         super(row, col, 0.2f, texturename, 10);
-        this.setRow(row);
-        this.setCol(col);
         this.name = texturename;
         this.isTaken = false;
         this.setHealth(health);
@@ -80,7 +78,8 @@ public abstract class AbstractVehicle extends Peon
 
     @Override
     public HexVector getCoords() {
-        return new HexVector(this.getCol(),this.getRow());
+        return this.position;
+        //return new HexVector(this.getCol(),this.getRow());
     }
 
     @Override
