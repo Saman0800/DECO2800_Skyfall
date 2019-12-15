@@ -43,6 +43,13 @@ public class TextureManager extends AbstractManager {
     public static final String VOLCANO_PORTAL_IMAGE = "resources/world_structures/portal_volcano.png";
     public static final String SPACEMAN_DED_KEY = "spacman_ded";
 
+    public static final String BISCUIT = "resources/new_food_items/Biscuit.png";
+    public static final String CAKE = "resources/new_food_items/Cake.png";
+    public static final String CHERRY = "resources/new_food_items/Cherry.png";
+    public static final String CHEESE = "resources/new_food_items/Cheese.png";
+    public static final String CURRY = "resources/new_food_items/CurryBowl.png";
+    public static final String DRUMSTICK = "resources/new_food_items/DrumStick.png";
+
     /**
      * A HashMap of all textures with string keys
      */
@@ -555,6 +562,14 @@ public class TextureManager extends AbstractManager {
             textureMap.put("forestPortal_inv", new Texture(DESERT_PORTAL_IMAGE));
             textureMap.put("volcanoPortal_inv", new Texture(VOLCANO_PORTAL_IMAGE));
             textureMap.put("mountainPortal_inv", new Texture(PORTAL_IMAGE));
+
+            // adding new food items
+            textureMap.put("biscuit", new Texture(BISCUIT));
+            textureMap.put("cake", new Texture(CAKE));
+            textureMap.put("cherry", new Texture(CHERRY));
+            textureMap.put("cheese", new Texture(CHEESE));
+            textureMap.put("curry", new Texture(CURRY));
+            textureMap.put("drumstick", new Texture(DRUMSTICK));
 
             LOGGER.info("ALL TEXTURES LOADED SUCCESSFULLY");
         } catch (Exception e) {
