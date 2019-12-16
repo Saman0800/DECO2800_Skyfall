@@ -287,7 +287,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void foodRule(List<EntitySpawnRule> biomeSpawnRules, Random random) {
-        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new BerryFoodItem(tile, true), random.nextInt(), 0.002);
+//        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new BerryFoodItem(tile, true), random.nextInt(), 0.002);
     }
 
     private void weaponsRule(List<EntitySpawnRule> biomeSpawnRules, Random random) {

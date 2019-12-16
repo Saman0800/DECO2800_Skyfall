@@ -22,7 +22,7 @@ public abstract class FoodItem extends StaticEntity implements Item, IFood {
     public int getHealthValue() {
         return healthValue;
     }
-    
+
 }
 
 
