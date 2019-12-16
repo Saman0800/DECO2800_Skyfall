@@ -694,8 +694,6 @@ public class MainCharacter extends Peon
     }
 
 
-
-
     public void pickUpInventory(Item item) {
         this.inventories.add(item);
     }
