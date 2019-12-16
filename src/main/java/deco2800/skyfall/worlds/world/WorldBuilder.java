@@ -597,16 +597,16 @@ public class WorldBuilder implements WorldBuilderInterface {
         for (AbstractBiome biome : world.getBiomes()) {
             switch (biome.getBiomeName()) {
             case "forest":
-                spawnEnemies(random, 0.02f, biome, world, enemyScaling);
+                spawnEnemies(random, 0.1f, biome, world, enemyScaling);
                 break;
             case "mountain":
-                spawnEnemies(random, 0.04f, biome, world, enemyScaling);
+                spawnEnemies(random, 0.1f, biome, world, enemyScaling);
                 break;
             case "desert":
-                spawnEnemies(random, 0.03f, biome, world, enemyScaling);
+                spawnEnemies(random, 0.1f, biome, world, enemyScaling);
                 break;
             case "snowy_mountains":
-                spawnEnemies(random, 0.025f, biome, world, enemyScaling);
+                spawnEnemies(random, 0.1f, biome, world, enemyScaling);
                 break;
             default:
                 break;
