@@ -11,4 +11,8 @@ public interface IFood {
      */
    int getHealthValue();
 
+    /**
+     * the value of health for this item
+     */
+   void setHealthValue(int value);
 }

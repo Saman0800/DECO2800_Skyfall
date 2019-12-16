@@ -7,6 +7,7 @@ import deco2800.skyfall.entities.enemies.Abductor;
 import deco2800.skyfall.entities.enemies.Heavy;
 import deco2800.skyfall.entities.enemies.Medium;
 import deco2800.skyfall.entities.enemies.Scout;
+import deco2800.skyfall.entities.fooditems.BerryFood;
 import deco2800.skyfall.entities.weapons.Axe;
 import deco2800.skyfall.entities.weapons.Bow;
 import deco2800.skyfall.entities.weapons.Spear;
@@ -249,6 +250,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateForestEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+        foodRule(biomeSpawnRules, random);
 
         long worldSeed = world.getSeed();
         weaponsRule(biomeSpawnRules, random);
@@ -285,9 +287,10 @@ public class WorldBuilder implements WorldBuilderInterface {
         mushroomRule.setLimitAdjacent(true);
         biomeSpawnRules.add(mushroomRule);
     }
-
+    // spawn berry
     private void foodRule(List<EntitySpawnRule> biomeSpawnRules, Random random) {
-//        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new BerryFoodItem(tile, true), random.nextInt(), 0.002);
+        EntitySpawnRule foodRule = new EntitySpawnRule(tile -> new BerryFood(tile, true), random.nextInt(), 0.005);
+        biomeSpawnRules.add(foodRule);
     }
 
     private void weaponsRule(List<EntitySpawnRule> biomeSpawnRules, Random random) {
@@ -310,7 +313,7 @@ public class WorldBuilder implements WorldBuilderInterface {
 
     private void generateMountainEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
         weaponsRule(biomeSpawnRules, random);
-
+        foodRule(biomeSpawnRules, random);
 
         // Create a new perlin noise map
         SpawnControl cubic = x -> (x * x * x) / 6.0 + 0.01;
@@ -339,6 +342,7 @@ public class WorldBuilder implements WorldBuilderInterface {
 
     private void generateDesertEntities(List<EntitySpawnRule> biomeSpawnRules, Random random) {
         weaponsRule(biomeSpawnRules, random);
+        foodRule(biomeSpawnRules, random);
 
         // Create a new perlin noise map
         SpawnControl cactiControl = x -> (x * x * x) / 8.0;
@@ -389,6 +393,8 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateSnowyMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random) {
+        foodRule(biomeSpawnRules, random);
+
         // Spawn some bows
         EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.03);
         biomeSpawnRules.add(bowRule);
@@ -416,6 +422,8 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateVolcanicMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
+        foodRule(biomeSpawnRules, random);
+
         // Spawn some swords
         EntitySpawnRule swordRule2 = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.03);
         biomeSpawnRules.add(swordRule2);
