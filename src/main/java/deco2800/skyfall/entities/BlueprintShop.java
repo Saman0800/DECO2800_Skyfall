@@ -1,9 +1,5 @@
 package deco2800.skyfall.entities;
-
-
 import deco2800.skyfall.worlds.Tile;
-
-
 
 /**
  * An blueprint shop entity that spawns in the game.

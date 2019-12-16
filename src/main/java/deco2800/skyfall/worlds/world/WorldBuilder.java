@@ -43,6 +43,7 @@ import deco2800.skyfall.resources.LootRarity;
 import deco2800.skyfall.worlds.Tile;
 import deco2800.skyfall.worlds.biomes.AbstractBiome;
 import deco2800.skyfall.worlds.generation.perlinnoise.NoiseGenerator;
+import deco2800.skyfall.entities.worlditems.Berry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -194,12 +195,17 @@ public class WorldBuilder implements WorldBuilderInterface {
                 LootRarity.LEGENDARY)), random.nextInt(), 0.001);
         biomeSpawnRules.add(chestRule);
     }
-
+    // spawn shop
     private void spawnBlueprintShop(Random random, List<EntitySpawnRule> biomeSpawnRules) {
-        // Spawn chests
-        EntitySpawnRule chestRule = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), random.nextInt(), 0.002);
-        biomeSpawnRules.add(chestRule);
+        EntitySpawnRule shop = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), random.nextInt(), 0.002);
+        biomeSpawnRules.add(shop);
     }
+
+    // Spawn new food items
+//    private void spawnNewFoodItem(Random random, List<EntitySpawnRule> biomeSpawnRules) {
+////        EntitySpawnRule newFoodItem = new EntitySpawnRule(tile -> new Berry(tile, false), random.nextInt(), 0.002);
+////        biomeSpawnRules.add(newFoodItem);
+////    }
 
     /**
      * The method to be used to spawn gold into a particular woorld
@@ -305,9 +311,11 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(mushroomRule);
     }
 
+
+
     private void weaponsRule(List<EntitySpawnRule> biomeSpawnRules, Random random) {
         // Spawn some swords
-        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.001);
+        EntitySpawnRule swordRule = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.002);
         biomeSpawnRules.add(swordRule);
 
         // Spawn some axes
