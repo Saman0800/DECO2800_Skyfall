@@ -6,7 +6,7 @@ public class Drumstick extends FoodItem {
 
     public Drumstick(Tile tile, boolean obstructed) {
         super(tile, "drumstick", obstructed, "drumstick");
-        this.setHealthValue(2);
+        this.setHealthValue(9);
     }
 
     public Drumstick newInstance(Tile tile) {

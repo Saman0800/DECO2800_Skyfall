@@ -6,7 +6,7 @@ public class Biscuit extends FoodItem {
 
     public Biscuit(Tile tile, boolean obstructed) {
         super(tile, "biscuit", obstructed, "biscuit");
-        this.setHealthValue(5);
+        this.setHealthValue(6);
     }
 
     public Biscuit newInstance(Tile tile) {
