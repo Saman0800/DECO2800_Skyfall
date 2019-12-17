@@ -39,7 +39,6 @@ public abstract class FoodItem extends StaticEntity implements Item, IFood {
 
     public void setName(String name) {this.name = name;}
 
-    @Override
     public void setHealthValue(int value) {this.healthValue = value;}
 
     public void setTexture(String texture) {this.texture = texture;}
@@ -79,9 +78,7 @@ public abstract class FoodItem extends StaticEntity implements Item, IFood {
 
     @Override
     public void use(HexVector position){
-        // Check player status
         if (MainCharacter.getInstance().getHealth() < 50 && !MainCharacter.getInstance().isDead()) {
-            // Add health to player
             MainCharacter.getInstance().changeHealth(getHealthValue());
         }
     }

@@ -7,7 +7,7 @@ import deco2800.skyfall.entities.enemies.Abductor;
 import deco2800.skyfall.entities.enemies.Heavy;
 import deco2800.skyfall.entities.enemies.Medium;
 import deco2800.skyfall.entities.enemies.Scout;
-import deco2800.skyfall.entities.fooditems.BerryFood;
+import deco2800.skyfall.entities.fooditems.*;
 import deco2800.skyfall.entities.weapons.Axe;
 import deco2800.skyfall.entities.weapons.Bow;
 import deco2800.skyfall.entities.weapons.Spear;
@@ -177,12 +177,6 @@ public class WorldBuilder implements WorldBuilderInterface {
         biomeSpawnRules.add(shop);
     }
 
-    // Spawn new food items
-//    private void spawnNewFoodItem(Random random, List<EntitySpawnRule> biomeSpawnRules) {
-////        EntitySpawnRule newFoodItem = new EntitySpawnRule(tile -> new Berry(tile, false), random.nextInt(), 0.002);
-////        biomeSpawnRules.add(newFoodItem);
-////    }
-
     /**
      * The method to be used to spawn gold into a particular woorld
      *
@@ -250,7 +244,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateForestEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
-        foodRule(biomeSpawnRules, random);
+        foodItems(biomeSpawnRules, random);
 
         long worldSeed = world.getSeed();
         weaponsRule(biomeSpawnRules, random);
@@ -287,10 +281,25 @@ public class WorldBuilder implements WorldBuilderInterface {
         mushroomRule.setLimitAdjacent(true);
         biomeSpawnRules.add(mushroomRule);
     }
-    // spawn berry
-    private void foodRule(List<EntitySpawnRule> biomeSpawnRules, Random random) {
-        EntitySpawnRule foodRule = new EntitySpawnRule(tile -> new BerryFood(tile, true), random.nextInt(), 0.005);
-        biomeSpawnRules.add(foodRule);
+    // spawn new food items in the world
+    private void foodItems(List<EntitySpawnRule> biomeSpawnRules, Random random) {
+        EntitySpawnRule cherry = new EntitySpawnRule(tile -> new BerryFood(tile, true), random.nextInt(), 0.001);
+        biomeSpawnRules.add(cherry);
+
+        EntitySpawnRule cheese = new EntitySpawnRule(tile -> new Cheese(tile, true), random.nextInt(), 0.002);
+        biomeSpawnRules.add(cheese);
+
+        EntitySpawnRule cake = new EntitySpawnRule(tile -> new Cake(tile, true), random.nextInt(), 0.001);
+        biomeSpawnRules.add(cake);
+
+        EntitySpawnRule biscuit = new EntitySpawnRule(tile -> new Biscuit(tile, true), random.nextInt(), 0.002);
+        biomeSpawnRules.add(biscuit);
+
+        EntitySpawnRule drumstick = new EntitySpawnRule(tile -> new Drumstick(tile, true), random.nextInt(), 0.001);
+        biomeSpawnRules.add(drumstick);
+
+        EntitySpawnRule curry = new EntitySpawnRule(tile -> new Curry(tile, true), random.nextInt(), 0.001);
+        biomeSpawnRules.add(curry);
     }
 
     private void weaponsRule(List<EntitySpawnRule> biomeSpawnRules, Random random) {
@@ -313,7 +322,7 @@ public class WorldBuilder implements WorldBuilderInterface {
 
     private void generateMountainEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
         weaponsRule(biomeSpawnRules, random);
-        foodRule(biomeSpawnRules, random);
+        foodItems(biomeSpawnRules, random);
 
         // Create a new perlin noise map
         SpawnControl cubic = x -> (x * x * x) / 6.0 + 0.01;
@@ -342,7 +351,7 @@ public class WorldBuilder implements WorldBuilderInterface {
 
     private void generateDesertEntities(List<EntitySpawnRule> biomeSpawnRules, Random random) {
         weaponsRule(biomeSpawnRules, random);
-        foodRule(biomeSpawnRules, random);
+        foodItems(biomeSpawnRules, random);
 
         // Create a new perlin noise map
         SpawnControl cactiControl = x -> (x * x * x) / 8.0;
@@ -393,7 +402,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateSnowyMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random) {
-        foodRule(biomeSpawnRules, random);
+        foodItems(biomeSpawnRules, random);
 
         // Spawn some bows
         EntitySpawnRule bowRule = new EntitySpawnRule(tile -> new Bow(tile, true), random.nextInt(), 0.03);
@@ -422,7 +431,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
 
     private void generateVolcanicMountainsEntities(List<EntitySpawnRule> biomeSpawnRules, Random random, World world) {
-        foodRule(biomeSpawnRules, random);
+        foodItems(biomeSpawnRules, random);
 
         // Spawn some swords
         EntitySpawnRule swordRule2 = new EntitySpawnRule(tile -> new Sword(tile, true), random.nextInt(), 0.03);
