@@ -43,12 +43,12 @@ public class TextureManager extends AbstractManager {
     public static final String VOLCANO_PORTAL_IMAGE = "resources/world_structures/portal_volcano.png";
     public static final String SPACEMAN_DED_KEY = "spacman_ded";
 
-    public static final String BISCUIT = "resources/new_food_items/Biscuit.png";
-    public static final String CAKE = "resources/new_food_items/Cake.png";
-    public static final String CHERRY = "resources/new_food_items/Cherry.png";
-    public static final String CHEESE = "resources/new_food_items/Cheese.png";
-    public static final String CURRY = "resources/new_food_items/CurryBowl.png";
-    public static final String DRUMSTICK = "resources/new_food_items/DrumStick.png";
+    public static final String BISCUIT = "resources/new_food_items/biscuit.png";
+    public static final String CAKE = "resources/new_food_items/cake.png";
+    public static final String CHERRY = "resources/new_food_items/cherry.png";
+    public static final String CHEESE = "resources/new_food_items/cheese.png";
+    public static final String CURRY = "resources/new_food_items/currybow.png";
+    public static final String DRUMSTICK = "resources/new_food_items/drumstick.png";
 
     /**
      * A HashMap of all textures with string keys
@@ -444,6 +444,12 @@ public class TextureManager extends AbstractManager {
             textureMap.put("bow_inv", new Texture("resources/items_icons/bow.png"));
             textureMap.put("sword_inv", new Texture("resources/items_icons/sword.png"));
             textureMap.put("spear_inv", new Texture("resources/items_icons/spear.png"));
+            textureMap.put("cherry_inv", new Texture("resources/new_food_items/cherry.png"));
+            textureMap.put("cheese_inv", new Texture("resources/new_food_items/cheese.png"));
+            textureMap.put("cake_inv", new Texture("resources/new_food_items/cake.png"));
+            textureMap.put("biscuit_inv", new Texture("resources/new_food_items/biscuit.png"));
+            textureMap.put("curry_inv", new Texture("resources/new_food_items/currybow.png"));
+            textureMap.put("drumstick_inv", new Texture("resources/new_food_items/drumstick.png"));
 
             textureMap.put("construction_info", new Texture("resources/items_icons/construction_description.png"));
 

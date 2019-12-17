@@ -1,4 +1,5 @@
 package deco2800.skyfall.entities.fooditems;
+import deco2800.skyfall.entities.MainCharacter;
 import deco2800.skyfall.entities.StaticEntity;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.util.HexVector;
@@ -61,10 +62,6 @@ public abstract class FoodItem extends StaticEntity implements Item, IFood {
         // Auto-generated method
     }
 
-    public void use(HexVector position) {
-
-    }
-
     @Override
     public HexVector getCoords() {
         return this.position;
@@ -78,6 +75,15 @@ public abstract class FoodItem extends StaticEntity implements Item, IFood {
     @Override
     public String getDescription() {
         return null;
+    }
+
+    @Override
+    public void use(HexVector position){
+        // Check player status
+        if (MainCharacter.getInstance().getHealth() < 50 && !MainCharacter.getInstance().isDead()) {
+            // Add health to player
+            MainCharacter.getInstance().changeHealth(getHealthValue());
+        }
     }
 }
 
