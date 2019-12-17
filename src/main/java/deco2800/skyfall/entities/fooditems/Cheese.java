@@ -2,7 +2,7 @@ package deco2800.skyfall.entities.fooditems;
 import deco2800.skyfall.resources.Item;
 import deco2800.skyfall.worlds.Tile;
 
-public class Cheese extends FoodItem implements Item, IFood {
+public class Cheese extends FoodItem {
 
     public Cheese(Tile tile, boolean obstructed) {
         super(tile, "cheese", obstructed, "cheese");

@@ -1,5 +1,6 @@
 package deco2800.skyfall.managers;
 
+import deco2800.skyfall.entities.fooditems.FoodItem;
 import deco2800.skyfall.gui.Tuple;
 import deco2800.skyfall.resources.HealthResources;
 import deco2800.skyfall.resources.Item;
@@ -425,6 +426,10 @@ public class InventoryManager extends TickableManager implements Serializable {
             ((ManufacturedResources) item).setPosition(col, row);
             ((ManufacturedResources) item).setTexture(item.getName() + WORLD);
             GameManager.get().getWorld().addEntity((ManufacturedResources) item);
+        } else if (item instanceof FoodItem) {
+            ((FoodItem) item).setPosition(col, row);
+            ((FoodItem) item).setTexture(item.getName() + WORLD);
+            GameManager.get().getWorld().addEntity((FoodItem) item);
         }
     }
 

@@ -10,12 +10,12 @@ import org.slf4j.Logger;
 public abstract class FoodItem extends StaticEntity implements Item, IFood {
 
     private String name;
-    private String foodType;
     private int healthValue;
     private HexVector position;
     private String texture;
     private boolean carryable;
     private boolean equippable;
+    private String subtype;
 
     private final Logger logger = LoggerFactory.getLogger(FoodItem.class);
 
@@ -23,9 +23,10 @@ public abstract class FoodItem extends StaticEntity implements Item, IFood {
         super(tile, 5, texture, obstructed);
         this.name = name;
         this.texture = texture;
+        this.subtype = "Food Item";
         this.carryable = true;
         this.equippable = true;
-        this.position = tile.getCoordinates();
+//        this.position = tile.getCoordinates();
     }
 
     public String getName() {return this.name;}
@@ -33,6 +34,7 @@ public abstract class FoodItem extends StaticEntity implements Item, IFood {
     public String getTexture(String texture) {
         return this.texture;
     }
+
     public int getHealthValue() {
         return healthValue;
     }
@@ -49,21 +51,23 @@ public abstract class FoodItem extends StaticEntity implements Item, IFood {
      * @return Subtype of food
      */
     public String getSubtype() {
-        return this.foodType;
+        return this.subtype;
     }
 
     @Override
     public boolean isEquippable() {
         return equippable;
     }
+
+
     @Override
-    public void onTick(long i) {
-        // Auto-generated method
+    public String toString() {
+        return "" + subtype + ":" + name;
     }
 
     @Override
     public HexVector getCoords() {
-        return this.position;
+        return position;
     }
 
     @Override
@@ -71,9 +75,11 @@ public abstract class FoodItem extends StaticEntity implements Item, IFood {
         return false;
     }
 
+    protected String description;
+
     @Override
     public String getDescription() {
-        return null;
+        return description;
     }
 
     @Override
@@ -81,6 +87,11 @@ public abstract class FoodItem extends StaticEntity implements Item, IFood {
         if (MainCharacter.getInstance().getHealth() < 50 && !MainCharacter.getInstance().isDead()) {
             MainCharacter.getInstance().changeHealth(getHealthValue());
         }
+    }
+
+    @Override
+    public void onTick(long i) {
+        // Auto-generated method
     }
 }
 
