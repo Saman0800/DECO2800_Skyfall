@@ -173,7 +173,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
     // spawn shop
     private void spawnBlueprintShop(Random random, List<EntitySpawnRule> biomeSpawnRules) {
-        EntitySpawnRule shop = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), random.nextInt(), 0.002);
+        EntitySpawnRule shop = new EntitySpawnRule(tile -> new BlueprintShop(tile, true), random.nextInt(), 0.001);
         biomeSpawnRules.add(shop);
     }
 
@@ -283,7 +283,7 @@ public class WorldBuilder implements WorldBuilderInterface {
     }
     // spawn new food items in the world
     private void foodItems(List<EntitySpawnRule> biomeSpawnRules, Random random) {
-        EntitySpawnRule cherry = new EntitySpawnRule(tile -> new BerryFood(tile, true), random.nextInt(), 0.001);
+        EntitySpawnRule cherry = new EntitySpawnRule(tile -> new Cheery(tile, true), random.nextInt(), 0.001);
         biomeSpawnRules.add(cherry);
 
         EntitySpawnRule cheese = new EntitySpawnRule(tile -> new Cheese(tile, true), random.nextInt(), 0.002);
