@@ -228,7 +228,7 @@ public class TextureManager extends AbstractManager {
             // adding bicycle icon and description
             textureMap.put("bike_inv", new Texture("resources/Bike/bike_icon.png"));
             textureMap.put("bike_desc", new Texture("resources/Bike/bike_desc.png"));
-            // sand car icon and descriptionwa
+            // sand car icon and description
             textureMap.put("sand_car_inv", new Texture("resources/sand_car_image/sand_car_icon.png"));
             textureMap.put("sand_car_desc", new Texture("resources/sand_car_image/sand_car_desc.png"));
 
