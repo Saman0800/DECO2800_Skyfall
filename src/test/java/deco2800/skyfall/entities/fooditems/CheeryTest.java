@@ -21,38 +21,52 @@ public class CheeryTest {
     public void tearDown() throws Exception {
         cherry = null;
     }
-
+    /**
+     * test get name return cherry
+     */
     @Test
     public void getName() {
         assertEquals(cherry.getName(), "cherry");
     }
-
+    /**
+     * test get texture return cherry
+     */
     @Test
     public void getTexture() {
         assertEquals(cherry.getTexture(), "cherry");
     }
-
+    /**
+     * test health value equal to 10
+     */
     @Test
     public void getHealthValue() {
         assertEquals(cherry.getHealthValue(), 10);
     }
-
+    /**
+     * test set health value
+     */
     @Test
     public void setHealthValue() {
         cherry.setHealthValue(5);
         assertEquals(cherry.getHealthValue(), 5);
     }
-
+    /**
+     * test if this item can be carried
+     */
     @Test
     public void isCarryable() {
         assertTrue(cherry.isCarryable());
     }
-
+    /**
+     * test if this item can be equipped
+     */
     @Test
     public void isEquippable() {
         assertTrue(cherry.isEquippable());
     }
-
+    /**
+     * test that if this item is obstructed
+     */
     @Test
     public void isObstructed() {
         assertFalse(cherry.isObstructed());

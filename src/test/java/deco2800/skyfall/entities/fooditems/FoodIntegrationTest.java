@@ -33,6 +33,9 @@ public class FoodIntegrationTest {
         inventory = null;
     }
 
+    /**
+     * test that food item can be added to inventory
+     */
     @Test
     public void pickupTest() {
         inventory.add(cheese);

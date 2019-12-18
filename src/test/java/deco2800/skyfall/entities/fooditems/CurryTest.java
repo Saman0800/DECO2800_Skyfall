@@ -19,38 +19,52 @@ public class CurryTest {
     public void tearDown() throws Exception {
         curry = null;
     }
-
+    /**
+     * test get name return curry
+     */
     @Test
     public void getName() {
         assertEquals(curry.getName(), "curry");
     }
-
+    /**
+     * test get texture return curry
+     */
     @Test
     public void getTexture() {
         assertEquals(curry.getTexture(), "curry");
     }
-
+    /**
+     * test health value equal to 8
+     */
     @Test
     public void getHealthValue() {
         assertEquals(curry.getHealthValue(), 8);
     }
-
+    /**
+     * test set health value
+     */
     @Test
     public void setHealthValue() {
         curry.setHealthValue(2);
         assertEquals(curry.getHealthValue(), 2);
     }
-
+    /**
+     * test if this item can be carried
+     */
     @Test
     public void isCarryable() {
         assertTrue(curry.isCarryable());
     }
-
+    /**
+     * test if this item can be equipped
+     */
     @Test
     public void isEquippable() {
         assertTrue(curry.isEquippable());
     }
-
+    /**
+     * test that if this item is obstructed
+     */
     @Test
     public void isObstructed() {
         assertFalse(curry.isObstructed());
